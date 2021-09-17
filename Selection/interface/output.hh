@@ -24,7 +24,7 @@ public:
   float allFullyResolved_AK4JetsSum_pt = -999.0;
   float allOneJet_AK8JetsSum_pt = -999.0;
   float allThreeJet_AK4JetsSum_pt = -999.0;
-  int nOneJet_GoodFatJet = -999;
+  int nGoodOneJet_FatJet = -999;
   int nGoodThreeJet_FatJet = -999;
   int nGoodThreeJet_Ak4Jet = -999;
 

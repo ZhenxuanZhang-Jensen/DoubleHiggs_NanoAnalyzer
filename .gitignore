@@ -15,6 +15,7 @@ Selection/*tree*
 
 *.root
 Selection/output.root
+.__*
 # Prerequisites
 *.d
 

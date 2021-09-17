@@ -8,7 +8,7 @@ void output::init() {
   fTree->Branch("allFullyResolved_AK4JetsSum_pt",&allFullyResolved_AK4JetsSum_pt,"allFullyResolved_AK4JetsSum_pt/F");
   fTree->Branch("allOneJet_AK8JetsSum_pt",&allOneJet_AK8JetsSum_pt,"allOneJet_AK8JetsSum_pt/F");
   fTree->Branch("allThreeJet_AK4JetsSum_pt",&allThreeJet_AK4JetsSum_pt,"allThreeJet_AK4JetsSum_pt/F");
-  fTree->Branch("nOneJet_GoodFatJet",&nOneJet_GoodFatJet,"nOneJet_GoodFatJet/I");
+  fTree->Branch("nGoodOneJet_FatJet",&nGoodOneJet_FatJet,"nGoodOneJet_FatJet/I");
   fTree->Branch("nGoodThreeJet_FatJet",&nGoodThreeJet_FatJet,"nGoodThreeJet_FatJet/I");
   fTree->Branch("nGoodThreeJet_Ak4Jet",&nGoodThreeJet_Ak4Jet,"nGoodThreeJet_Ak4Jet/I");
 /* -------------------------------------------------------------------------- */
@@ -279,7 +279,7 @@ void output::clearVars() {
    nTagJets = -999.0;
    allFullyResolved_AK4JetsSum_pt = -999.0;
    allOneJet_AK8JetsSum_pt = -999.0;
-   nOneJet_GoodFatJet = -999.0;
+   nGoodOneJet_FatJet = -999.0;
    nGoodThreeJet_FatJet = -999.0;
    nGoodThreeJet_Ak4Jet = -999.0;
 
