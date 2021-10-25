@@ -615,13 +615,17 @@ int main (int argc, char** argv) {
             // Save pT, eta, phi and mass of LV_GEN_Higgs[1] in output Tree
             if(LV_GEN_Higgs[0].Pt()>=LV_GEN_Higgs[1].Pt())
             {
+            WVJJTree->GEN_H1_p = LV_GEN_Higgs[0].P();
             WVJJTree->GEN_H1_pT = LV_GEN_Higgs[0].Pt();
+            WVJJTree->GEN_H1_pz = LV_GEN_Higgs[0].Pz();
             WVJJTree->GEN_H1_eta = LV_GEN_Higgs[0].Eta();
             WVJJTree->GEN_H1_phi = LV_GEN_Higgs[0].Phi();
             WVJJTree->GEN_H1_energy = LV_GEN_Higgs[0].E();
             WVJJTree->GEN_H1_mass = LV_GEN_Higgs[0].M();
 
+            WVJJTree->GEN_H2_p = LV_GEN_Higgs[1].P();
             WVJJTree->GEN_H2_pT = LV_GEN_Higgs[1].Pt();
+            WVJJTree->GEN_H2_pz = LV_GEN_Higgs[1].Pz();
             WVJJTree->GEN_H2_eta = LV_GEN_Higgs[1].Eta();
             WVJJTree->GEN_H2_phi = LV_GEN_Higgs[1].Phi();
             WVJJTree->GEN_H2_energy = LV_GEN_Higgs[1].E();
@@ -629,13 +633,17 @@ int main (int argc, char** argv) {
             }
             else
             {
-            WVJJTree->GEN_H1_pT = LV_GEN_Higgs[1].Pt();
+            WVJJTree->GEN_H1_p = LV_GEN_Higgs[1].P();
+            WVJJTree->GEN_H1_pT = LV_GEN_Higgs[0].Pt();
+            WVJJTree->GEN_H1_pz = LV_GEN_Higgs[0].Pz();
             WVJJTree->GEN_H1_eta = LV_GEN_Higgs[1].Eta();
             WVJJTree->GEN_H1_phi = LV_GEN_Higgs[1].Phi();
             WVJJTree->GEN_H1_energy = LV_GEN_Higgs[1].E();
             WVJJTree->GEN_H1_mass = LV_GEN_Higgs[1].M();
 
+            WVJJTree->GEN_H2_p = LV_GEN_Higgs[0].Pt();
             WVJJTree->GEN_H2_pT = LV_GEN_Higgs[0].Pt();
+            WVJJTree->GEN_H2_pz = LV_GEN_Higgs[0].Pz();
             WVJJTree->GEN_H2_eta = LV_GEN_Higgs[0].Eta();
             WVJJTree->GEN_H2_phi = LV_GEN_Higgs[0].Phi();
             WVJJTree->GEN_H2_energy = LV_GEN_Higgs[0].E();

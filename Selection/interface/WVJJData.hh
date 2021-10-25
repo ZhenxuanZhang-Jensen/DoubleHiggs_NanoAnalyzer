@@ -100,10 +100,14 @@ public:
   float GEN_W2_phi = -999.0;
   float GEN_W2_energy = -999.0;
   float GEN_H1_pT = -999.0;
+  float GEN_H1_p = -999.0;
+  float GEN_H1_pz = -999.0;
   float GEN_H1_eta = -999.0;
   float GEN_H1_phi = -999.0;
   float GEN_H1_energy = -999.0;
   float GEN_H2_pT = -999.0;
+  float GEN_H2_p = -999.0;
+  float GEN_H2_pz = -999.0;
   float GEN_H2_eta = -999.0;
   float GEN_H2_phi = -999.0;
   float GEN_H2_energy = -999.0;
