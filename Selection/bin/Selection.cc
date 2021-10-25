@@ -768,8 +768,9 @@ int main (int argc, char** argv) {
                     WVJJTree->pho1_mvaID_WP80 = NanoReader_.Photon_mvaID_WP80[PhotonCount];
                     WVJJTree->pho1_mvaID_WP90 = NanoReader_.Photon_mvaID_WP90[PhotonCount];
                 }
-                else if ( NanoReader_.Photon_pt[PhotonCount] > WVJJTree->pho2_pt ) {
-                    WVJJTree->pho2_pt = NanoReader_.Photon_pt[PhotonCount];
+                else if ( (NanoReader_.Photon_pt[PhotonCount] > WVJJTree->pho2_pt) && (WVJJTree->pho1_pt > NanoReader_.Photon_pt[PhotonCount]) ) 
+                {
+                    WVJJTree->pho2_pt = NanoReader_.Photon_pt[PhotonCount]; 
                     WVJJTree->pho2_eta = NanoReader_.Photon_eta[PhotonCount];
                     WVJJTree->pho2_phi = NanoReader_.Photon_phi[PhotonCount];
                     WVJJTree->pho2_m = NanoReader_.Photon_mass[PhotonCount];
@@ -781,11 +782,12 @@ int main (int argc, char** argv) {
                     WVJJTree->pho2_mvaID_WP90 = NanoReader_.Photon_mvaID_WP90[PhotonCount];
                 }
             }
+
             /* ----------------- Leading and SubLeading photon selection ---------------- */
 
-            if (!(nTightPhoton==2)) continue;
             if(!(WVJJTree->pho1_pt > PHO1_PT_CUT)) continue;
             if(!(WVJJTree->pho2_pt > PHO2_PT_CUT)) continue;
+            if (!(nTightPhoton>=2)) continue;
 
             totalCutFlow_FH->Fill("Photon Selection",1);
             totalCutFlow_SL->Fill("Photon Selection",1);
