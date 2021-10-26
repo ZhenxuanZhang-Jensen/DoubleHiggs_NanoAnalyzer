@@ -52,6 +52,18 @@ public :
   TTreeReaderArray<Int_t> GenPart_pdgId = {tree_->GetBranchStatus("GenPart_pdgId") ? fReader : fReaderNull, "GenPart_pdgId"};
   TTreeReaderArray<Int_t> GenPart_status = {tree_->GetBranchStatus("GenPart_status") ? fReader : fReaderNull, "GenPart_status"};
   TTreeReaderArray<Int_t> GenPart_statusFlags = {tree_->GetBranchStatus("GenPart_statusFlags") ? fReader : fReaderNull, "GenPart_statusFlags"};
+  // GenJet
+  TTreeReaderValue<UInt_t> nGenJet = {tree_->GetBranchStatus("nGenJet") ? fReader : fReaderNull, "nGenJet"};
+  TTreeReaderArray<Float_t> GenJet_eta = {tree_->GetBranchStatus("GenJet_eta") ? fReader : fReaderNull, "GenJet_eta"};
+  TTreeReaderArray<Float_t> GenJet_mass = {tree_->GetBranchStatus("GenJet_mass") ? fReader : fReaderNull, "GenJet_mass"};
+  TTreeReaderArray<Float_t> GenJet_phi = {tree_->GetBranchStatus("GenJet_phi") ? fReader : fReaderNull, "GenJet_phi"};
+  TTreeReaderArray<Float_t> GenJet_pt = {tree_->GetBranchStatus("GenJet_pt") ? fReader : fReaderNull, "GenJet_pt"};
+  // GenJet_AK8
+  TTreeReaderValue<UInt_t> nGenJetAK8 = {tree_->GetBranchStatus("nGenJetAK8") ? fReader : fReaderNull, "nGenJetAK8"};
+  TTreeReaderArray<Float_t> GenJetAK8_eta = {tree_->GetBranchStatus("GenJetAK8_eta") ? fReader : fReaderNull, "GenJetAK8_eta"};
+  TTreeReaderArray<Float_t> GenJetAK8_mass = {tree_->GetBranchStatus("GenJetAK8_mass") ? fReader : fReaderNull, "GenJetAK8_mass"};
+  TTreeReaderArray<Float_t> GenJetAK8_phi = {tree_->GetBranchStatus("GenJetAK8_phi") ? fReader : fReaderNull, "GenJetAK8_phi"};
+  TTreeReaderArray<Float_t> GenJetAK8_pt = {tree_->GetBranchStatus("GenJetAK8_pt") ? fReader : fReaderNull, "GenJetAK8_pt"};
 
   //HLT
   TTreeReaderValue<Bool_t> HLT_IsoMu22 = {tree_->GetBranchStatus("HLT_IsoMu22") ? fReader : fReaderNull, "HLT_IsoMu22"};
