@@ -75,6 +75,7 @@ int main (int argc, char** argv) {
     //ak8 jet cuts
     const float AK8_HJET_MIN_PT = 300;
     const float AK8_WJET_MIN_PT = 200;
+    // checking 2.4 to 4.7
     const float AK8_MAX_ETA = 2.4;
 
     // Mass window cuts
@@ -86,6 +87,7 @@ int main (int argc, char** argv) {
     //ak4 jet cuts
     //const float AK4_PT_VETO_CUT = 20;
     // const float AK4_ETA_CUT = 2.4;
+    //checking 2.4 to 4.7
     const float AK4_PT_CUT = 25;
     const float AK4_MAX_ETA = 2.4;
     // const float AK4_JJ_MIN_M = 40.0;
@@ -348,8 +350,6 @@ int main (int argc, char** argv) {
         }
 
         if(DEBUG) std::cout << "\t[INFO]: Start of event loop. " << std::endl;
-        float count_HH =0;
-        float count_HH_p=0;
         for (uint i=0; i < t->GetEntries(); i++)
         // for (uint i=0; i < 200; i++)
         {
@@ -442,14 +442,7 @@ int main (int argc, char** argv) {
             // if (! (WVJJTree->LHE_H1_eta * WVJJTree->LHE_H2_eta < 0) &&  abs(WVJJTree->LHE_H1_eta - WVJJTree->LHE_H2_eta) )continue;
 
             // if (abs(abs(WVJJTree->LHE_H1_eta) - abs(WVJJTree->LHE_H2_eta)) > 0.2) continue;
-            if (abs(abs(WVJJTree->LHE_H1_eta) - abs(WVJJTree->LHE_H2_eta)) < 0.1)
-            {
-                count_HH += 1;
-                if(abs(abs(WVJJTree->LHE_H1_p) - abs(WVJJTree->LHE_H2_p)) < 10)
-                {
-                    count_HH_p += 1;
-                }
-            }
+
             // if (abs(abs(WVJJTree->LHE_H1_eta) - abs(WVJJTree->LHE_H2_eta)) < 0.1)
             // {
             //     Radion_Cutflow->Fill("| |eta1| - |eta2| | < 0.1",1);
@@ -893,6 +886,8 @@ int main (int argc, char** argv) {
                 if (!(abs(NanoReader_.Photon_eta[PhotonCount]) < PHO_ETA_CUT )) continue;
                 if (!(NanoReader_.Photon_isScEtaEB[PhotonCount] || NanoReader_.Photon_isScEtaEE[PhotonCount])) continue;
                 if (!(NanoReader_.Photon_mvaID[PhotonCount] > PHO_MVA_ID)) continue;
+                if(!(NanoReader_.Photon_pixelSeed[PhotonCount]) == 0 ) continue;
+                if (!(NanoReader_.Photon_electronVeto[PhotonCount]) == 1) continue;
                 nTightPhoton++;
 
                 /* ----------- push pt,eta,phi,ecorr in the TightPhoton last index ---------- */
@@ -2047,7 +2042,6 @@ int main (int argc, char** argv) {
 
             ot->Fill();
         }
-        std::cout<<"P<10 ration is :" << count_HH_p / count_HH << std::endl;
         delete t;
         delete r;
         delete f;
