@@ -76,7 +76,7 @@ int main (int argc, char** argv) {
     const float AK8_HJET_MIN_PT = 300;
     const float AK8_WJET_MIN_PT = 200;
     // checking 2.4 to 4.7
-    const float AK8_MAX_ETA = 2.4;
+    const float AK8_MAX_ETA = 4.7;
 
     // Mass window cuts
     const float AK8_HJet_MIN_SDM = 90;
@@ -89,7 +89,7 @@ int main (int argc, char** argv) {
     // const float AK4_ETA_CUT = 2.4;
     //checking 2.4 to 4.7
     const float AK4_PT_CUT = 25;
-    const float AK4_MAX_ETA = 2.4;
+    const float AK4_MAX_ETA = 4.7;
     // const float AK4_JJ_MIN_M = 40.0;
     // const float AK4_JJ_MAX_M = 250.0;
 
@@ -886,8 +886,8 @@ int main (int argc, char** argv) {
                 if (!(abs(NanoReader_.Photon_eta[PhotonCount]) < PHO_ETA_CUT )) continue;
                 if (!(NanoReader_.Photon_isScEtaEB[PhotonCount] || NanoReader_.Photon_isScEtaEE[PhotonCount])) continue;
                 if (!(NanoReader_.Photon_mvaID[PhotonCount] > PHO_MVA_ID)) continue;
-                // if(!(NanoReader_.Photon_pixelSeed[PhotonCount]) == 0 ) continue;
-                // if (!(NanoReader_.Photon_electronVeto[PhotonCount]) == 1) continue;
+                if(!(NanoReader_.Photon_pixelSeed[PhotonCount]) == 0 ) continue;
+                if (!(NanoReader_.Photon_electronVeto[PhotonCount]) == 1) continue;
                 nTightPhoton++;
 
                 /* ----------- push pt,eta,phi,ecorr in the TightPhoton last index ---------- */
@@ -941,7 +941,7 @@ int main (int argc, char** argv) {
 
             if(!(WVJJTree->pho1_pt > PHO1_PT_CUT)) continue;
             if(!(WVJJTree->pho2_pt > PHO2_PT_CUT)) continue;
-            if (!(nTightPhoton>=2)) continue;
+            if (!(nTightPhoton==2)) continue;
 
             totalCutFlow_FH->Fill("Photon Selection",1);
             totalCutFlow_SL->Fill("Photon Selection",1);
@@ -1065,7 +1065,7 @@ int main (int argc, char** argv) {
                     // }
                 }
                 bool isClean=true;
-                for ( std::size_t k=0; k<LV_tightPhoton.size(); k++) {
+                for ( std::size_t k=0; k<2; k++) {
                     if (deltaR(LV_tightPhoton.at(k).Eta(), LV_tightPhoton.at(k).Phi(),
                                NanoReader_.Electron_eta[j], NanoReader_.Electron_phi[j]) < 0.4) {
                         isClean = false;
@@ -1126,7 +1126,7 @@ int main (int argc, char** argv) {
                          NanoReader_.FatJet_eta[j], NanoReader_.FatJet_phi[j]) < AK8_LEP_DR_CUT)
                     isClean = false;
                 }
-                for ( std::size_t k=0; k<LV_tightPhoton.size(); k++) {
+                for ( std::size_t k=0; k<2; k++) {
                     if (deltaR(LV_tightPhoton.at(k).Eta(), LV_tightPhoton.at(k).Phi(),
                                NanoReader_.FatJet_eta[j], NanoReader_.FatJet_phi[j]) < AK8_LEP_DR_CUT) {
                         isClean = false;
@@ -1248,7 +1248,7 @@ int main (int argc, char** argv) {
 
             //Important: Onejet RECO&GEN Higgs dR
             // if ((nTightMu + nTightEle == 0) && nGood_Higgs_FatJet>=1 && WVJJTree->OneJet_deltaR_GENRECO_HH<0.4)
-            if ((nTightMu + nTightEle == 0) && nGood_Higgs_FatJet>=1 && WVJJTree->OneJet_deltaR_GENRECO_HH<0.4)
+            if ((nTightMu + nTightEle == 0) && nGood_Higgs_FatJet>=1 && WVJJTree->OneJet_deltaR_GENRECO_HH<1.6)
             {
                 totalCutFlow_FH_GENMatch->Fill("nAK8_Higgs >= 1",1);
                 totalCutFlow_FH_GENMatch->Fill("1Jet2Jet3Jet4Jet",1);
@@ -1293,7 +1293,7 @@ int main (int argc, char** argv) {
                     isClean = false;
                 }
                 // cleaning jet from photons
-                for ( std::size_t k=0; k<LV_tightPhoton.size(); k++) {
+                for ( std::size_t k=0; k<2; k++) {
                     if (deltaR(LV_tightPhoton.at(k).Eta(), LV_tightPhoton.at(k).Phi(),
                                NanoReader_.FatJet_eta[j], NanoReader_.FatJet_phi[j]) < AK8_LEP_DR_CUT) {
                         isClean = false;
@@ -1388,7 +1388,7 @@ int main (int argc, char** argv) {
                 }
 
                 if (DEBUG) std::cout << "\t[INFO::AK4jets] [" << i <<"/" << lineCount << "] Clean AK4 jet with photons jets" << std::endl;
-                for ( std::size_t k=0; k<LV_tightPhoton.size(); k++) {
+                for ( std::size_t k=0; k<2; k++) {
                     if (deltaR(LV_tightPhoton.at(k).Eta(), LV_tightPhoton.at(k).Phi(),
                                NanoReader_.Jet_eta[j], NanoReader_.Jet_phi[j]) < AK4_LEP_DR_CUT) {
                         isClean = false;
@@ -1435,72 +1435,7 @@ int main (int argc, char** argv) {
                     if (DEBUG) std::cout << "\t[INFO::AK4Jets] [" << i <<"/" << lineCount << "] btag_eff_tight  = " << btag_eff_tight << std::endl;
 
                     if (DEBUG) std::cout << "\t[INFO::AK4jets] [" << i <<"/" << lineCount << "] Got Btag SF for loose, medium and tight" << std::endl;
-                    // if (NanoReader_.Jet_btagDeepB[j] > btag_loose_wp) {
-                    //   WVJJTree->nAK4Btag_loose++;
-                    //   if (isMC) {
-                    //     WVJJTree->btagWeight_loose *= NanoReader_.Jet_btagSF_deepcsv_L[j];
-                    //     WVJJTree->btagWeight_loose_Up *= NanoReader_.Jet_btagSF_deepcsv_L_up[j];
-                    //     WVJJTree->btagWeight_loose_Down *= NanoReader_.Jet_btagSF_deepcsv_L_down[j];
-                    //   }
-                    // }
-                    // else {
-                    //   if (isMC) {
-                    //     if (btag_eff_loose == 1.0) {
-                    //       WVJJTree->btagWeight_loose *= NanoReader_.Jet_btagSF_deepcsv_L[j];
-                    //       WVJJTree->btagWeight_loose_Up *= NanoReader_.Jet_btagSF_deepcsv_L_up[j];
-                    //       WVJJTree->btagWeight_loose_Down *= NanoReader_.Jet_btagSF_deepcsv_L_down[j];
-                    //     }
-                    //     else {
-                    //       WVJJTree->btagWeight_loose *= (1.0 - NanoReader_.Jet_btagSF_deepcsv_L[j] * btag_eff_loose) / (1.0 - btag_eff_loose);
-                    //       WVJJTree->btagWeight_loose_Up *= (1.0 - NanoReader_.Jet_btagSF_deepcsv_L_up[j] * btag_eff_loose) / (1.0 - btag_eff_loose);
-                    //       WVJJTree->btagWeight_loose_Down *= (1.0 - NanoReader_.Jet_btagSF_deepcsv_L_down[j] * btag_eff_loose) / (1.0 - btag_eff_loose);
-                    //     }
-                    //   }
-                    // }
-                    // if (NanoReader_.Jet_btagDeepB[j] > btag_medium_wp) {
-                    //   WVJJTree->nAK4Btag_medium++;
-                    //   if (isMC) {
-                    //     WVJJTree->btagWeight_medium *= NanoReader_.Jet_btagSF_deepcsv_M[j];
-                    //     WVJJTree->btagWeight_medium_Up *= NanoReader_.Jet_btagSF_deepcsv_M_up[j];
-                    //     WVJJTree->btagWeight_medium_Down *= NanoReader_.Jet_btagSF_deepcsv_M_down[j];
-                    //   }
-                    // }
-                    // else {
-                    //   if (isMC) {
-                    //     if (btag_eff_medium == 1.0) {
-                    //       WVJJTree->btagWeight_medium *= NanoReader_.Jet_btagSF_deepcsv_M[j];
-                    //       WVJJTree->btagWeight_medium_Up *= NanoReader_.Jet_btagSF_deepcsv_M_up[j];
-                    //       WVJJTree->btagWeight_medium_Down *= NanoReader_.Jet_btagSF_deepcsv_M_down[j];
-                    //     }
-                    //     else {
-                    //       WVJJTree->btagWeight_medium *= (1.0 - NanoReader_.Jet_btagSF_deepcsv_M[j] * btag_eff_medium) / (1.0 - btag_eff_medium);
-                    //       WVJJTree->btagWeight_medium_Up *= (1.0 - NanoReader_.Jet_btagSF_deepcsv_M_up[j] * btag_eff_medium) / (1.0 - btag_eff_medium);
-                    //       WVJJTree->btagWeight_medium_Down *= (1.0 - NanoReader_.Jet_btagSF_deepcsv_M_down[j] * btag_eff_medium) / (1.0 - btag_eff_medium);
-                    //     }
-                    //   }
-                    // }
-                    // if (NanoReader_.Jet_btagDeepB[j] > btag_tight_wp) {
-                    //   WVJJTree->nAK4Btag_tight++;
-                    //   if (isMC) {
-                    //     WVJJTree->btagWeight_tight *= NanoReader_.Jet_btagSF_deepcsv_T[j];
-                    //     WVJJTree->btagWeight_tight_Up *= NanoReader_.Jet_btagSF_deepcsv_T_up[j];
-                    //     WVJJTree->btagWeight_tight_Down *= NanoReader_.Jet_btagSF_deepcsv_T_down[j];
-                    //   }
-                    // }
-                    // else {
-                    //   if (isMC) {
-                    //     if (btag_eff_tight == 1.0) {
-                    //       WVJJTree->btagWeight_tight *= NanoReader_.Jet_btagSF_deepcsv_T[j];
-                    //       WVJJTree->btagWeight_tight_Up *= NanoReader_.Jet_btagSF_deepcsv_T_up[j];
-                    //       WVJJTree->btagWeight_tight_Down *= NanoReader_.Jet_btagSF_deepcsv_T_down[j];
-                    //     }
-                    //     else {
-                    //       WVJJTree->btagWeight_tight *= (1.0 - NanoReader_.Jet_btagSF_deepcsv_T[j] * btag_eff_tight) / (1.0 - btag_eff_tight);
-                    //       WVJJTree->btagWeight_tight_Up *= (1.0 - NanoReader_.Jet_btagSF_deepcsv_T_up[j] * btag_eff_tight) / (1.0 - btag_eff_tight);
-                    //       WVJJTree->btagWeight_tight_Down *= (1.0 - NanoReader_.Jet_btagSF_deepcsv_T_down[j] * btag_eff_tight) / (1.0 - btag_eff_tight);
-                    //     }
-                    //   }
-                    // }
+                 
                 }
                 if (DEBUG) std::cout << "\t[INFO::AK4jets] [" << i <<"/" << lineCount << "] btag weight computation done" << std::endl;
 
@@ -1749,8 +1684,8 @@ int main (int argc, char** argv) {
                 // other conditons are already applied in the current if condition
                 // so I did not added conditons that belongs to 2 jet category.
                 // Important: Two jets RECO&GEN Higgs dR 
-                // if ( WVJJTree->TwoJet_deltaR_GENRECO_HH < 0.8)
-                if ( WVJJTree->TwoJet_deltaR_LeadAK8WBoson_GENW < 0.4 && WVJJTree-> TwoJet_deltaR_SubLeadAK8WBoson_GENW < 0.4)
+                if ( WVJJTree->TwoJet_deltaR_GENRECO_HH < 0.8)
+                // if ( WVJJTree->TwoJet_deltaR_LeadAK8WBoson_GENW < 0.4 && WVJJTree-> TwoJet_deltaR_SubLeadAK8WBoson_GENW < 0.4)
                 {
                     totalCutFlow_FH_GENMatch->Fill("nAK8H=0 & nAK8_W >= 2",1);
                     totalCutFlow_FH_GENMatch->Fill("1Jet2Jet3Jet4Jet",1);
@@ -1886,7 +1821,7 @@ int main (int argc, char** argv) {
                 WVJJTree->ThreeJet_deltaPhi_HH = deltaPhi(LV_Ak8WZJets[0] + LV_Ak4Jets[0] + LV_Ak4Jets[1],diphoton);
                 // Important: Three jets RECO&GEN Higgs dR 
                 // if(WVJJTree->ThreeJet_deltaR_AK4WBoson_GENW<0.4 && WVJJTree->ThreeJet_deltaR_AK8WBoson_GENW<0.4){
-                if(WVJJTree->ThreeJet_deltaR_GENRECO_HH<0.4){
+                if(WVJJTree->ThreeJet_deltaR_GENRECO_HH<0.8){
                     totalCutFlow_FH_GENMatch->Fill("nAK8H=0 & nAK8_W>=1 & nAK4>=2",1);
                     totalCutFlow_FH_GENMatch->Fill("1Jet2Jet3Jet4Jet",1);
                 }
@@ -1983,7 +1918,7 @@ int main (int argc, char** argv) {
                 WVJJTree->FullyResolved_deltaPhi_HH = deltaPhi(FourJets,diphoton);
                 // Important: Four jets RECO&GEN Higgs dR 
                 // if(WVJJTree->FullyResolved_deltaR_LeadingWboson_GENW<0.4 && WVJJTree-> FullyResolved_deltaR_SubLeadingWboson_GENW < 0.4){
-                if(WVJJTree->FullyResolved_deltaR_LHERECO_HH < 0.4){
+                if(WVJJTree->FullyResolved_deltaR_GENRECO_HH < 0.8){
                     totalCutFlow_FH_GENMatch->Fill("nAK8H=0 & nAK8W=0 & nAK4>=4",1);
                     totalCutFlow_FH_GENMatch->Fill("1Jet2Jet3Jet4Jet",1);
                 }

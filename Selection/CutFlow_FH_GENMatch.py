@@ -59,11 +59,10 @@ info = {"SampleName": [],
         "pT/mgg cut": [],
         "pT(#gamma #gamma)>100": [],
         "DiPhoton (%)": [],
-        "1Jet Category": [],
-        "2Jet Category": [],
-        "3Jet Category(in)": [],
-        "3Jet Category": [],
-        "4Jet Category": [],
+        "1Jet Category(%)": [],
+        "2Jet Category(%)": [],
+        "3Jet Category(%)": [],
+        "4Jet Category(%)": [],
         "All cat jets(%)": [],
         "Pt/mgg && Photon pT > 100 (%)": []
         }
@@ -102,11 +101,10 @@ for files_ in Hist:
     info["DiPhoton (%)"].append(round((float(info["Photon Selection"][count]) / info["MC Gen"][count]) * 100.0,2))
     # print("test: ",info["nAK8H=0 & nAK8W=0 & nAK4>=4"][count])
     # print("test: ",info["MC Gen"][count])
-    info["1Jet Category"].append(round((float(info["nAK8_Higgs >= 1"][count]) / info["MC Gen"][count]) * 100.0,2))
-    info["2Jet Category"].append(round((float(info["nAK8H=0 & nAK8_W >= 2"][count]) / info["MC Gen"][count]) * 100.0,2))
-    info["3Jet Category(in)"].append(round((float(info["nAK8H=0 & nAK8_W>=1 & nAK4>=2"][count]) / info["MC Gen"][count]) * 100.0,2))
-    info["3Jet Category"].append(round((float(info["nAK8H=0 & nAK8_W=1 & nAK4>=2"][count]) / info["MC Gen"][count]) * 100.0,2))
-    info["4Jet Category"].append(round((float(info["nAK8H=0 & nAK8W=0 & nAK4>=4"][count]) / info["MC Gen"][count]) * 100.0,2))
+    info["1Jet Category(%)"].append(round((float(info["nAK8_Higgs >= 1"][count]) / info["MC Gen"][count]) * 100.0,2))
+    info["2Jet Category(%)"].append(round((float(info["nAK8H=0 & nAK8_W >= 2"][count]) / info["MC Gen"][count]) * 100.0,2))
+    info["3Jet Category(%)"].append(round((float(info["nAK8H=0 & nAK8_W=1 & nAK4>=2"][count]) / info["MC Gen"][count]) * 100.0,2))
+    info["4Jet Category(%)"].append(round((float(info["nAK8H=0 & nAK8W=0 & nAK4>=4"][count]) / info["MC Gen"][count]) * 100.0,2))
     info["All cat jets(%)"].append(round((float(info["1Jet2Jet3Jet4Jet"][count]) / info["MC Gen"][count]) * 100.0,2))
     info["Pt/mgg && Photon pT > 100 (%)"].append(round((float(info["pT(#gamma #gamma)>100"][count]) / info["MC Gen"][count]) * 100.0,2))
 
@@ -145,7 +143,7 @@ print("\n\n\n")
 
 # df = df.reindex(["SampleName", "MC Gen", "Trigger", "Photon Selection", "Lepton Selection", "nAK8H=0 & nAK8W=0 & nAK4>=4", "1Jet2Jet3Jet4Jet", "pT/mgg cut", "pT(#gamma #gamma)>100", "DiPhoton (%)", "1Jet Category", "All cat jets(%)", "Pt/mgg && Photon pT > 100 (%)"])
 # df = df.reindex(["SampleName", "MC Gen", "Trigger", "Photon Selection", "Lepton Selection", "nAK8H=0 & nAK8W=0 & nAK4>=4", "1Jet2Jet3Jet4Jet", "DiPhoton (%)", "1Jet Category", "All cat jets(%)"])
-df = df.reindex(["SampleName", "MC Gen", "Trigger", "Photon Selection", "Lepton Selection", "nAK8_Higgs >= 1", "nAK8H=0 & nAK8_W >= 2", "nAK8H=0 & nAK8_W>=1 & nAK4>=2", "nAK8H=0 & nAK8_W=1 & nAK4>=2", "nAK8H=0 & nAK8W=0 & nAK4>=4", "1Jet2Jet3Jet4Jet", "DiPhoton (%)", "1Jet Category", "2Jet Category", "3Jet Category(in)", "3Jet Category", "4Jet Category", "All cat jets(%)"])
+df = df.reindex(["SampleName", "MC Gen", "Trigger", "Photon Selection", "Lepton Selection", "nAK8_Higgs >= 1", "nAK8H=0 & nAK8_W >= 2", "nAK8H=0 & nAK8_W>=1 & nAK4>=2", "nAK8H=0 & nAK8_W=1 & nAK4>=2", "nAK8H=0 & nAK8W=0 & nAK4>=4", "1Jet2Jet3Jet4Jet", "DiPhoton (%)", "1Jet Category(%)", "2Jet Category(%)", "3Jet Category(%)", "4Jet Category(%)", "All cat jets(%)"])
 
 print(df)
 
@@ -161,7 +159,7 @@ os.system('cat '+ plotDir+ '/test.csv')
 # df.loc[4] = info["nAK8H=0 & nAK8W=0 & nAK4>=4"]
 # df.loc[5] = info["pT(#gamma #gamma)>100"]
 # df.loc[6] = info["DiPhoton (%)"]
-# df.loc[7] = info["1Jet Category"]
+# df.loc[7] = info["1Jet Category(%)"]
 # df.loc[8] = info["Pt/mgg && Photon pT > 100 (%)"]
 # df.loc[0] = info["MC Gen"]
 # print(df)
