@@ -10,8 +10,8 @@ if not os.path.isdir(plotDir):
 
 Hist = [
         "/eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G2Qlnu_M250.root",
-        # "/eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G2Qlnu_M1000.root",
-        # "/eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G2Qlnu_M3000.root",
+        "/eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G2Qlnu_M1000.root",
+        "/eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G2Qlnu_M3000.root",
         # "GluGluToRadionToHHTo2G2Qlnu_M500.root",
         # "GluGluToRadionToHHTo2G2Qlnu_M800.root",
         # "GluGluToRadionToHHTo2G2Qlnu_M1500.root",

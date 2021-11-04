@@ -866,7 +866,7 @@ int main (int argc, char** argv) {
 
             if(!(WVJJTree->pho1_pt > PHO1_PT_CUT)) continue;
             if(!(WVJJTree->pho2_pt > PHO2_PT_CUT)) continue;
-            if (!(nTightPhoton >= 2)) continue;
+            if (!(nTightPhoton == 2)) continue;
             //checking lepton misidentify
             // if(nTightEle!=1) continue;
             totalCutFlow_SL->Fill("Photon Selection",1);
@@ -934,21 +934,21 @@ int main (int argc, char** argv) {
 
                 // cut-based ID, tight WP
                 // checking without selection
-                // if ( ! NanoReader_.Muon_tightId[j] ) continue;
+                if ( ! NanoReader_.Muon_tightId[j] ) continue;
 
                 // MiniIso ID from miniAOD selector (1=MiniIsoLoose, 2=MiniIsoMedium, 3=MiniIsoTight, 4=MiniIsoVeryTight)
-                // if ( ! (NanoReader_.Muon_miniIsoId[j] > 2) ) continue;
+                if ( ! (NanoReader_.Muon_miniIsoId[j] > 2) ) continue;
 
                 if (DEBUG) std::cout << "\t[INFO::Muons] [" << i <<"/" << lineCount << "] Clean Muons with photons" << std::endl;
 
-                // bool isClean=true;
-                // for ( std::size_t k=0; k<2; k++) {
-                //     if (deltaR(LV_tightPhoton.at(k).Eta(), LV_tightPhoton.at(k).Phi(),
-                //                NanoReader_.Muon_eta[j], NanoReader_.Muon_phi[j]) < 0.4) {
-                //         isClean = false;
-                //     }
-                // }
-                // if ( isClean == false ) continue;
+                bool isClean=true;
+                for ( std::size_t k=0; k<2; k++) {
+                    if (deltaR(LV_tightPhoton.at(k).Eta(), LV_tightPhoton.at(k).Phi(),
+                               NanoReader_.Muon_eta[j], NanoReader_.Muon_phi[j]) < 0.4) {
+                        isClean = false;
+                    }
+                }
+                if ( isClean == false ) continue;
 
                 TLorentzVector Mu(0,0,0,0);
                 // Mu.SetPtEtaPhiM( NanoReader_.Muon_pt[j], NanoReader_.Muon_eta[j], NanoReader_.Muon_phi[j], NanoReader_.Muon_mass[j] );
@@ -962,14 +962,14 @@ int main (int argc, char** argv) {
                 LV_tightMuon.push_back(Mu);
             }
 
-            if (nMu!=0)
-            {
-                totalCutFlow_SL->Fill("Mu before cut",1);
-            }
-            if (nTightMu!=0)
-            {
-                totalCutFlow_SL->Fill("Mu after cut",1);
-            }
+            // if (nMu!=0)
+            // {
+            //     totalCutFlow_SL->Fill("Mu before cut",1);
+            // }
+            // if (nTightMu!=0)
+            // {
+            //     totalCutFlow_SL->Fill("Mu after cut",1);
+            // }
            
             
             for ( uint j=0; j < *NanoReader_.nElectron; j++ )
@@ -1017,18 +1017,18 @@ int main (int argc, char** argv) {
             }
             // std::cout << "\t[INFO] Number of Eletrons: " << nTightEle
             // <<" \t Number of Muons:" << nTightMu <<"\t Numbers of leptons:" << nTightEle + nTightMu << std::endl;
-            if(nMu + nEle != 0)
-            {
-                totalCutFlow_SL->Fill("All Leptons",1);
-            }
-            if(nEle != 0)
-            {
-                totalCutFlow_SL->Fill("Ele before cut",1);
-            }
-            if(nTightEle!=0)
-            {
-                totalCutFlow_SL->Fill("Ele after cut",1);
-            }
+            // if(nMu + nEle != 0)
+            // {
+            //     totalCutFlow_SL->Fill("All Leptons",1);
+            // }
+            // if(nEle != 0)
+            // {
+            //     totalCutFlow_SL->Fill("Ele before cut",1);
+            // }
+            // if(nTightEle!=0)
+            // {
+            //     totalCutFlow_SL->Fill("Ele after cut",1);
+            // }
 
             if (nTightMu + nTightEle != 1) continue;
             totalCutFlow_SL->Fill("Lepton Selection",1);
