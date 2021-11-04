@@ -886,8 +886,8 @@ int main (int argc, char** argv) {
                 if (!(abs(NanoReader_.Photon_eta[PhotonCount]) < PHO_ETA_CUT )) continue;
                 if (!(NanoReader_.Photon_isScEtaEB[PhotonCount] || NanoReader_.Photon_isScEtaEE[PhotonCount])) continue;
                 if (!(NanoReader_.Photon_mvaID[PhotonCount] > PHO_MVA_ID)) continue;
-                if(!(NanoReader_.Photon_pixelSeed[PhotonCount]) == 0 ) continue;
-                if (!(NanoReader_.Photon_electronVeto[PhotonCount]) == 1) continue;
+                // if(!(NanoReader_.Photon_pixelSeed[PhotonCount]) == 0 ) continue;
+                // if (!(NanoReader_.Photon_electronVeto[PhotonCount]) == 1) continue;
                 nTightPhoton++;
 
                 /* ----------- push pt,eta,phi,ecorr in the TightPhoton last index ---------- */
