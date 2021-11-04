@@ -430,14 +430,19 @@ int main (int argc, char** argv) {
                 LV_GEN_quarks.clear();
                 LV_GEN_leptons.clear();
                 LV_GEN_neutrino.clear();
-                // print the GENevents tree
-                for (UInt_t GENPartCount = 0; GENPartCount < *NanoReader_.nGenPart; ++GENPartCount)
-                {   
-                    std::cout
-                    << "Event" << i <<"/idx:" << GENPartCount << "\t ID:" << NanoReader_.GenPart_pdgId[GENPartCount] 
-                    <<"\t MotherID:" << NanoReader_.GenPart_genPartIdxMother[GENPartCount]
-                    << std::endl; 
-                }
+                // checking print the GENevents tree
+                // for (UInt_t GENPartCount = 0; GENPartCount < *NanoReader_.nGenPart; ++GENPartCount)
+                // {   
+                //     std::cout
+                //     << "Event:" << i <<"/idx:" << GENPartCount << "\t ID:" << NanoReader_.GenPart_pdgId[GENPartCount] 
+                //     << "\t Name:";
+                //     printpdgID(NanoReader_.GenPart_pdgId[GENPartCount]);
+                //     std::cout <<"\t MotherID:" << NanoReader_.GenPart_genPartIdxMother[GENPartCount]
+                //     << "\t Pt:" << NanoReader_.GenPart_pt[GENPartCount]
+                //     << "\t Eta:" << NanoReader_.GenPart_eta[GENPartCount]
+                //     << "\t Phi:" << NanoReader_.GenPart_phi[GENPartCount]
+                //     << std::endl; 
+                // }
                 for (UInt_t GENPartCount = 0; GENPartCount < *NanoReader_.nGenPart; ++GENPartCount)
                 {
                     int pdgid = NanoReader_.GenPart_pdgId[GENPartCount];
@@ -836,20 +841,20 @@ int main (int argc, char** argv) {
                 // std::cout << "pho2_pt= " << WVJJTree->pho2_pt << std::endl;
                 
             }
-            LV_tightPhoton.push_back(TLorentzVector(0,0,0,0));
-            LV_tightPhoton.back().SetPtEtaPhiE(
-                                            WVJJTree->pho1_pt,
-                                            WVJJTree->pho1_eta,
-                                            WVJJTree->pho1_phi,
-                                            WVJJTree->pho1_E
-                                            );
-            LV_tightPhoton.push_back(TLorentzVector(0,0,0,0));
-            LV_tightPhoton.back().SetPtEtaPhiE(
-                                            WVJJTree->pho2_pt,
-                                            WVJJTree->pho2_eta,
-                                            WVJJTree->pho2_phi,
-                                            WVJJTree->pho2_E
-                                            );
+            // LV_tightPhoton.push_back(TLorentzVector(0,0,0,0));
+            // LV_tightPhoton.back().SetPtEtaPhiE(
+            //                                 WVJJTree->pho1_pt,
+            //                                 WVJJTree->pho1_eta,
+            //                                 WVJJTree->pho1_phi,
+            //                                 WVJJTree->pho1_E
+            //                                 );
+            // LV_tightPhoton.push_back(TLorentzVector(0,0,0,0));
+            // LV_tightPhoton.back().SetPtEtaPhiE(
+            //                                 WVJJTree->pho2_pt,
+            //                                 WVJJTree->pho2_eta,
+            //                                 WVJJTree->pho2_phi,
+            //                                 WVJJTree->pho2_E
+            //                                 );
             TLorentzVector LV_pho1(0,0,0,0);
             LV_pho1.SetPtEtaPhiM( WVJJTree->pho1_pt, WVJJTree->pho1_eta, WVJJTree->pho1_phi, WVJJTree->pho1_m );
 
@@ -924,26 +929,26 @@ int main (int argc, char** argv) {
             for (uint j=0; j < *NanoReader_.nMuon; j++) 
             {
                 nMu++;
-                totalCutFlow_SL->Fill("Mu before cut",1);
                 if ( NanoReader_.Muon_pt[j] < LEP_PT_VETO_CUT ) continue;
                 if ( abs(NanoReader_.Muon_eta[j]) > MU_ETA_CUT ) continue;
 
                 // cut-based ID, tight WP
-                if ( ! NanoReader_.Muon_tightId[j] ) continue;
+                // checking without selection
+                // if ( ! NanoReader_.Muon_tightId[j] ) continue;
 
                 // MiniIso ID from miniAOD selector (1=MiniIsoLoose, 2=MiniIsoMedium, 3=MiniIsoTight, 4=MiniIsoVeryTight)
-                if ( ! (NanoReader_.Muon_miniIsoId[j] > 2) ) continue;
+                // if ( ! (NanoReader_.Muon_miniIsoId[j] > 2) ) continue;
 
                 if (DEBUG) std::cout << "\t[INFO::Muons] [" << i <<"/" << lineCount << "] Clean Muons with photons" << std::endl;
 
-                bool isClean=true;
-                for ( std::size_t k=0; k<2; k++) {
-                    if (deltaR(LV_tightPhoton.at(k).Eta(), LV_tightPhoton.at(k).Phi(),
-                               NanoReader_.Muon_eta[j], NanoReader_.Muon_phi[j]) < 0.4) {
-                        isClean = false;
-                    }
-                }
-                if ( isClean == false ) continue;
+                // bool isClean=true;
+                // for ( std::size_t k=0; k<2; k++) {
+                //     if (deltaR(LV_tightPhoton.at(k).Eta(), LV_tightPhoton.at(k).Phi(),
+                //                NanoReader_.Muon_eta[j], NanoReader_.Muon_phi[j]) < 0.4) {
+                //         isClean = false;
+                //     }
+                // }
+                // if ( isClean == false ) continue;
 
                 TLorentzVector Mu(0,0,0,0);
                 // Mu.SetPtEtaPhiM( NanoReader_.Muon_pt[j], NanoReader_.Muon_eta[j], NanoReader_.Muon_phi[j], NanoReader_.Muon_mass[j] );
@@ -957,10 +962,19 @@ int main (int argc, char** argv) {
                 LV_tightMuon.push_back(Mu);
             }
 
+            if (nMu!=0)
+            {
+                totalCutFlow_SL->Fill("Mu before cut",1);
+            }
+            if (nTightMu!=0)
+            {
+                totalCutFlow_SL->Fill("Mu after cut",1);
+            }
+           
+            
             for ( uint j=0; j < *NanoReader_.nElectron; j++ )
             {
                 nEle++;
-                totalCutFlow_SL->Fill("Ele before cut",1);
                 if ( NanoReader_.Electron_pt[j] < LEP_PT_VETO_CUT ) continue;
                 if ( abs(NanoReader_.Electron_eta[j]) > EL_ETA_CUT ) continue;
                 if ( NanoReader_.Electron_convVeto[j] == false) continue;
@@ -1007,11 +1021,11 @@ int main (int argc, char** argv) {
             {
                 totalCutFlow_SL->Fill("All Leptons",1);
             }
-            if (nTightMu==1 && nTightEle == 0)
+            if(nEle != 0)
             {
-                totalCutFlow_SL->Fill("Mu after cut",1);
+                totalCutFlow_SL->Fill("Ele before cut",1);
             }
-            if(nTightEle==1 && nTightMu == 0)
+            if(nTightEle!=0)
             {
                 totalCutFlow_SL->Fill("Ele after cut",1);
             }

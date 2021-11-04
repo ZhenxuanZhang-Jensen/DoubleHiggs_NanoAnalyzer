@@ -6,7 +6,8 @@
 #include <TTreeReader.h>
 #include <TTreeReaderValue.h>
 #include <TTreeReaderArray.h>
-string printpdgID();
+#include <string>
+void printpdgID(int num);
 class NanoReader {
 public :
   TTreeReader fReader;
