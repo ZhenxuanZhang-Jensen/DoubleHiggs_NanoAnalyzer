@@ -499,6 +499,15 @@ void WVJJData::init() {
   fTree->Branch("OneJet_Radion_m",&OneJet_Radion_m,"OneJet_Radion_m/F");
   fTree->Branch("OneJet_Radion_E",&OneJet_Radion_E,"OneJet_Radion_E/F");
   // SL channel
+  fTree->Branch("OneJet_p",&OneJet_p,"OneJet_p/F");
+  fTree->Branch("OneJet_pt",&OneJet_pt,"OneJet_pt/F");
+  fTree->Branch("OneJet_pz",&OneJet_pz,"OneJet_pz/F");
+  fTree->Branch("OneJet_eta",&OneJet_eta,"OneJet_eta/F");
+  fTree->Branch("OneJet_phi",&OneJet_phi,"OneJet_phi/F");
+  fTree->Branch("OneJet_M",&OneJet_M,"OneJet_M/F");
+  fTree->Branch("OneJet_E",&OneJet_E,"OneJet_E/F");
+  fTree->Branch("OneJet_deltaR_GENRECO_HH",&OneJet_deltaR_GENRECO_HH,"OneJet_deltaR_GENRECO_HH/F");
+
   fTree->Branch("TwoJet_LeadJet_p",&TwoJet_LeadJet_p,"TwoJet_LeadJet_p/F");
   fTree->Branch("TwoJet_LeadJet_pt",&TwoJet_LeadJet_pt,"TwoJet_LeadJet_pt/F");
   fTree->Branch("TwoJet_LeadJet_pz",&TwoJet_LeadJet_pz,"TwoJet_LeadJet_pz/F");
@@ -1346,6 +1355,15 @@ void WVJJData::clearVars() {
   OneJet_Radion_m = -999.0;
   OneJet_Radion_E = -999.0;
   // SL channel
+  OneJet_p = -999.0;
+  OneJet_pt = -999.0;
+  OneJet_pz = -999.0;
+  OneJet_eta = -999.0;
+  OneJet_phi = -999.0;
+  OneJet_M = -999.0;
+  OneJet_E = -999.0;
+  OneJet_deltaR_GENRECO_HH = -999.0;
+
   TwoJet_LeadJet_p = -999.0;
   TwoJet_LeadJet_pt = -999.0;
   TwoJet_LeadJet_pz = -999.0;

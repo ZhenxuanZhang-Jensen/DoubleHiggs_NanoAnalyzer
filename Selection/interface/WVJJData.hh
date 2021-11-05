@@ -193,7 +193,6 @@ public:
   float SubLeading_photon_deltaR_GENRECO_G = -999.0;
   float DiPhoton_deltaR_pho1_GENPhoton = -999.0;
   float DiPhoton_deltaR_pho2_GENPhoton = -999.0;
-  float OneJet_deltaR_GENRECO_HH = -999.0;
   float TwoJet_deltaR_GENRECO_HH = -999.0;
   float TwoJet_deltaR_LeadAK8WBoson_GENW = -999.0;
   float TwoJet_deltaR_SubLeadAK8WBoson_GENW = -999.0;
@@ -576,6 +575,15 @@ public:
   float OneJet_Radion_m = -999.0;
   float OneJet_Radion_E = -999.0;
   // SL channel
+  float OneJet_p = -999.0;
+  float OneJet_pt = -999.0;
+  float OneJet_pz = -999.0;
+  float OneJet_eta = -999.0;
+  float OneJet_phi = -999.0;
+  float OneJet_M = -999.0;
+  float OneJet_E = -999.0;
+  float OneJet_deltaR_GENRECO_HH = -999.0;
+
   float TwoJet_LeadJet_p = -999.0;
   float TwoJet_LeadJet_pt = -999.0;
   float TwoJet_LeadJet_pz = -999.0;

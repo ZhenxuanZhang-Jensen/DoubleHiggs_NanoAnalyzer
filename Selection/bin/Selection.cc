@@ -192,8 +192,7 @@ int main (int argc, char** argv) {
     totalCutFlow_SL_GENMatch->GetXaxis()->SetBinLabel(9,"1Jet+2Jet");
     totalCutFlow_SL_GENMatch->GetXaxis()->SetBinLabel(10,"pT/mgg cut");
     totalCutFlow_SL_GENMatch->GetXaxis()->SetBinLabel(11,"pT(#gamma #gamma)>100");
-    totalCutFlow_SL_GENMatch->GetXaxis()->SetBinLabel(12,"GEN_Match photon before");
-    totalCutFlow_SL_GENMatch->GetXaxis()->SetBinLabel(13,"GEN_Match photon after");
+    
 
     TH1F *eventNumber = new TH1F("eventNumber","eventNumber",1,0,1);
     eventNumber->GetXaxis()->SetBinLabel(1,"LHE_Radion_HH_eta");
@@ -304,8 +303,8 @@ int main (int argc, char** argv) {
         }
         totalEvents->SetBinContent(2,totalEvents->GetBinContent(2)+genEventSumw);
         totalCutFlow_SL->Fill("MC Gen",genEventCount);
-        totalCutFlow_SL_GENMatch->Fill("MC Gen",genEventCount);
         totalCutFlow_SL->Fill("nEvent",genEventSumw);
+        totalCutFlow_SL_GENMatch->Fill("MC Gen",genEventCount);
         totalCutFlow_SL_GENMatch->Fill("nEvent",genEventSumw);
         //check if tree has these hlt branches
         if (lineCount == 1){
@@ -430,7 +429,6 @@ int main (int argc, char** argv) {
                 LV_GEN_quarks.clear();
                 LV_GEN_leptons.clear();
                 LV_GEN_neutrino.clear();
-                // checking print the GENevents tree
                 // for (UInt_t GENPartCount = 0; GENPartCount < *NanoReader_.nGenPart; ++GENPartCount)
                 // {   
                 //     std::cout
@@ -864,13 +862,7 @@ int main (int argc, char** argv) {
             
             /* ----------------- Leading and SubLeading photon selection ---------------- */
 
-            if(!(WVJJTree->pho1_pt > PHO1_PT_CUT)) continue;
-            if(!(WVJJTree->pho2_pt > PHO2_PT_CUT)) continue;
-            if (!(nTightPhoton == 2)) continue;
-            //checking lepton misidentify
             // if(nTightEle!=1) continue;
-            totalCutFlow_SL->Fill("Photon Selection",1);
-            totalCutFlow_SL_GENMatch->Fill("Photon Selection",1);
 
             // std::cout << "Exactly 2 photons found..." << std::endl;
 
@@ -906,12 +898,17 @@ int main (int argc, char** argv) {
             WVJJTree->SubLeading_photon_deltaR_GENRECO_G = deltaR(LV_pho2,LV_GEN_photons[1]);
             WVJJTree->DiPhoton_deltaR_pho1_GENPhoton = MinDeltaRFromReferenceLV(LV_pho1,LV_GEN_photons[0],LV_GEN_photons[1]);
             WVJJTree->DiPhoton_deltaR_pho2_GENPhoton = MinDeltaRFromReferenceLV(LV_pho2,LV_GEN_photons[0],LV_GEN_photons[1]);
+            if(!(WVJJTree->pho1_pt > PHO1_PT_CUT)) continue;
+            if(!(WVJJTree->pho2_pt > PHO2_PT_CUT)) continue;
             if(!(WVJJTree->pho1_pt_byMgg > 0.35)) continue;
             if(!(WVJJTree->pho2_pt_byMgg > 0.25)) continue;
-            totalCutFlow_SL->Fill("GEN_Match photon before",1);
-            if(WVJJTree->DiPhoton_deltaR_GENRECO_HH < 0.4 ){
-                totalCutFlow_SL->Fill("GEN_Match photon after",1);
+            //checking photons constrain
+            if (!(nTightPhoton == 2)) continue;
+            if(WVJJTree->DiPhoton_deltaR_GENRECO_HH < 0.4 )
+            {
+                totalCutFlow_SL_GENMatch->Fill("Photon Selection",1);
             }
+            totalCutFlow_SL->Fill("Photon Selection",1);
             // LEPTON SELECTION
             /* -------------------------------------------------------------------------- */
             /*                      ele and muon Selection                                */
@@ -933,7 +930,6 @@ int main (int argc, char** argv) {
                 if ( abs(NanoReader_.Muon_eta[j]) > MU_ETA_CUT ) continue;
 
                 // cut-based ID, tight WP
-                // checking without selection
                 if ( ! NanoReader_.Muon_tightId[j] ) continue;
 
                 // MiniIso ID from miniAOD selector (1=MiniIsoLoose, 2=MiniIsoMedium, 3=MiniIsoTight, 4=MiniIsoVeryTight)
@@ -1113,7 +1109,7 @@ int main (int argc, char** argv) {
                                             NanoReader_.FatJet_msoftdrop[j]
                                             );
             }
-            // if (nGood_WLep_FatJet>=1) to talCutFlow_SL->Fill("nAK8_W >= 1",1);
+
 
             /* -------------------------------------------------------------------------- */
             /*                                   AK4Jet                                   */
@@ -1237,8 +1233,24 @@ int main (int argc, char** argv) {
             if (DEBUG) std::cout << "\t[INFO::AK4jets] [" << i <<"/" << lineCount << "] Passed nJet>=4 conditon" << std::endl;
             //Important: 1 W fat jet
             if ((nTightMu + nTightEle == 1) && nGood_W_FatJet >= 1 )
-                {totalCutFlow_SL->Fill("nAK8_W >= 1",1);
-                totalCutFlow_SL_GENMatch->Fill("nAK8_W >= 1",1);}
+                {
+                    WVJJTree->OneJet_p = LV_Ak8WZJets[0].P();
+                    WVJJTree->OneJet_pt = LV_Ak8WZJets[0].Pt();
+                    WVJJTree->OneJet_pz = LV_Ak8WZJets[0].Pz();
+                    WVJJTree->OneJet_eta = LV_Ak8WZJets[0].Eta();
+                    WVJJTree->OneJet_phi = LV_Ak8WZJets[0].Phi();
+                    WVJJTree->OneJet_M = LV_Ak8WZJets[0].M();
+                    WVJJTree->OneJet_E = LV_Ak8WZJets[0].E();
+                    WVJJTree->OneJet_deltaR_GENRECO_HH = deltaR(LV_Ak8WZJets[0], LV_GEN_WBosons[0]+LV_GEN_WBosons[1]);
+
+                    totalCutFlow_SL->Fill("nAK8_W >= 1",1);
+    
+                }
+            if(WVJJTree->OneJet_deltaR_GENRECO_HH < 1.6)
+            {
+                totalCutFlow_SL_GENMatch->Fill("nAK8_W >= 1",1);
+            }
+
             //Important: 2 W jets
             if ((nTightMu + nTightEle == 1) && nGood_W_FatJet == 0 &&  nGoodAK4jets >= 2)
             {
@@ -1265,12 +1277,12 @@ int main (int argc, char** argv) {
 
 
                 totalCutFlow_SL->Fill("nAK4 >= 2",1);
-                totalCutFlow_SL_GENMatch->Fill("nAK4 >= 2",1);
-            
-            
             
             }
-            
+            if(WVJJTree-> TwoJet_deltaR_GENRECO_HH < 0.8)
+            {
+                totalCutFlow_SL_GENMatch->Fill("nAK4 >= 2",1);
+            }
             // final selection
             if ((nTightMu + nTightEle == 1) && (
                 (nGood_W_FatJet >= 1) ||
