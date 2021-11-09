@@ -4,7 +4,7 @@ import os
 
 ROOT.gROOT.SetBatch(True)
 
-plotDir = "CutFlowTables_SL"
+plotDir = "CutFlowTables_SL_GEN"
 if not os.path.isdir(plotDir):
     os.makedirs(plotDir)
 
@@ -24,8 +24,6 @@ info = {"SampleName": [],
         "Trigger": [],
         "Photon Selection": [],
         "Lepton Selection": [],
-        "Electron Selection": [],
-        "Muon Selection": [],
         "nAK8_W >= 1": [],
         "nAK4 >= 2": [],
         "1Jet+2Jet": [],
@@ -33,14 +31,10 @@ info = {"SampleName": [],
         "pT(#gamma #gamma)>100": [],
         "DiPhoton (%)": [],
         "Exactly 1 lepton(%)": [],
-        "Exactly 1 Electron(%)": [],
-        "Exactly 1 Muon(%)": [],
         "1Jet Category(%)": [],
         "2Jet Category(%)": [],
         "All cat jets(%)": [],
         "Pt/mgg && Photon pT > 100 (%)": [],
-        "All Leptons": [],
-        "After GEN Cut": []
         }
 
 count = 0
@@ -58,7 +52,7 @@ for files_ in Hist:
 
     # print("Number of bins: {}".format(inFile.GetXaxis().GetNbinsX()))
 
-    h1 = inFile.Get("totalCutFlow_SL")
+    h1 = inFile.Get("totalCutFlow_SL_GENMatch")
     h1.SetTitle(Title)
     h1.GetYaxis().SetTitle("Number of events")
 
@@ -75,13 +69,11 @@ for files_ in Hist:
 
     info["DiPhoton (%)"].append(round((float(info["Photon Selection"][count]) / info["MC Gen"][count]) * 100.0,2))
     info["Exactly 1 lepton(%)"].append(round((float(info["Lepton Selection"][count]) / info["MC Gen"][count]) * 100.0,2))
-    info["Exactly 1 Muon(%)"].append(round((float(info["Muon Selection"][count]) / info["MC Gen"][count]) * 100.0,2))
-    info["Exactly 1 Electron(%)"].append(round((float(info["Electron Selection"][count]) / info["MC Gen"][count]) * 100.0,2))
     info["1Jet Category(%)"].append(round((float(info["nAK8_W >= 1"][count]) / info["MC Gen"][count]) * 100.0,2))
     info["2Jet Category(%)"].append(round((float(info["nAK4 >= 2"][count]) / info["MC Gen"][count]) * 100.0,2))
     info["All cat jets(%)"].append(round((float(info["1Jet+2Jet"][count]) / info["MC Gen"][count]) * 100.0,2))
     info["Pt/mgg && Photon pT > 100 (%)"].append(round((float(info["pT(#gamma #gamma)>100"][count]) / info["MC Gen"][count]) * 100.0,2))    
-    info["After GEN Cut"].append(info["All Leptons"][count])
+    
     # info["GEN_Match_photon(%) before"].append(round((float(info["GEN_Match photon before"][count]) / info["MC Gen"][count]) * 100.0,2))
     # info["GEN_Match_photon(%) after"].append(round((float(info["GEN_Match photon after"][count]) / info["MC Gen"][count]) * 100.0,2))
 
@@ -106,9 +98,10 @@ print("\n\n\n")
 
 # df = df.reindex(["SampleName", "MC Gen", "Trigger", "Photon Selection", "Lepton Selection", "nAK8H=0 & nAK8W=0 & nAK4>=4", "1Jet+2Jet", "pT/mgg cut", "pT(#gamma #gamma)>100", "DiPhoton (%)", "1Jet Category(%)", "All cat jets(%)", "Pt/mgg && Photon pT > 100 (%)"])
 # df = df.reindex(["SampleName", "MC Gen", "Trigger", "Photon Selection", "Lepton Selection", "nAK8H=0 & nAK8W=0 & nAK4>=4", "1Jet+2Jet", "DiPhoton (%)", "1Jet Category(%)", "All cat jets(%)"])
-df = df.reindex(["SampleName", "MC Gen", "Trigger", "Photon Selection", "After GEN Cut",
-"Lepton Selection",  "Electron Selection","Muon Selection", 
-"DiPhoton (%)", "Exactly 1 lepton(%)","Exactly 1 Electron(%)","Exactly 1 Muon(%)"])
+df = df.reindex(["SampleName", "MC Gen", "Trigger", "Photon Selection", "Lepton Selection", 
+"nAK8_W >= 1", "nAK4 >= 2", "1Jet+2Jet", "DiPhoton (%)", "Exactly 1 lepton(%)", "1Jet Category(%)", 
+"2Jet Category(%)", "All cat jets(%)"
+])
 
 print(df)
 

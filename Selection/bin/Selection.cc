@@ -73,7 +73,7 @@ int main (int argc, char** argv) {
 
     //ak8 jet cuts
     const float AK8_WJET_MIN_PT = 200;
-    //checking eta with 2.4 to 4.7
+    // eta with 2.4 to 4.7
     const float AK8_MAX_ETA = 4.7;
 
     // Mass window cuts
@@ -84,7 +84,7 @@ int main (int argc, char** argv) {
     //const float AK4_PT_VETO_CUT = 20;
     // const float AK4_ETA_CUT = 2.4;
     const float AK4_PT_CUT = 25;
-    //checking eta with 2.4 to 4.7
+    // eta with 2.4 to 4.7
     const float AK4_MAX_ETA = 4.7;
     // const float AK4_JJ_MIN_M = 40.0;
     // const float AK4_JJ_MAX_M = 250.0;
@@ -133,6 +133,9 @@ int main (int argc, char** argv) {
     std::vector<TLorentzVector> LV_GEN_photons;
     std::vector<TLorentzVector> LV_GEN_quarks;
     std::vector<TLorentzVector> LV_GEN_leptons;
+    std::vector<TLorentzVector> LV_GEN_Ele;
+    std::vector<TLorentzVector> LV_GEN_Muon;
+    std::vector<TLorentzVector> LV_GEN_Tau;
     std::vector<TLorentzVector> LV_GEN_neutrino;
 
     std::vector<TLorentzVector> LV_tightMuon;
@@ -160,7 +163,7 @@ int main (int argc, char** argv) {
     WVJJData* WVJJTree = new WVJJData(ot);
     TH1F *totalEvents = new TH1F("TotalEvents","TotalEvents",2,-1,1);
     
-    TH1F *totalCutFlow_SL = new TH1F("totalCutFlow_SL","totalCutFlow_SL",18,0,18);
+    TH1F *totalCutFlow_SL = new TH1F("totalCutFlow_SL","totalCutFlow_SL",20,0,20);
     totalCutFlow_SL->GetXaxis()->SetBinLabel(1,"MC Gen");
     totalCutFlow_SL->GetXaxis()->SetBinLabel(2,"nEvent");
     totalCutFlow_SL->GetXaxis()->SetBinLabel(3,"Skim NanoAOD");
@@ -179,8 +182,10 @@ int main (int argc, char** argv) {
     totalCutFlow_SL->GetXaxis()->SetBinLabel(16,"Mu after cut");
     totalCutFlow_SL->GetXaxis()->SetBinLabel(17,"Ele after cut");
     totalCutFlow_SL->GetXaxis()->SetBinLabel(18,"All Leptons");
+    totalCutFlow_SL->GetXaxis()->SetBinLabel(19,"Muon Selection");
+    totalCutFlow_SL->GetXaxis()->SetBinLabel(20,"Electron Selection");
     
-    TH1F *totalCutFlow_SL_GENMatch = new TH1F("totalCutFlow_SL_GENMatch","totalCutFlow_SL_GENMatch",13,0,13);
+    TH1F *totalCutFlow_SL_GENMatch = new TH1F("totalCutFlow_SL_GENMatch","totalCutFlow_SL_GENMatch",11,0,11);
     totalCutFlow_SL_GENMatch->GetXaxis()->SetBinLabel(1,"MC Gen");
     totalCutFlow_SL_GENMatch->GetXaxis()->SetBinLabel(2,"nEvent");
     totalCutFlow_SL_GENMatch->GetXaxis()->SetBinLabel(3,"Skim NanoAOD");
@@ -428,6 +433,9 @@ int main (int argc, char** argv) {
                 LV_GEN_photons.clear();
                 LV_GEN_quarks.clear();
                 LV_GEN_leptons.clear();
+                LV_GEN_Ele.clear();
+                LV_GEN_Muon.clear();
+                LV_GEN_Tau.clear();
                 LV_GEN_neutrino.clear();
                 // for (UInt_t GENPartCount = 0; GENPartCount < *NanoReader_.nGenPart; ++GENPartCount)
                 // {   
@@ -435,7 +443,7 @@ int main (int argc, char** argv) {
                 //     << "Event:" << i <<"/idx:" << GENPartCount << "\t ID:" << NanoReader_.GenPart_pdgId[GENPartCount] 
                 //     << "\t Name:";
                 //     printpdgID(NanoReader_.GenPart_pdgId[GENPartCount]);
-                //     std::cout <<"\t MotherID:" << NanoReader_.GenPart_genPartIdxMother[GENPartCount]
+                //     std::cout << "\t status:" <<NanoReader_.GenPart_status[GENPartCount] <<"\t MotherID:" << NanoReader_.GenPart_genPartIdxMother[GENPartCount]
                 //     << "\t Pt:" << NanoReader_.GenPart_pt[GENPartCount]
                 //     << "\t Eta:" << NanoReader_.GenPart_eta[GENPartCount]
                 //     << "\t Phi:" << NanoReader_.GenPart_phi[GENPartCount]
@@ -511,13 +519,13 @@ int main (int argc, char** argv) {
                     // Important: add lepton and neutrino
                     // Add ele,mu,tao separatly then add together as leptons
                     // if (  (abs(pdgid)==11 ||abs(pdgid)==13||abs(pdgid)==15) && abs(motherPDGid) == 24 && (status == 1||status ==23) )
-                    if (  ((abs(pdgid)==11&&(status==1||status==23)) || (abs(pdgid)==13&&(status==1||status==23)) || (abs(pdgid)==15&&(status==2||status==23))) && abs(motherPDGid) == 24 )
-                    {
-                        LV_GEN_leptons.push_back(TLorentzVector(0,0,0,0));
-                        LV_GEN_leptons.back().SetPtEtaPhiM(NanoReader_.GenPart_pt[GENPartCount],
-                                                           NanoReader_.GenPart_eta[GENPartCount],
-                                                           NanoReader_.GenPart_phi[GENPartCount],
-                                                           NanoReader_.GenPart_mass[GENPartCount]);
+                    // if (  ((abs(pdgid)==11&&(status==1||status==23)) || (abs(pdgid)==13&&(status==1||status==23)) || (abs(pdgid)==15&&(status==2||status==23))) && abs(motherPDGid) == 24 )
+                    // {
+                    //     LV_GEN_leptons.push_back(TLorentzVector(0,0,0,0));
+                    //     LV_GEN_leptons.back().SetPtEtaPhiM(NanoReader_.GenPart_pt[GENPartCount],
+                    //                                        NanoReader_.GenPart_eta[GENPartCount],
+                    //                                        NanoReader_.GenPart_phi[GENPartCount],
+                    //                                        NanoReader_.GenPart_mass[GENPartCount]);
                         // std::cout << "\tEvent No. " << i << "/" << lineCount << ":\tQuarks: pdgID: " << pdgid
                         //           << "\tstatus: " << status << "\tMother pdgID: " <<  motherPDGid
                         //           << "\tpT: " << NanoReader_.GenPart_pt[GENPartCount]
@@ -527,7 +535,36 @@ int main (int argc, char** argv) {
                         //           <<"\t isHardProcess:" << isHardProcess <<"\t isFromHardProcess:" << isFromHardProcess<< 
                         //           "\t isFromHardProcessBeforeFSR:" << isFromHardProcessBeforeFSR
                         //           << std::endl;                        
+                    // }
+                    if (  ((abs(pdgid)==11&&(status==1||status==23)) && abs(motherPDGid) == 24) )
+                    {
+                        LV_GEN_Ele.push_back(TLorentzVector(0,0,0,0));
+                        LV_GEN_Ele.back().SetPtEtaPhiM(NanoReader_.GenPart_pt[GENPartCount],
+                                                           NanoReader_.GenPart_eta[GENPartCount],
+                                                           NanoReader_.GenPart_phi[GENPartCount],
+                                                           NanoReader_.GenPart_mass[GENPartCount]);
+
                     }
+                    if (  ((abs(pdgid)==13&&(status==1||status==23)) && abs(motherPDGid) == 24) )
+                    {
+                        LV_GEN_Muon.push_back(TLorentzVector(0,0,0,0));
+                        LV_GEN_Muon.back().SetPtEtaPhiM(NanoReader_.GenPart_pt[GENPartCount],
+                                                           NanoReader_.GenPart_eta[GENPartCount],
+                                                           NanoReader_.GenPart_phi[GENPartCount],
+                                                           NanoReader_.GenPart_mass[GENPartCount]);
+
+                    }
+                    if (  ((abs(pdgid)==15&&(status==2||status==23))&&abs(motherPDGid) == 24) )
+                    {
+                        LV_GEN_Tau.push_back(TLorentzVector(0,0,0,0));
+                        LV_GEN_Tau.back().SetPtEtaPhiM(NanoReader_.GenPart_pt[GENPartCount],
+                                                           NanoReader_.GenPart_eta[GENPartCount],
+                                                           NanoReader_.GenPart_phi[GENPartCount],
+                                                           NanoReader_.GenPart_mass[GENPartCount]);
+
+                    }
+
+
                     if (  (abs(pdgid)==12 ||abs(pdgid)==14||abs(pdgid)==16) && abs(motherPDGid) == 24 && (status == 1||status ==23))
                     {
                         
@@ -537,6 +574,7 @@ int main (int argc, char** argv) {
                                                            NanoReader_.GenPart_phi[GENPartCount],
                                                            NanoReader_.GenPart_mass[GENPartCount]);
                     }
+
                     
                    
                 }
@@ -572,6 +610,30 @@ int main (int argc, char** argv) {
                     exit(0);
                 }
             }
+            //checking Gen level ele category
+            // if(!(LV_GEN_Ele.size() == 1 && (LV_GEN_Muon.size()+LV_GEN_Tau.size() == 0))) continue;
+            // // Save pT, eta, phi and mass of Ele in output Tree
+            // WVJJTree->GEN_Ele_p = LV_GEN_Ele[0].P();            
+            // WVJJTree->GEN_Ele_pt = LV_GEN_Ele[0].Pt();            
+            // WVJJTree->GEN_Ele_pz = LV_GEN_Ele[0].Pz();            
+            // WVJJTree->GEN_Ele_eta = LV_GEN_Ele[0].Eta();            
+            // WVJJTree->GEN_Ele_phi = LV_GEN_Ele[0].Phi();            
+            // WVJJTree->GEN_Ele_m = LV_GEN_Ele[0].M();            
+            // WVJJTree->GEN_Ele_E = LV_GEN_Ele[0].E();
+            // // Gen level Muon category
+            // if(!(LV_GEN_Muon.size() == 1 && (LV_GEN_Ele.size()+LV_GEN_Tau.size() == 0))) continue;
+            // WVJJTree->GEN_Muon_p = LV_GEN_Muon[0].P();            
+            // WVJJTree->GEN_Muon_pt = LV_GEN_Muon[0].Pt();            
+            // WVJJTree->GEN_Muon_pz = LV_GEN_Muon[0].Pz();            
+            // WVJJTree->GEN_Muon_eta = LV_GEN_Muon[0].Eta();            
+            // WVJJTree->GEN_Muon_phi = LV_GEN_Muon[0].Phi();            
+            // WVJJTree->GEN_Muon_m = LV_GEN_Muon[0].M();            
+            // WVJJTree->GEN_Muon_E = LV_GEN_Muon[0].E();
+            // Gen level Tau category
+            if(!(LV_GEN_Tau.size() == 1 && (LV_GEN_Muon.size()+LV_GEN_Ele.size() == 0))) continue;
+
+
+
             TLorentzVector LV_GEN_HiggsGG(0,0,0,0);
             TLorentzVector LV_GEN_HiggsWW(0,0,0,0);
             LV_GEN_HiggsGG = LV_GEN_photons[0] + LV_GEN_photons[1];
@@ -582,39 +644,30 @@ int main (int argc, char** argv) {
             
             WVJJTree->LHEGEN_deltaR_HToWWH = TMath::Min(deltaR(LV_LHE_Higgs[0].Eta(),LV_LHE_Higgs[0].Phi(),LV_GEN_HiggsWW.Eta(),LV_GEN_HiggsWW.Phi()),
                                                     deltaR(LV_LHE_Higgs[1].Eta(),LV_LHE_Higgs[1].Phi(),LV_GEN_HiggsWW.Eta(),LV_GEN_HiggsWW.Phi()));
-
-            // Save pT, eta, phi and mass of LV_GEN_leptons[0] in output Tree
-            WVJJTree->GEN_Lepton1_p = LV_GEN_leptons[0].P();            
-            WVJJTree->GEN_Lepton1_pt = LV_GEN_leptons[0].Pt();            
-            WVJJTree->GEN_Lepton1_pz = LV_GEN_leptons[0].Pz();            
-            WVJJTree->GEN_Lepton1_eta = LV_GEN_leptons[0].Eta();            
-            WVJJTree->GEN_Lepton1_phi = LV_GEN_leptons[0].Phi();            
-            WVJJTree->GEN_Lepton1_m = LV_GEN_leptons[0].M();            
-            WVJJTree->GEN_Lepton1_E = LV_GEN_leptons[0].E();
-            if(LV_GEN_leptons.size() == 3)
-            {
-                WVJJTree->GEN_Lepton1_p = LV_GEN_leptons[0].P();            
-                WVJJTree->GEN_Lepton1_pt = LV_GEN_leptons[0].Pt();            
-                WVJJTree->GEN_Lepton1_pz = LV_GEN_leptons[0].Pz();            
-                WVJJTree->GEN_Lepton1_eta = LV_GEN_leptons[0].Eta();            
-                WVJJTree->GEN_Lepton1_phi = LV_GEN_leptons[0].Phi();            
-                WVJJTree->GEN_Lepton1_m = LV_GEN_leptons[0].M();            
-                WVJJTree->GEN_Lepton1_E = LV_GEN_leptons[0].E();
-                WVJJTree->GEN_Lepton2_p = LV_GEN_leptons[0].P();            
-                WVJJTree->GEN_Lepton2_pt = LV_GEN_leptons[0].Pt();            
-                WVJJTree->GEN_Lepton2_pz = LV_GEN_leptons[0].Pz();            
-                WVJJTree->GEN_Lepton2_eta = LV_GEN_leptons[0].Eta();            
-                WVJJTree->GEN_Lepton2_phi = LV_GEN_leptons[0].Phi();            
-                WVJJTree->GEN_Lepton2_m = LV_GEN_leptons[0].M();            
-                WVJJTree->GEN_Lepton2_E = LV_GEN_leptons[0].E();
-                WVJJTree->GEN_Lepton3_p = LV_GEN_leptons[0].P();            
-                WVJJTree->GEN_Lepton3_pt = LV_GEN_leptons[0].Pt();            
-                WVJJTree->GEN_Lepton3_pz = LV_GEN_leptons[0].Pz();            
-                WVJJTree->GEN_Lepton3_eta = LV_GEN_leptons[0].Eta();            
-                WVJJTree->GEN_Lepton3_phi = LV_GEN_leptons[0].Phi();            
-                WVJJTree->GEN_Lepton3_m = LV_GEN_leptons[0].M();            
-                WVJJTree->GEN_Lepton3_E = LV_GEN_leptons[0].E();
-            }
+            // if(LV_GEN_leptons.size() == 3)
+            // {
+            //     WVJJTree->GEN_Lepton1_p = LV_GEN_leptons[0].P();            
+            //     WVJJTree->GEN_Lepton1_pt = LV_GEN_leptons[0].Pt();            
+            //     WVJJTree->GEN_Lepton1_pz = LV_GEN_leptons[0].Pz();            
+            //     WVJJTree->GEN_Lepton1_eta = LV_GEN_leptons[0].Eta();            
+            //     WVJJTree->GEN_Lepton1_phi = LV_GEN_leptons[0].Phi();            
+            //     WVJJTree->GEN_Lepton1_m = LV_GEN_leptons[0].M();            
+            //     WVJJTree->GEN_Lepton1_E = LV_GEN_leptons[0].E();
+            //     WVJJTree->GEN_Lepton2_p = LV_GEN_leptons[0].P();            
+            //     WVJJTree->GEN_Lepton2_pt = LV_GEN_leptons[0].Pt();            
+            //     WVJJTree->GEN_Lepton2_pz = LV_GEN_leptons[0].Pz();            
+            //     WVJJTree->GEN_Lepton2_eta = LV_GEN_leptons[0].Eta();            
+            //     WVJJTree->GEN_Lepton2_phi = LV_GEN_leptons[0].Phi();            
+            //     WVJJTree->GEN_Lepton2_m = LV_GEN_leptons[0].M();            
+            //     WVJJTree->GEN_Lepton2_E = LV_GEN_leptons[0].E();
+            //     WVJJTree->GEN_Lepton3_p = LV_GEN_leptons[0].P();            
+            //     WVJJTree->GEN_Lepton3_pt = LV_GEN_leptons[0].Pt();            
+            //     WVJJTree->GEN_Lepton3_pz = LV_GEN_leptons[0].Pz();            
+            //     WVJJTree->GEN_Lepton3_eta = LV_GEN_leptons[0].Eta();            
+            //     WVJJTree->GEN_Lepton3_phi = LV_GEN_leptons[0].Phi();            
+            //     WVJJTree->GEN_Lepton3_m = LV_GEN_leptons[0].M();            
+            //     WVJJTree->GEN_Lepton3_E = LV_GEN_leptons[0].E();
+            // }
 
             // Save pT, eta, phi and mass of LV_GEN_photons[0] in output Tree
             // Save pT, eta, phi and mass of LV_GEN_photons[1] in output Tree
@@ -902,7 +955,7 @@ int main (int argc, char** argv) {
             if(!(WVJJTree->pho2_pt > PHO2_PT_CUT)) continue;
             if(!(WVJJTree->pho1_pt_byMgg > 0.35)) continue;
             if(!(WVJJTree->pho2_pt_byMgg > 0.25)) continue;
-            //checking photons constrain
+            // photons constrain
             if (!(nTightPhoton == 2)) continue;
             if(WVJJTree->DiPhoton_deltaR_GENRECO_HH < 0.4 )
             {
@@ -1025,11 +1078,35 @@ int main (int argc, char** argv) {
             // {
             //     totalCutFlow_SL->Fill("Ele after cut",1);
             // }
-
+            //checking
+            totalCutFlow_SL->Fill("All Leptons",1);  
             if (nTightMu + nTightEle != 1) continue;
             totalCutFlow_SL->Fill("Lepton Selection",1);
             totalCutFlow_SL_GENMatch->Fill("Lepton Selection",1);
-            
+            //Exactly one Ele 
+            if (nTightMu == 0 && nTightEle ==1)
+            {
+                totalCutFlow_SL->Fill("Electron Selection",1);
+                WVJJTree->Ele_p = LV_tightEle[0].P();
+                WVJJTree->Ele_pt = LV_tightEle[0].Pt();
+                WVJJTree->Ele_pz = LV_tightEle[0].Pz();
+                WVJJTree->Ele_eta = LV_tightEle[0].Eta();
+                WVJJTree->Ele_phi = LV_tightEle[0].Phi();
+                WVJJTree->Ele_m = LV_tightEle[0].M();
+                WVJJTree->Ele_E = LV_tightEle[0].E();
+            } 
+            if(nTightEle == 0 && nTightMu ==1)
+            {
+                WVJJTree->Muon_p = LV_tightMuon[0].P();
+                WVJJTree->Muon_pt = LV_tightMuon[0].Pt();
+                WVJJTree->Muon_pz = LV_tightMuon[0].Pz();
+                WVJJTree->Muon_eta = LV_tightMuon[0].Eta();
+                WVJJTree->Muon_phi = LV_tightMuon[0].Phi();
+                WVJJTree->Muon_m = LV_tightMuon[0].M();
+                WVJJTree->Muon_E = LV_tightMuon[0].E();
+
+                totalCutFlow_SL->Fill("Muon Selection",1);
+            }
             /* -------------------------------------------------------------------------- */
             /*                                   AK8Jet   Higgs Jet                       */
             /* -------------------------------------------------------------------------- */
@@ -1245,11 +1322,13 @@ int main (int argc, char** argv) {
 
                     totalCutFlow_SL->Fill("nAK8_W >= 1",1);
     
+                    // gen match
+                if(WVJJTree->OneJet_deltaR_GENRECO_HH < 0.8)
+                {
+                    totalCutFlow_SL_GENMatch->Fill("nAK8_W >= 1",1);
+                    totalCutFlow_SL_GENMatch->Fill("1Jet+2Jet",1);
                 }
-            if(WVJJTree->OneJet_deltaR_GENRECO_HH < 1.6)
-            {
-                totalCutFlow_SL_GENMatch->Fill("nAK8_W >= 1",1);
-            }
+                }
 
             //Important: 2 W jets
             if ((nTightMu + nTightEle == 1) && nGood_W_FatJet == 0 &&  nGoodAK4jets >= 2)
@@ -1278,20 +1357,20 @@ int main (int argc, char** argv) {
 
                 totalCutFlow_SL->Fill("nAK4 >= 2",1);
             
+                if(WVJJTree-> TwoJet_deltaR_GENRECO_HH < 0.4)
+                {
+                    totalCutFlow_SL_GENMatch->Fill("nAK4 >= 2",1);
+                    totalCutFlow_SL_GENMatch->Fill("1Jet+2Jet",1);
+                }
             }
-            if(WVJJTree-> TwoJet_deltaR_GENRECO_HH < 0.8)
-            {
-                totalCutFlow_SL_GENMatch->Fill("nAK4 >= 2",1);
-            }
+            // genmatch
             // final selection
             if ((nTightMu + nTightEle == 1) && (
                 (nGood_W_FatJet >= 1) ||
                 (nGood_W_FatJet == 0 && nGoodAK4jets >= 2))
                )
             {
-                {totalCutFlow_SL->Fill("1Jet+2Jet",1);
-                totalCutFlow_SL_GENMatch->Fill("1Jet+2Jet",1);}
-
+                totalCutFlow_SL->Fill("1Jet+2Jet",1);
                 if(WVJJTree->pho1_pt_byMgg > 0.35 && WVJJTree->pho2_pt_byMgg > 0.25)
                 {   totalCutFlow_SL->Fill("pT/mgg cut",1);
                     totalCutFlow_SL_GENMatch->Fill("pT/mgg cut",1);}
