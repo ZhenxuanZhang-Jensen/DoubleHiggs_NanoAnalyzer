@@ -2,7 +2,6 @@
 #define WVJJ_DATA_HH
 
 #include "TTree.h"
-
 class WVJJData {
 
 public:
@@ -67,6 +66,20 @@ public:
   float GEN_HGG_phi = -999.0;
   float GEN_HGG_energy = -999.0;
 
+  float GEN_HiggsWW_p = -999.0;
+  float GEN_HiggsWW_pt = -999.0;
+  float GEN_HiggsWW_pz = -999.0;
+  float GEN_HiggsWW_eta = -999.0;
+  float GEN_HiggsWW_phi = -999.0;
+  float GEN_HiggsWW_E = -999.0;
+  float GEN_HiggsWW_mass = -999.0;
+  float GEN_HiggsGG_p = -999.0;
+  float GEN_HiggsGG_pt = -999.0;
+  float GEN_HiggsGG_pz = -999.0;
+  float GEN_HiggsGG_eta = -999.0;
+  float GEN_HiggsGG_phi = -999.0;
+  float GEN_HiggsGG_E = -999.0;
+  float GEN_HiggsGG_mass = -999.0;
   float GEN_LeadingPhoton_pT = -999.0;
   float GEN_LeadingPhoton_eta = -999.0;
   float GEN_LeadingPhoton_phi = -999.0;
@@ -823,15 +836,23 @@ public:
   float ThreeJet_FatJet_tau4 = -999.0;
   float ThreeJet_nFatJet = -999.0;
   float ThreeJet_nAK4Jet = -999.0;
+  float ThreeJet_LeadingAK4_p = -999.0;
+  float ThreeJet_LeadingAK4_pz = -999.0;
   float ThreeJet_LeadingAK4_pT = -999.0;
   float ThreeJet_LeadingAK4_eta = -999.0;
   float ThreeJet_LeadingAK4_phi = -999.0;
   float ThreeJet_LeadingAK4_mass = -999.0;
+  float ThreeJet_LeadingAK4_E = -999.0;
   float ThreeJet_SubLeadingAK4_pT = -999.0;
+  float ThreeJet_SubLeadingAK4_p = -999.0;
+  float ThreeJet_SubLeadingAK4_pz = -999.0;
   float ThreeJet_SubLeadingAK4_eta = -999.0;
   float ThreeJet_SubLeadingAK4_phi = -999.0;
   float ThreeJet_SubLeadingAK4_mass = -999.0;
+  float ThreeJet_SubLeadingAK4_E = -999.0;
+  float ThreeJet_AK4WBoson_p = -999.0;
   float ThreeJet_AK4WBoson_pt = -999.0;
+  float ThreeJet_AK4WBoson_pz = -999.0;
   float ThreeJet_AK4WBoson_eta = -999.0;
   float ThreeJet_AK4WBoson_phi = -999.0;
   float ThreeJet_AK4WBoson_m = -999.0;
@@ -844,7 +865,9 @@ public:
   float ThreeJet_Radion_m = -999.0;
   float ThreeJet_Radion_E = -999.0;
 
+  float ThreeJet_Higgs_p = -999.0;
   float ThreeJet_Higgs_pt = -999.0;
+  float ThreeJet_Higgs_pz = -999.0;
   float ThreeJet_Higgs_eta = -999.0;
   float ThreeJet_Higgs_phi = -999.0;
   float ThreeJet_Higgs_m = -999.0;
@@ -858,6 +881,14 @@ public:
   float FullyResolved_Jet2_pt = -999.0;
   float FullyResolved_Jet3_pt = -999.0;
   float FullyResolved_Jet4_pt = -999.0;
+  float FullyResolved_Jet1_p = -999.0;
+  float FullyResolved_Jet2_p = -999.0;
+  float FullyResolved_Jet3_p = -999.0;
+  float FullyResolved_Jet4_p = -999.0;
+  float FullyResolved_Jet1_pz = -999.0;
+  float FullyResolved_Jet2_pz = -999.0;
+  float FullyResolved_Jet3_pz = -999.0;
+  float FullyResolved_Jet4_pz = -999.0;
 
   float FullyResolved_Jet1_eta = -999.0;
   float FullyResolved_Jet2_eta = -999.0;

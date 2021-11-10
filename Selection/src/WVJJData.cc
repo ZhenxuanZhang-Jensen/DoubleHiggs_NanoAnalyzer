@@ -1,5 +1,6 @@
 #include "../interface/WVJJData.hh"
 
+
 void WVJJData::init() {
 
   clearVars();
@@ -80,6 +81,20 @@ void WVJJData::init() {
   fTree->Branch("GEN_H2_eta",&GEN_H2_eta,"GEN_H2_eta/F");
   fTree->Branch("GEN_H2_phi",&GEN_H2_phi,"GEN_H2_phi/F");
   fTree->Branch("GEN_H2_energy",&GEN_H2_energy,"GEN_H2_energy/F");
+  fTree->Branch("GEN_HiggsWW_pt",&GEN_HiggsWW_pt,"GEN_HiggsWW_pt/F");
+  fTree->Branch("GEN_HiggsWW_p",&GEN_HiggsWW_p,"GEN_HiggsWW_p/F");
+  fTree->Branch("GEN_HiggsWW_pz",&GEN_HiggsWW_pz,"GEN_HiggsWW_pz/F");
+  fTree->Branch("GEN_HiggsWW_eta",&GEN_HiggsWW_eta,"GEN_HiggsWW_eta/F");
+  fTree->Branch("GEN_HiggsWW_phi",&GEN_HiggsWW_phi,"GEN_HiggsWW_phi/F");
+  fTree->Branch("GEN_HiggsWW_E",&GEN_HiggsWW_E,"GEN_HiggsWW_E/F");
+  fTree->Branch("GEN_HiggsWW_mass",&GEN_HiggsWW_mass,"GEN_HiggsWW_mass/F");
+  fTree->Branch("GEN_HiggsGG_pt",&GEN_HiggsGG_pt,"GEN_HiggsGG_pt/F");
+  fTree->Branch("GEN_HiggsGG_p",&GEN_HiggsGG_p,"GEN_HiggsGG_p/F");
+  fTree->Branch("GEN_HiggsGG_pz",&GEN_HiggsGG_pz,"GEN_HiggsGG_pz/F");
+  fTree->Branch("GEN_HiggsGG_eta",&GEN_HiggsGG_eta,"GEN_HiggsGG_eta/F");
+  fTree->Branch("GEN_HiggsGG_phi",&GEN_HiggsGG_phi,"GEN_HiggsGG_phi/F");
+  fTree->Branch("GEN_HiggsGG_E",&GEN_HiggsGG_E,"GEN_HiggsGG_E/F");
+  fTree->Branch("GEN_HiggsGG_mass",&GEN_HiggsGG_mass,"GEN_HiggsGG_mass/F");
 
   fTree->Branch("GEN_HWW_mass",&GEN_HWW_mass,"GEN_HWW_mass/F");
   fTree->Branch("GEN_HGG_mass",&GEN_HGG_mass,"GEN_HGG_mass/F");
@@ -758,11 +773,15 @@ void WVJJData::init() {
   fTree->Branch("ThreeJet_SubLeadingAK4_phi",&ThreeJet_SubLeadingAK4_phi,"ThreeJet_SubLeadingAK4_phi/F");
   fTree->Branch("ThreeJet_SubLeadingAK4_mass",&ThreeJet_SubLeadingAK4_mass,"ThreeJet_SubLeadingAK4_mass/F");
   fTree->Branch("ThreeJet_AK4WBoson_pt",&ThreeJet_AK4WBoson_pt,"ThreeJet_AK4WBoson_pt/F");
+  fTree->Branch("ThreeJet_AK4WBoson_p",&ThreeJet_AK4WBoson_p,"ThreeJet_AK4WBoson_p/F");
+  fTree->Branch("ThreeJet_AK4WBoson_pz",&ThreeJet_AK4WBoson_pz,"ThreeJet_AK4WBoson_pz/F");
   fTree->Branch("ThreeJet_AK4WBoson_eta",&ThreeJet_AK4WBoson_eta,"ThreeJet_AK4WBoson_eta/F");
   fTree->Branch("ThreeJet_AK4WBoson_phi",&ThreeJet_AK4WBoson_phi,"ThreeJet_AK4WBoson_phi/F");
   fTree->Branch("ThreeJet_AK4WBoson_m",&ThreeJet_AK4WBoson_m,"ThreeJet_AK4WBoson_m/F");
   fTree->Branch("ThreeJet_AK4WBoson_E",&ThreeJet_AK4WBoson_E,"ThreeJet_AK4WBoson_E/F");
   fTree->Branch("ThreeJet_Higgs_pt",&ThreeJet_Higgs_pt,"ThreeJet_Higgs_pt/F");
+  fTree->Branch("ThreeJet_Higgs_p",&ThreeJet_Higgs_p,"ThreeJet_Higgs_p/F");
+  fTree->Branch("ThreeJet_Higgs_pz",&ThreeJet_Higgs_pz,"ThreeJet_Higgs_pz/F");
   fTree->Branch("ThreeJet_Higgs_eta",&ThreeJet_Higgs_eta,"ThreeJet_Higgs_eta/F");
   fTree->Branch("ThreeJet_Higgs_phi",&ThreeJet_Higgs_phi,"ThreeJet_Higgs_phi/F");
   fTree->Branch("ThreeJet_Higgs_m",&ThreeJet_Higgs_m,"ThreeJet_Higgs_m/F");
@@ -889,6 +908,20 @@ void WVJJData::clearVars() {
 
   is_tZq = false;
 
+  GEN_HiggsWW_p = -999.0;
+  GEN_HiggsWW_pt = -999.0;
+  GEN_HiggsWW_pz = -999.0;
+  GEN_HiggsWW_eta = -999.0;
+  GEN_HiggsWW_phi = -999.0;
+  GEN_HiggsWW_E = -999.0;
+  GEN_HiggsWW_mass = -999.0;
+  GEN_HiggsGG_p = -999.0;
+  GEN_HiggsGG_pt = -999.0;
+  GEN_HiggsGG_pz = -999.0;
+  GEN_HiggsGG_eta = -999.0;
+  GEN_HiggsGG_phi = -999.0;
+  GEN_HiggsGG_E = -999.0;
+  GEN_HiggsGG_mass = -999.0;
   GEN_LeadingPhoton_pT = -999.0;
   GEN_LeadingPhoton_eta = -999.0;
   GEN_LeadingPhoton_phi = -999.0;
@@ -1635,12 +1668,16 @@ void WVJJData::clearVars() {
   ThreeJet_SubLeadingAK4_eta = -999.0;
   ThreeJet_SubLeadingAK4_phi = -999.0;
   ThreeJet_SubLeadingAK4_mass = -999.0;
+  ThreeJet_AK4WBoson_p = -999.0;
   ThreeJet_AK4WBoson_pt = -999.0;
+  ThreeJet_AK4WBoson_pz = -999.0;
   ThreeJet_AK4WBoson_eta = -999.0;
   ThreeJet_AK4WBoson_phi = -999.0;
   ThreeJet_AK4WBoson_m = -999.0;
   ThreeJet_AK4WBoson_E = -999.0;
+  ThreeJet_Higgs_p = -999.0;
   ThreeJet_Higgs_pt = -999.0;
+  ThreeJet_Higgs_pz = -999.0;
   ThreeJet_Higgs_eta = -999.0;
   ThreeJet_Higgs_phi = -999.0;
   ThreeJet_Higgs_m = -999.0;

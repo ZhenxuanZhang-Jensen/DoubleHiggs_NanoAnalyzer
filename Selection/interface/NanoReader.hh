@@ -6,6 +6,22 @@
 #include <TTreeReader.h>
 #include <TTreeReaderValue.h>
 #include <TTreeReaderArray.h>
+#include "TLorentzVector.h"
+#include <vector>
+#include <sstream>
+#include <vector>
+#include <algorithm> // std::search
+#include <string>
+#include <glob.h>
+
+/* -------------------------------------------------------------------------- */
+/*                   Utilize the invariant mass information:                  */
+/* -------------------------------------------------------------------------- */
+// void GetFHminWHJets(std::vector<TLorentzVector> &AllGoodJets, std::vector<Float_t> &b_dis, std::vector<TLorentzVector> &SelectedJets, std::vector<Float_t> &Selectedb_dis, bool DEBUG);
+/* -------------------------------------------------------------------------- */
+/*               Choose the four jets with max (dR(H_γγ,H_jjjj))              */
+/* -------------------------------------------------------------------------- */
+void GetFHJetUsingDR(TLorentzVector &Hgg, std::vector<TLorentzVector> &AllGoodJets, std::vector<Float_t> &b_dis, std::vector<TLorentzVector> &SelectedJets, std::vector<Float_t> &Selectedb_dis, bool DEBUG);
 
 class NanoReader {
 public :
