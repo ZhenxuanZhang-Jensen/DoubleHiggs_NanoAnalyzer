@@ -599,7 +599,18 @@ int main (int argc, char** argv) {
                 // WVJJTree->GEN_OneJet_had_AK8_E = LV_GEN_quarks_had_AK8.at(0).E();
                 // }
 
-
+                // for (UInt_t GENPartCount = 0; GENPartCount < *NanoReader_.nGenPart; ++GENPartCount)
+                // {   
+                //     std::cout
+                //     << "Event:" << i <<"/idx:" << GENPartCount << "\t ID:" << NanoReader_.GenPart_pdgId[GENPartCount] 
+                //     << "\t Name:";
+                //     printpdgID(NanoReader_.GenPart_pdgId[GENPartCount]);
+                //     std::cout << "\t status:" <<NanoReader_.GenPart_status[GENPartCount] <<"\t MotherID:" << NanoReader_.GenPart_genPartIdxMother[GENPartCount]
+                //     << "\t Pt:" << NanoReader_.GenPart_pt[GENPartCount]
+                //     << "\t Eta:" << NanoReader_.GenPart_eta[GENPartCount]
+                //     << "\t Phi:" << NanoReader_.GenPart_phi[GENPartCount]
+                //     << std::endl; 
+                // }
                 for (UInt_t GENPartCount = 0; GENPartCount < *NanoReader_.nGenPart; ++GENPartCount)
                 {
                     int pdgid = NanoReader_.GenPart_pdgId[GENPartCount];
@@ -678,7 +689,7 @@ int main (int argc, char** argv) {
                     std::cout << "GEN photons are more than 2. Please check..." << std::endl;
                     exit(0);
                 }
-                if (LV_GEN_Higgs.size()>2)
+                if (LV_GEN_Higgs.size()!=2 )
                 {
                     std::cout << "Higgs size = " << LV_GEN_Higgs.size() << std::endl;
                     std::cout << "GEN Higgs are more than 2. Please check..." << std::endl;
@@ -803,8 +814,8 @@ int main (int argc, char** argv) {
             else
             {
             WVJJTree->GEN_H1_p = LV_GEN_Higgs.at(1).P();
-            WVJJTree->GEN_H1_pT = LV_GEN_Higgs.at(0).Pt();
-            WVJJTree->GEN_H1_pz = LV_GEN_Higgs.at(0).Pz();
+            WVJJTree->GEN_H1_pT = LV_GEN_Higgs.at(1).Pt();
+            WVJJTree->GEN_H1_pz = LV_GEN_Higgs.at(1).Pz();
             WVJJTree->GEN_H1_eta = LV_GEN_Higgs.at(1).Eta();
             WVJJTree->GEN_H1_phi = LV_GEN_Higgs.at(1).Phi();
             WVJJTree->GEN_H1_energy = LV_GEN_Higgs.at(1).E();
@@ -920,13 +931,13 @@ int main (int argc, char** argv) {
                     WVJJTree->pho2_eta = WVJJTree->pho1_eta;
                     WVJJTree->pho2_phi = WVJJTree->pho1_phi;
                     WVJJTree->pho2_m = WVJJTree->pho1_m;
+                    WVJJTree->pho2_E = WVJJTree->pho1_E;
                     WVJJTree->pho2_iso = WVJJTree->pho1_iso;
                     WVJJTree->pho2_q = WVJJTree->pho1_q;
                     WVJJTree->pho2_mvaIDFall17V2 = WVJJTree->pho1_mvaIDFall17V2;
                     WVJJTree->pho2_mvaIDFall17V1 = WVJJTree->pho1_mvaIDFall17V1;
                     WVJJTree->pho2_mvaID_WP80 = WVJJTree->pho1_mvaID_WP80;
                     WVJJTree->pho2_mvaID_WP90 = WVJJTree->pho1_mvaID_WP90;
-
 
                     WVJJTree->pho1_pt = NanoReader_.Photon_pt[PhotonCount];
                     WVJJTree->pho1_eta = NanoReader_.Photon_eta[PhotonCount];
@@ -1987,7 +1998,7 @@ int main (int argc, char** argv) {
                 WVJJTree->FullyResolved_deltaPhi_HH = deltaPhi(FourJets,diphoton);
                 // Important: Four jets RECO&GEN Higgs dR 
                 // if(WVJJTree->FullyResolved_deltaR_LeadingWboson_GENW<0.4 && WVJJTree-> FullyResolved_deltaR_SubLeadingWboson_GENW < 0.4){
-                if(WVJJTree->FullyResolved_deltaR_GENRECO_HH < 0.8){
+                if(WVJJTree->FullyResolved_deltaR_LHERECO_HH < 0.8){
                     totalCutFlow_FH_GENMatch->Fill("nAK8H=0 & nAK8W=0 & nAK4>=4",1);
                     totalCutFlow_FH_GENMatch->Fill("1Jet2Jet3Jet4Jet",1);
                 }
