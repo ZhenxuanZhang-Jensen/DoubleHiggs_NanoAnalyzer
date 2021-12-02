@@ -9,7 +9,7 @@ if not os.path.isdir(plotDir):
     os.makedirs(plotDir)
 
 Hist = [
-        "/eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M250.root",
+        "/eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M300.root",
         "/eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M1000.root",
         "/eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M3000.root",
 
@@ -98,7 +98,7 @@ for files_ in Hist:
         if h1.GetXaxis().GetBinLabel(x + 1) not in info:
             continue
         info[h1.GetXaxis().GetBinLabel(x + 1)].append(int(h1.GetBinContent(x + 1)))
-
+ 
     info["DiPhoton (%)"].append(round((float(info["Photon Selection"][count]) / info["MC Gen"][count]) * 100.0,2))
     # print("test: ",info["nAK8H=0 & nAK8W=0 & nAK4>=4"][count])
     # print("test: ",info["MC Gen"][count])

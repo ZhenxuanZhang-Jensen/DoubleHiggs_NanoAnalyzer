@@ -67,6 +67,98 @@ float MinDeltaR(TLorentzVector Check1, TLorentzVector Check2, TLorentzVector Che
   
   return TMath::Min(TMath::Min(TMath::Min(TMath::Min(TMath::Min(deltaR1,deltaR2), deltaR3), deltaR4), deltaR5), deltaR6);
 }
+float MinDeltaR3(TLorentzVector Check1, TLorentzVector Check2, TLorentzVector Check3)
+{
+  float deltaR1 = deltaR(Check1, Check2);
+  float deltaR2 = deltaR(Check1, Check3);
+  float deltaR3 = deltaR(Check2, Check3);
+  return TMath::Min(TMath::Min(deltaR1,deltaR2), deltaR3);
+}
+/* maximum deltaR between any 4 TLorentzVector */
+float MaxDeltaR(TLorentzVector Check1, TLorentzVector Check2, TLorentzVector Check3, TLorentzVector Check4)
+{
+  float deltaR1 = deltaR(Check1, Check2);
+  float deltaR2 = deltaR(Check1, Check3);
+  float deltaR3 = deltaR(Check1, Check4);
+  
+  float deltaR4 = deltaR(Check2, Check3);
+  float deltaR5 = deltaR(Check2, Check4);
+
+  float deltaR6 = deltaR(Check3, Check4);
+  
+  return TMath::Max(TMath::Max(TMath::Max(TMath::Max(TMath::Max(deltaR1,deltaR2), deltaR3), deltaR4), deltaR5), deltaR6);
+}
+float Min3Q(TLorentzVector Check1, TLorentzVector Check2, TLorentzVector Check3, TLorentzVector Check4)
+{
+  TLorentzVector min2Q;
+  float none =-999;
+  float deltaR1 = deltaR(Check1, Check2);
+  float deltaR2 = deltaR(Check1, Check3);
+  float deltaR3 = deltaR(Check1, Check4);
+  
+  float deltaR4 = deltaR(Check2, Check3);
+  float deltaR5 = deltaR(Check2, Check4);
+
+  float deltaR6 = deltaR(Check3, Check4);
+  float mindeltaR = TMath::Min(TMath::Min(TMath::Min(TMath::Min(TMath::Min(deltaR1,deltaR2), deltaR3), deltaR4), deltaR5), deltaR6);
+  if(mindeltaR == deltaR1){min2Q = Check1+Check2;return MinDeltaR3(min2Q,Check3,Check4);};
+  if(mindeltaR == deltaR2){min2Q = Check1+Check3;return MinDeltaR3(min2Q,Check2,Check4);};
+  if(mindeltaR == deltaR3){min2Q = Check1+Check4;return MinDeltaR3(min2Q,Check2,Check3);};
+  if(mindeltaR == deltaR4){min2Q = Check2+Check3;return MinDeltaR3(min2Q,Check1,Check4);};
+  if(mindeltaR == deltaR5){min2Q = Check2+Check4;return MinDeltaR3(min2Q,Check1,Check3);};
+  if(mindeltaR == deltaR6){min2Q = Check3+Check4;return MinDeltaR3(min2Q,Check1,Check2);};
+  return none;
+}
+float TwoJetCategory(TLorentzVector Check1, TLorentzVector Check2, TLorentzVector Check3, TLorentzVector Check4)
+{
+   TLorentzVector min2Q;
+  float deltaR1 = deltaR(Check1, Check2);
+  float deltaR2 = deltaR(Check1, Check3);
+  float deltaR3 = deltaR(Check1, Check4);
+  
+  float deltaR4 = deltaR(Check2, Check3);
+  float deltaR5 = deltaR(Check2, Check4);
+
+  float deltaR6 = deltaR(Check3, Check4);
+  float mindeltaR = TMath::Min(TMath::Min(TMath::Min(TMath::Min(TMath::Min(deltaR1,deltaR2), deltaR3), deltaR4), deltaR5), deltaR6);
+  if(mindeltaR == deltaR1 && mindeltaR<0.8 && deltaR(Check3,Check4)<0.8 && MaxDeltaR(Check1,Check2,Check3,Check4)>1.6) {return 1;};
+  if(mindeltaR == deltaR2 && mindeltaR<0.8 && deltaR(Check2,Check4)<0.8 && MaxDeltaR(Check1,Check2,Check3,Check4)>1.6) {return 1;};
+  if(mindeltaR == deltaR3 && mindeltaR<0.8 && deltaR(Check2,Check3)<0.8 && MaxDeltaR(Check1,Check2,Check3,Check4)>1.6) {return 1;};
+  if(mindeltaR == deltaR4 && mindeltaR<0.8 && deltaR(Check1,Check4)<0.8 && MaxDeltaR(Check1,Check2,Check3,Check4)>1.6) {return 1;};
+  if(mindeltaR == deltaR5 && mindeltaR<0.8 && deltaR(Check1,Check3)<0.8 && MaxDeltaR(Check1,Check2,Check3,Check4)>1.6) {return 1;};
+  if(mindeltaR == deltaR6 && mindeltaR<0.8 && deltaR(Check1,Check2)<0.8 && MaxDeltaR(Check1,Check2,Check3,Check4)>1.6) {return 1;};
+  return 0;
+}
+float ThreeJetCategory(TLorentzVector Check1, TLorentzVector Check2, TLorentzVector Check3, TLorentzVector Check4)
+{
+   TLorentzVector Merge_2Q_1;
+   TLorentzVector Merge_2Q_2;
+   TLorentzVector Merge_2Q_3;
+   TLorentzVector Merge_2Q_4;
+   TLorentzVector Merge_2Q_5;
+   TLorentzVector Merge_2Q_6;
+  float deltaR1 = deltaR(Check1, Check2);
+  float deltaR2 = deltaR(Check1, Check3);
+  float deltaR3 = deltaR(Check1, Check4);
+  float deltaR4 = deltaR(Check2, Check3);
+  float deltaR5 = deltaR(Check2, Check4);
+  float deltaR6 = deltaR(Check3, Check4);
+  Merge_2Q_1 = Check1 + Check2;
+  Merge_2Q_2 = Check1 + Check3;
+  Merge_2Q_3 = Check1 + Check4;
+  Merge_2Q_4 = Check2 + Check3;
+  Merge_2Q_5 = Check2 + Check4;
+  Merge_2Q_6 = Check3 + Check4;
+
+  float mindeltaR = TMath::Min(TMath::Min(TMath::Min(TMath::Min(TMath::Min(deltaR1,deltaR2), deltaR3), deltaR4), deltaR5), deltaR6);
+  if(mindeltaR == deltaR1 && mindeltaR<0.8 && deltaR(Check3,Check4)>0.8 && MinDeltaRFromReferenceLV(Merge_2Q_1,Check3,Check4)>1.2) {return 1;};
+  if(mindeltaR == deltaR2 && mindeltaR<0.8 && deltaR(Check2,Check4)>0.8 && MinDeltaRFromReferenceLV(Merge_2Q_2,Check2,Check4)>1.2) {return 1;};
+  if(mindeltaR == deltaR3 && mindeltaR<0.8 && deltaR(Check2,Check3)>0.8 && MinDeltaRFromReferenceLV(Merge_2Q_3,Check2,Check3)>1.2) {return 1;};
+  if(mindeltaR == deltaR4 && mindeltaR<0.8 && deltaR(Check1,Check4)>0.8 && MinDeltaRFromReferenceLV(Merge_2Q_4,Check1,Check4)>1.2) {return 1;};
+  if(mindeltaR == deltaR5 && mindeltaR<0.8 && deltaR(Check1,Check3)>0.8 && MinDeltaRFromReferenceLV(Merge_2Q_5,Check1,Check3)>1.2) {return 1;};
+  if(mindeltaR == deltaR6 && mindeltaR<0.8 && deltaR(Check1,Check2)>0.8 && MinDeltaRFromReferenceLV(Merge_2Q_6,Check1,Check2)>1.2) {return 1;};
+  return 0;
+}
 
 float deltaPhi(float phi1, float phi2) {
   float deltaphi_ = TMath::Abs(phi1-phi2);

@@ -14,10 +14,11 @@
 #include <string>
 #include <glob.h>
 void printpdgID(int num);
+void GetRecoJetsFromGenJets(std::vector<TLorentzVector> &AllGoodJets, std::vector<TLorentzVector> &LV_GEN_quarks_had_AK4,std::vector<TLorentzVector> &SelectedJets);
 /* -------------------------------------------------------------------------- */
 /*                   Utilize the invariant mass information:                  */
 /* -------------------------------------------------------------------------- */
-// void GetFHminWHJets(std::vector<TLorentzVector> &AllGoodJets, std::vector<Float_t> &b_dis, std::vector<TLorentzVector> &SelectedJets, std::vector<Float_t> &Selectedb_dis, bool DEBUG);
+void GetFHminWHJets(std::vector<TLorentzVector> &AllGoodJets, std::vector<Float_t> &b_dis, std::vector<TLorentzVector> &SelectedJets, std::vector<Float_t> &Selectedb_dis, bool DEBUG);
 /* -------------------------------------------------------------------------- */
 /*               Choose the four jets with max (dR(H_γγ,H_jjjj))              */
 /* -------------------------------------------------------------------------- */

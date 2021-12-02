@@ -34,7 +34,6 @@ public:
   float ThreeJet_deltaR_AK8AK41 = -999.0;
   float ThreeJet_deltaR_MinAK8AK4 = -999.0;
   float FullyResolved_deltaR_MinAlljeta = -999.0;
-
   uint run;
   uint ls;
   uint long evt;
@@ -57,6 +56,7 @@ public:
   // tZq veto ZV
   bool is_tZq;
 
+  float nAllAK4jets = -999.0;
   float GEN_HWW_pT = -999.0;
   float GEN_HWW_eta = -999.0;
   float GEN_HWW_phi = -999.0;
@@ -182,6 +182,55 @@ public:
   float GEN_Q4_had_AK4_phi = -999.0;
   float GEN_Q4_had_AK4_m = -999.0;
   float GEN_Q4_had_AK4_E = -999.0;
+  float GEN_Q5_had_AK4_p = -999.0;
+  float GEN_Q5_had_AK4_pt = -999.0;
+  float GEN_Q5_had_AK4_pz = -999.0;
+  float GEN_Q5_had_AK4_eta = -999.0;
+  float GEN_Q5_had_AK4_phi = -999.0;
+  float GEN_Q5_had_AK4_m = -999.0;
+  float GEN_Q5_had_AK4_E = -999.0;
+  float GEN_Q6_had_AK4_p = -999.0;
+  float GEN_Q6_had_AK4_pt = -999.0;
+  float GEN_Q6_had_AK4_pz = -999.0;
+  float GEN_Q6_had_AK4_eta = -999.0;
+  float GEN_Q6_had_AK4_phi = -999.0;
+  float GEN_Q6_had_AK4_m = -999.0;
+  float GEN_Q6_had_AK4_E = -999.0;
+  float GEN_Q7_had_AK4_p = -999.0;
+  float GEN_Q7_had_AK4_pt = -999.0;
+  float GEN_Q7_had_AK4_pz = -999.0;
+  float GEN_Q7_had_AK4_eta = -999.0;
+  float GEN_Q7_had_AK4_phi = -999.0;
+  float GEN_Q7_had_AK4_m = -999.0;
+  float GEN_Q7_had_AK4_E = -999.0;
+  float GEN_Q8_had_AK4_p = -999.0;
+  float GEN_Q8_had_AK4_pt = -999.0;
+  float GEN_Q8_had_AK4_pz = -999.0;
+  float GEN_Q8_had_AK4_eta = -999.0;
+  float GEN_Q8_had_AK4_phi = -999.0;
+  float GEN_Q8_had_AK4_m = -999.0;
+  float GEN_Q8_had_AK4_E = -999.0;
+  float GEN_Q9_had_AK4_p = -999.0;
+  float GEN_Q9_had_AK4_pt = -999.0;
+  float GEN_Q9_had_AK4_pz = -999.0;
+  float GEN_Q9_had_AK4_eta = -999.0;
+  float GEN_Q9_had_AK4_phi = -999.0;
+  float GEN_Q9_had_AK4_m = -999.0;
+  float GEN_Q9_had_AK4_E = -999.0;
+  float GEN_Q10_had_AK4_p = -999.0;
+  float GEN_Q10_had_AK4_pt = -999.0;
+  float GEN_Q10_had_AK4_pz = -999.0;
+  float GEN_Q10_had_AK4_eta = -999.0;
+  float GEN_Q10_had_AK4_phi = -999.0;
+  float GEN_Q10_had_AK4_m = -999.0;
+  float GEN_Q10_had_AK4_E = -999.0;
+  float four_had_jets_p = -999.0;
+  float four_had_jets_pz = -999.0;
+  float four_had_jets_pt = -999.0;
+  float four_had_jets_M = -999.0;
+  float four_had_jets_E = -999.0;
+  float four_had_jets_eta = -999.0;
+  float four_had_jets_phi = -999.0;
 
   float GEN_W1_had_AK4_p = -999.0;
   float GEN_W1_had_AK4_pt = -999.0;
@@ -197,6 +246,13 @@ public:
   float GEN_W2_had_AK4_phi = -999.0;
   float GEN_W2_had_AK4_m = -999.0;
   float GEN_W2_had_AK4_E = -999.0;
+  float GEN_H_had_AK4_p = -999.0;
+  float GEN_H_had_AK4_pt = -999.0;
+  float GEN_H_had_AK4_pz = -999.0;
+  float GEN_H_had_AK4_eta = -999.0;
+  float GEN_H_had_AK4_phi = -999.0;
+  float GEN_H_had_AK4_m = -999.0;
+  float GEN_H_had_AK4_E = -999.0;
 
   float GEN_Lead_had_AK8_p = -999.0;
   float GEN_Lead_had_AK8_pt = -999.0;
@@ -252,6 +308,8 @@ public:
   float GEN_deltaR_GG = -999.0;
   float GEN_deltaR_WW = -999.0;
   float GEN_deltaR_MIN4Q = -999.0;
+  float GEN_deltaR_MAX4Q = -999.0;
+  float GEN_deltaR_MIN3Q = -999.0;
   float DiPhoton_deltaR_GENRECO_HH = -999.0;
   float Leading_photon_deltaR_GENRECO_G = -999.0;
   float SubLeading_photon_deltaR_GENRECO_G = -999.0;
@@ -273,6 +331,14 @@ public:
   float FullyResolved_deltaR_LeadingWboson_GENW = -999.0;
   float FullyResolved_deltaR_SubLeadingWboson_GENW = -999.0;
   float FullyResolved_deltaR_GENRECO_HH = -999.0;
+  float GEN_had_jets_deltaR_HH = -999.0;
+  float GEN_had_jets_deltaR_leadingWboson_GENW = -999.0;
+  float GEN_had_jets_deltaR_SubleadingWboson_GENW = -999.0;
+  float GEN_had_jets_deltaR_RECOjet1_GENjet1 = -999.0;
+  float GEN_had_jets_deltaR_RECOjet2_GENjet2 = -999.0;
+  float GEN_had_jets_deltaR_RECOjet3_GENjet3 = -999.0;
+  float GEN_had_jets_deltaR_RECOjet4_GENjet4 = -999.0;
+  float  deltaR_GENJetQuark_HH= -999.0;
 
   float OneJet_deltaR_LHERECO_HH = -999.0;
   float TwoJet_deltaR_LHERECO_HH = -999.0;
@@ -881,6 +947,12 @@ public:
   float FullyResolved_Jet2_pt = -999.0;
   float FullyResolved_Jet3_pt = -999.0;
   float FullyResolved_Jet4_pt = -999.0;
+  float FullyResolved_Jet5_pt = -999.0;
+  float FullyResolved_Jet6_pt = -999.0;
+  float FullyResolved_Jet7_pt = -999.0;
+  float FullyResolved_Jet8_pt = -999.0;
+  float FullyResolved_Jet9_pt = -999.0;
+  float FullyResolved_Jet10_pt = -999.0;
   float FullyResolved_Jet1_p = -999.0;
   float FullyResolved_Jet2_p = -999.0;
   float FullyResolved_Jet3_p = -999.0;
@@ -894,22 +966,42 @@ public:
   float FullyResolved_Jet2_eta = -999.0;
   float FullyResolved_Jet3_eta = -999.0;
   float FullyResolved_Jet4_eta = -999.0;
-
+  float FullyResolved_Jet5_eta = -999.0;
+  float FullyResolved_Jet6_eta = -999.0;
+  float FullyResolved_Jet7_eta = -999.0;
+  float FullyResolved_Jet8_eta = -999.0;
+  float FullyResolved_Jet9_eta = -999.0;
+  float FullyResolved_Jet10_eta = -999.0;
   float FullyResolved_Jet1_phi = -999.0;
   float FullyResolved_Jet2_phi = -999.0;
   float FullyResolved_Jet3_phi = -999.0;
   float FullyResolved_Jet4_phi = -999.0;
-
+  float FullyResolved_Jet5_phi = -999.0;
+  float FullyResolved_Jet6_phi = -999.0;
+  float FullyResolved_Jet7_phi = -999.0;
+  float FullyResolved_Jet8_phi = -999.0;
+  float FullyResolved_Jet9_phi = -999.0;
+  float FullyResolved_Jet10_phi = -999.0;
   float FullyResolved_Jet1_E = -999.0;
   float FullyResolved_Jet2_E = -999.0;
   float FullyResolved_Jet3_E = -999.0;
   float FullyResolved_Jet4_E = -999.0;
-
+  float FullyResolved_Jet5_E = -999.0;
+  float FullyResolved_Jet6_E = -999.0;
+  float FullyResolved_Jet7_E = -999.0;
+  float FullyResolved_Jet8_E = -999.0;
+  float FullyResolved_Jet9_E = -999.0;
+  float FullyResolved_Jet10_E = -999.0;
   float FullyResolved_Jet1_M = -999.0;
   float FullyResolved_Jet2_M = -999.0;
   float FullyResolved_Jet3_M = -999.0;
   float FullyResolved_Jet4_M = -999.0;
-
+  float FullyResolved_Jet5_M = -999.0;
+  float FullyResolved_Jet6_M = -999.0;
+  float FullyResolved_Jet7_M = -999.0;
+  float FullyResolved_Jet8_M = -999.0;
+  float FullyResolved_Jet9_M = -999.0;
+  float FullyResolved_Jet10_M = -999.0;
   float FullyResolved_TwoLeadingJets_pt = -999.0;
   float FullyResolved_TwoLeadingJets_eta = -999.0;
   float FullyResolved_TwoLeadingJets_phi = -999.0;
@@ -953,6 +1045,18 @@ public:
   float FullyResolved_deltaR_HH = -999.0;
   float FullyResolved_deltaEta_HH = -999.0;
   float FullyResolved_deltaPhi_HH = -999.0;
+  float FullyResolved_category = -999.0;
+  float TwoJet_category = -999.0;
+  float ThreeJet_category = -999.0;
+  float OneJet_category = -999.0;
+  float GEN_BoolTwoJet_deltaR = -999.0;
+  float GEN_BoolThreeJet_deltaR = -999.0;
+  std::vector<float> dR_ak4_fatjet;
+  std::vector<float> dR_ak4_ak4;
+  std::vector<float> dR_ak4_photon;
+  std::vector<float> dR_ak4_ele;
+  std::vector<float> dR_ak4_muon;
+
 
 };
 

@@ -28,6 +28,7 @@ void WVJJData::init() {
   // tZq veto
   fTree->Branch("is_tZq",&is_tZq,"is_tZq/O");
 
+  fTree->Branch("nAllAK4jets",&nAllAK4jets,"nAllAK4jets/F");
   fTree->Branch("GEN_HWW_pT",&GEN_HWW_pT,"GEN_HWW_pT/F");
   fTree->Branch("GEN_HWW_eta",&GEN_HWW_eta,"GEN_HWW_eta/F");
   fTree->Branch("GEN_HWW_phi",&GEN_HWW_phi,"GEN_HWW_phi/F");
@@ -153,6 +154,55 @@ void WVJJData::init() {
   fTree->Branch("GEN_Q4_had_AK4_phi",&GEN_Q4_had_AK4_phi,"GEN_Q4_had_AK4_phi/F");
   fTree->Branch("GEN_Q4_had_AK4_m",&GEN_Q4_had_AK4_m,"GEN_Q4_had_AK4_m/F");
   fTree->Branch("GEN_Q4_had_AK4_E",&GEN_Q4_had_AK4_E,"GEN_Q4_had_AK4_E/F");
+  fTree->Branch("GEN_Q5_had_AK4_p",&GEN_Q5_had_AK4_p,"GEN_Q5_had_AK4_p/F");
+  fTree->Branch("GEN_Q5_had_AK4_pt",&GEN_Q5_had_AK4_pt,"GEN_Q5_had_AK4_pt/F");
+  fTree->Branch("GEN_Q5_had_AK4_pz",&GEN_Q5_had_AK4_pz,"GEN_Q5_had_AK4_pz/F");
+  fTree->Branch("GEN_Q5_had_AK4_eta",&GEN_Q5_had_AK4_eta,"GEN_Q5_had_AK4_eta/F");
+  fTree->Branch("GEN_Q5_had_AK4_phi",&GEN_Q5_had_AK4_phi,"GEN_Q5_had_AK4_phi/F");
+  fTree->Branch("GEN_Q5_had_AK4_m",&GEN_Q5_had_AK4_m,"GEN_Q5_had_AK4_m/F");
+  fTree->Branch("GEN_Q5_had_AK4_E",&GEN_Q5_had_AK4_E,"GEN_Q5_had_AK4_E/F");
+  fTree->Branch("GEN_Q6_had_AK4_p",&GEN_Q6_had_AK4_p,"GEN_Q6_had_AK4_p/F");
+  fTree->Branch("GEN_Q6_had_AK4_pt",&GEN_Q6_had_AK4_pt,"GEN_Q6_had_AK4_pt/F");
+  fTree->Branch("GEN_Q6_had_AK4_pz",&GEN_Q6_had_AK4_pz,"GEN_Q6_had_AK4_pz/F");
+  fTree->Branch("GEN_Q6_had_AK4_eta",&GEN_Q6_had_AK4_eta,"GEN_Q6_had_AK4_eta/F");
+  fTree->Branch("GEN_Q6_had_AK4_phi",&GEN_Q6_had_AK4_phi,"GEN_Q6_had_AK4_phi/F");
+  fTree->Branch("GEN_Q6_had_AK4_m",&GEN_Q6_had_AK4_m,"GEN_Q6_had_AK4_m/F");
+  fTree->Branch("GEN_Q6_had_AK4_E",&GEN_Q6_had_AK4_E,"GEN_Q6_had_AK4_E/F");
+  fTree->Branch("GEN_Q7_had_AK4_p",&GEN_Q7_had_AK4_p,"GEN_Q7_had_AK4_p/F");
+  fTree->Branch("GEN_Q7_had_AK4_pt",&GEN_Q7_had_AK4_pt,"GEN_Q7_had_AK4_pt/F");
+  fTree->Branch("GEN_Q7_had_AK4_pz",&GEN_Q7_had_AK4_pz,"GEN_Q7_had_AK4_pz/F");
+  fTree->Branch("GEN_Q7_had_AK4_eta",&GEN_Q7_had_AK4_eta,"GEN_Q7_had_AK4_eta/F");
+  fTree->Branch("GEN_Q7_had_AK4_phi",&GEN_Q7_had_AK4_phi,"GEN_Q7_had_AK4_phi/F");
+  fTree->Branch("GEN_Q7_had_AK4_m",&GEN_Q7_had_AK4_m,"GEN_Q7_had_AK4_m/F");
+  fTree->Branch("GEN_Q7_had_AK4_E",&GEN_Q7_had_AK4_E,"GEN_Q7_had_AK4_E/F");
+  fTree->Branch("GEN_Q8_had_AK4_p",&GEN_Q8_had_AK4_p,"GEN_Q8_had_AK4_p/F");
+  fTree->Branch("GEN_Q8_had_AK4_pt",&GEN_Q8_had_AK4_pt,"GEN_Q8_had_AK4_pt/F");
+  fTree->Branch("GEN_Q8_had_AK4_pz",&GEN_Q8_had_AK4_pz,"GEN_Q8_had_AK4_pz/F");
+  fTree->Branch("GEN_Q8_had_AK4_eta",&GEN_Q8_had_AK4_eta,"GEN_Q8_had_AK4_eta/F");
+  fTree->Branch("GEN_Q8_had_AK4_phi",&GEN_Q8_had_AK4_phi,"GEN_Q8_had_AK4_phi/F");
+  fTree->Branch("GEN_Q8_had_AK4_m",&GEN_Q8_had_AK4_m,"GEN_Q8_had_AK4_m/F");
+  fTree->Branch("GEN_Q8_had_AK4_E",&GEN_Q8_had_AK4_E,"GEN_Q8_had_AK4_E/F");
+  fTree->Branch("GEN_Q9_had_AK4_p",&GEN_Q9_had_AK4_p,"GEN_Q9_had_AK4_p/F");
+  fTree->Branch("GEN_Q9_had_AK4_pt",&GEN_Q9_had_AK4_pt,"GEN_Q9_had_AK4_pt/F");
+  fTree->Branch("GEN_Q9_had_AK4_pz",&GEN_Q9_had_AK4_pz,"GEN_Q9_had_AK4_pz/F");
+  fTree->Branch("GEN_Q9_had_AK4_eta",&GEN_Q9_had_AK4_eta,"GEN_Q9_had_AK4_eta/F");
+  fTree->Branch("GEN_Q9_had_AK4_phi",&GEN_Q9_had_AK4_phi,"GEN_Q9_had_AK4_phi/F");
+  fTree->Branch("GEN_Q9_had_AK4_m",&GEN_Q9_had_AK4_m,"GEN_Q9_had_AK4_m/F");
+  fTree->Branch("GEN_Q9_had_AK4_E",&GEN_Q9_had_AK4_E,"GEN_Q9_had_AK4_E/F");
+  fTree->Branch("GEN_Q10_had_AK4_p",&GEN_Q10_had_AK4_p,"GEN_Q10_had_AK4_p/F");
+  fTree->Branch("GEN_Q10_had_AK4_pt",&GEN_Q10_had_AK4_pt,"GEN_Q10_had_AK4_pt/F");
+  fTree->Branch("GEN_Q10_had_AK4_pz",&GEN_Q10_had_AK4_pz,"GEN_Q10_had_AK4_pz/F");
+  fTree->Branch("GEN_Q10_had_AK4_eta",&GEN_Q10_had_AK4_eta,"GEN_Q10_had_AK4_eta/F");
+  fTree->Branch("GEN_Q10_had_AK4_phi",&GEN_Q10_had_AK4_phi,"GEN_Q10_had_AK4_phi/F");
+  fTree->Branch("GEN_Q10_had_AK4_m",&GEN_Q10_had_AK4_m,"GEN_Q10_had_AK4_m/F");
+  fTree->Branch("GEN_Q10_had_AK4_E",&GEN_Q10_had_AK4_E,"GEN_Q10_had_AK4_E/F");
+  fTree->Branch("four_had_jets_p",&four_had_jets_p,"four_had_jets_p/F");
+  fTree->Branch("four_had_jets_pt",&four_had_jets_pt,"four_had_jets_pt/F");
+  fTree->Branch("four_had_jets_pz",&four_had_jets_pz,"four_had_jets_pz/F");
+  fTree->Branch("four_had_jets_M",&four_had_jets_M,"four_had_jets_M/F");
+  fTree->Branch("four_had_jets_E",&four_had_jets_E,"four_had_jets_E/F");
+  fTree->Branch("four_had_jets_eta",&four_had_jets_eta,"four_had_jets_eta/F");
+  fTree->Branch("four_had_jets_phi",&four_had_jets_phi,"four_had_jets_phi/F");
 
   fTree->Branch("GEN_W1_had_AK4_p",&GEN_W1_had_AK4_p,"GEN_W1_had_AK4_p/F");
   fTree->Branch("GEN_W1_had_AK4_pt",&GEN_W1_had_AK4_pt,"GEN_W1_had_AK4_pt/F");
@@ -168,6 +218,13 @@ void WVJJData::init() {
   fTree->Branch("GEN_W2_had_AK4_phi",&GEN_W2_had_AK4_phi,"GEN_W2_had_AK4_phi/F");
   fTree->Branch("GEN_W2_had_AK4_m",&GEN_W2_had_AK4_m,"GEN_W2_had_AK4_m/F");
   fTree->Branch("GEN_W2_had_AK4_E",&GEN_W2_had_AK4_E,"GEN_W2_had_AK4_E/F");
+  fTree->Branch("GEN_H_had_AK4_p",&GEN_H_had_AK4_p,"GEN_H_had_AK4_p/F");
+  fTree->Branch("GEN_H_had_AK4_pt",&GEN_H_had_AK4_pt,"GEN_H_had_AK4_pt/F");
+  fTree->Branch("GEN_H_had_AK4_pz",&GEN_H_had_AK4_pz,"GEN_H_had_AK4_pz/F");
+  fTree->Branch("GEN_H_had_AK4_eta",&GEN_H_had_AK4_eta,"GEN_H_had_AK4_eta/F");
+  fTree->Branch("GEN_H_had_AK4_phi",&GEN_H_had_AK4_phi,"GEN_H_had_AK4_phi/F");
+  fTree->Branch("GEN_H_had_AK4_m",&GEN_H_had_AK4_m,"GEN_H_had_AK4_m/F");
+  fTree->Branch("GEN_H_had_AK4_E",&GEN_H_had_AK4_E,"GEN_H_had_AK4_E/F");
 
   fTree->Branch("GEN_Lead_had_AK8_p",&GEN_Lead_had_AK8_p,"GEN_Lead_had_AK8_p/F");
   fTree->Branch("GEN_Lead_had_AK8_pt",&GEN_Lead_had_AK8_pt,"GEN_Lead_had_AK8_pt/F");
@@ -224,6 +281,8 @@ void WVJJData::init() {
   fTree->Branch("GEN_deltaR_GG",&GEN_deltaR_GG,"GEN_deltaR_GG/F");
   fTree->Branch("GEN_deltaR_WW",&GEN_deltaR_WW,"GEN_deltaR_WW/F");
   fTree->Branch("GEN_deltaR_MIN4Q",&GEN_deltaR_MIN4Q,"GEN_deltaR_MIN4Q/F");
+  fTree->Branch("GEN_deltaR_MAX4Q",&GEN_deltaR_MAX4Q,"GEN_deltaR_MAX4Q/F");
+  fTree->Branch("GEN_deltaR_MIN3Q",&GEN_deltaR_MIN3Q,"GEN_deltaR_MIN3Q/F");
   fTree->Branch("DiPhoton_deltaR_GENRECO_HH",&DiPhoton_deltaR_GENRECO_HH,"DiPhoton_deltaR_GENRECO_HH/F");
   fTree->Branch("Leading_photon_deltaR_GENRECO_G",&Leading_photon_deltaR_GENRECO_G,"Leading_photon_deltaR_GENRECO_G/F");
   fTree->Branch("SubLeading_photon_deltaR_GENRECO_G",&SubLeading_photon_deltaR_GENRECO_G,"SubLeading_photon_deltaR_GENRECO_G/F");
@@ -245,6 +304,14 @@ void WVJJData::init() {
   fTree->Branch("FullyResolved_deltaR_LeadingWboson_GENW",&FullyResolved_deltaR_LeadingWboson_GENW,"FullyResolved_deltaR_LeadingWboson_GENW/F");
   fTree->Branch("FullyResolved_deltaR_SubLeadingWboson_GENW",&FullyResolved_deltaR_SubLeadingWboson_GENW,"FullyResolved_deltaR_SubLeadingWboson_GENW/F");
   fTree->Branch("FullyResolved_deltaR_GENRECO_HH",&FullyResolved_deltaR_GENRECO_HH,"FullyResolved_deltaR_GENRECO_HH/F");
+  fTree->Branch("GEN_had_jets_deltaR_HH",&GEN_had_jets_deltaR_HH,"GEN_had_jets_deltaR_HH/F");
+  fTree->Branch("GEN_had_jets_deltaR_leadingWboson_GENW",&GEN_had_jets_deltaR_leadingWboson_GENW,"GEN_had_jets_deltaR_leadingWboson_GENW/F");
+  fTree->Branch("GEN_had_jets_deltaR_SubleadingWboson_GENW",&GEN_had_jets_deltaR_SubleadingWboson_GENW,"GEN_had_jets_deltaR_SubleadingWboson_GENW/F");
+  fTree->Branch("GEN_had_jets_deltaR_RECOjet1_GENjet1",&GEN_had_jets_deltaR_RECOjet1_GENjet1,"GEN_had_jets_deltaR_RECOjet1_GENjet1/F");
+  fTree->Branch("GEN_had_jets_deltaR_RECOjet2_GENjet2",&GEN_had_jets_deltaR_RECOjet2_GENjet2,"GEN_had_jets_deltaR_RECOjet2_GENjet2/F");
+  fTree->Branch("GEN_had_jets_deltaR_RECOjet3_GENjet3",&GEN_had_jets_deltaR_RECOjet3_GENjet3,"GEN_had_jets_deltaR_RECOjet3_GENjet3/F");
+  fTree->Branch("GEN_had_jets_deltaR_RECOjet4_GENjet4",&GEN_had_jets_deltaR_RECOjet4_GENjet4,"GEN_had_jets_deltaR_RECOjet4_GENjet4/F");
+  fTree->Branch("deltaR_GENJetQuark_HH",&deltaR_GENJetQuark_HH,"deltaR_GENJetQuark_HH/F");
 
   fTree->Branch("OneJet_deltaR_LHERECO_HH",&OneJet_deltaR_LHERECO_HH,"OneJet_deltaR_LHERECO_HH/F");
   fTree->Branch("TwoJet_deltaR_LHERECO_HH",&TwoJet_deltaR_LHERECO_HH,"TwoJet_deltaR_LHERECO_HH/F");
@@ -799,26 +866,56 @@ void WVJJData::init() {
   fTree->Branch("FullyResolved_Jet2_pt", &FullyResolved_Jet2_pt, "FullyResolved_Jet2_pt/F");
   fTree->Branch("FullyResolved_Jet3_pt", &FullyResolved_Jet3_pt, "FullyResolved_Jet3_pt/F");
   fTree->Branch("FullyResolved_Jet4_pt", &FullyResolved_Jet4_pt, "FullyResolved_Jet4_pt/F");
+  fTree->Branch("FullyResolved_Jet5_pt", &FullyResolved_Jet5_pt, "FullyResolved_Jet5_pt/F");
+  fTree->Branch("FullyResolved_Jet6_pt", &FullyResolved_Jet6_pt, "FullyResolved_Jet6_pt/F");
+  fTree->Branch("FullyResolved_Jet7_pt", &FullyResolved_Jet7_pt, "FullyResolved_Jet7_pt/F");
+  fTree->Branch("FullyResolved_Jet8_pt", &FullyResolved_Jet8_pt, "FullyResolved_Jet8_pt/F");
+  fTree->Branch("FullyResolved_Jet9_pt", &FullyResolved_Jet9_pt, "FullyResolved_Jet9_pt/F");
+  fTree->Branch("FullyResolved_Jet10_pt", &FullyResolved_Jet10_pt, "FullyResolved_Jet10_pt/F");
 
   fTree->Branch("FullyResolved_Jet1_eta", &FullyResolved_Jet1_eta, "FullyResolved_Jet1_eta/F");
   fTree->Branch("FullyResolved_Jet2_eta", &FullyResolved_Jet2_eta, "FullyResolved_Jet2_eta/F");
   fTree->Branch("FullyResolved_Jet3_eta", &FullyResolved_Jet3_eta, "FullyResolved_Jet3_eta/F");
   fTree->Branch("FullyResolved_Jet4_eta", &FullyResolved_Jet4_eta, "FullyResolved_Jet4_eta/F");
+  fTree->Branch("FullyResolved_Jet5_eta", &FullyResolved_Jet5_eta, "FullyResolved_Jet5_eta/F");
+  fTree->Branch("FullyResolved_Jet6_eta", &FullyResolved_Jet6_eta, "FullyResolved_Jet6_eta/F");
+  fTree->Branch("FullyResolved_Jet7_eta", &FullyResolved_Jet7_eta, "FullyResolved_Jet7_eta/F");
+  fTree->Branch("FullyResolved_Jet8_eta", &FullyResolved_Jet8_eta, "FullyResolved_Jet8_eta/F");
+  fTree->Branch("FullyResolved_Jet9_eta", &FullyResolved_Jet9_eta, "FullyResolved_Jet9_eta/F");
+  fTree->Branch("FullyResolved_Jet10_eta", &FullyResolved_Jet10_eta, "FullyResolved_Jet10_eta/F");
 
   fTree->Branch("FullyResolved_Jet1_phi", &FullyResolved_Jet1_phi, "FullyResolved_Jet1_phi/F");
   fTree->Branch("FullyResolved_Jet2_phi", &FullyResolved_Jet2_phi, "FullyResolved_Jet2_phi/F");
   fTree->Branch("FullyResolved_Jet3_phi", &FullyResolved_Jet3_phi, "FullyResolved_Jet3_phi/F");
   fTree->Branch("FullyResolved_Jet4_phi", &FullyResolved_Jet4_phi, "FullyResolved_Jet4_phi/F");
+  fTree->Branch("FullyResolved_Jet5_phi", &FullyResolved_Jet5_phi, "FullyResolved_Jet5_phi/F");
+  fTree->Branch("FullyResolved_Jet6_phi", &FullyResolved_Jet6_phi, "FullyResolved_Jet6_phi/F");
+  fTree->Branch("FullyResolved_Jet7_phi", &FullyResolved_Jet7_phi, "FullyResolved_Jet7_phi/F");
+  fTree->Branch("FullyResolved_Jet8_phi", &FullyResolved_Jet8_phi, "FullyResolved_Jet8_phi/F");
+  fTree->Branch("FullyResolved_Jet9_phi", &FullyResolved_Jet9_phi, "FullyResolved_Jet9_phi/F");
+  fTree->Branch("FullyResolved_Jet10_phi", &FullyResolved_Jet10_phi, "FullyResolved_Jet10_phi/F");
 
   fTree->Branch("FullyResolved_Jet1_E", &FullyResolved_Jet1_E, "FullyResolved_Jet1_E/F");
   fTree->Branch("FullyResolved_Jet2_E", &FullyResolved_Jet2_E, "FullyResolved_Jet2_E/F");
   fTree->Branch("FullyResolved_Jet3_E", &FullyResolved_Jet3_E, "FullyResolved_Jet3_E/F");
   fTree->Branch("FullyResolved_Jet4_E", &FullyResolved_Jet4_E, "FullyResolved_Jet4_E/F");
+  fTree->Branch("FullyResolved_Jet5_E", &FullyResolved_Jet5_E, "FullyResolved_Jet5_E/F");
+  fTree->Branch("FullyResolved_Jet6_E", &FullyResolved_Jet6_E, "FullyResolved_Jet6_E/F");
+  fTree->Branch("FullyResolved_Jet7_E", &FullyResolved_Jet7_E, "FullyResolved_Jet7_E/F");
+  fTree->Branch("FullyResolved_Jet8_E", &FullyResolved_Jet8_E, "FullyResolved_Jet8_E/F");
+  fTree->Branch("FullyResolved_Jet9_E", &FullyResolved_Jet9_E, "FullyResolved_Jet9_E/F");
+  fTree->Branch("FullyResolved_Jet10_E", &FullyResolved_Jet10_E, "FullyResolved_Jet10_E/F");
 
   fTree->Branch("FullyResolved_Jet1_M", &FullyResolved_Jet1_M, "FullyResolved_Jet1_M/F");
   fTree->Branch("FullyResolved_Jet2_M", &FullyResolved_Jet2_M, "FullyResolved_Jet2_M/F");
   fTree->Branch("FullyResolved_Jet3_M", &FullyResolved_Jet3_M, "FullyResolved_Jet3_M/F");
   fTree->Branch("FullyResolved_Jet4_M", &FullyResolved_Jet4_M, "FullyResolved_Jet4_M/F");
+  fTree->Branch("FullyResolved_Jet5_M", &FullyResolved_Jet5_M, "FullyResolved_Jet5_M/F");
+  fTree->Branch("FullyResolved_Jet6_M", &FullyResolved_Jet6_M, "FullyResolved_Jet6_M/F");
+  fTree->Branch("FullyResolved_Jet7_M", &FullyResolved_Jet7_M, "FullyResolved_Jet7_M/F");
+  fTree->Branch("FullyResolved_Jet8_M", &FullyResolved_Jet8_M, "FullyResolved_Jet8_M/F");
+  fTree->Branch("FullyResolved_Jet9_M", &FullyResolved_Jet9_M, "FullyResolved_Jet9_M/F");
+  fTree->Branch("FullyResolved_Jet10_M", &FullyResolved_Jet10_M, "FullyResolved_Jet10_M/F");
 
   fTree->Branch("FullyResolved_TwoLeadingJets_pt", &FullyResolved_TwoLeadingJets_pt, "FullyResolved_TwoLeadingJets_pt/F");
   fTree->Branch("FullyResolved_TwoLeadingJets_eta", &FullyResolved_TwoLeadingJets_eta, "FullyResolved_TwoLeadingJets_eta/F");
@@ -874,6 +971,17 @@ void WVJJData::init() {
   fTree->Branch("ThreeJet_deltaR_AK8AK41",&ThreeJet_deltaR_AK8AK41,"ThreeJet_deltaR_AK8AK41/F");
   fTree->Branch("ThreeJet_deltaR_MinAK8AK4",&ThreeJet_deltaR_MinAK8AK4,"ThreeJet_deltaR_MinAK8AK4/F");
   fTree->Branch("FullyResolved_deltaR_MinAlljeta",&FullyResolved_deltaR_MinAlljeta,"FullyResolved_deltaR_MinAlljeta/F");
+  fTree->Branch("FullyResolved_category",&FullyResolved_category,"FullyResolved_category/F");
+  fTree->Branch("TwoJet_category",&TwoJet_category,"TwoJet_category/F");
+  fTree->Branch("ThreeJet_category",&ThreeJet_category,"ThreeJet_category/F");
+  fTree->Branch("OneJet_category",&OneJet_category,"OneJet_category/F");
+  fTree->Branch("GEN_BoolTwoJet_deltaR",&GEN_BoolTwoJet_deltaR,"GEN_BoolTwoJet_deltaR/F");
+  fTree->Branch("GEN_BoolThreeJet_deltaR",&GEN_BoolThreeJet_deltaR,"GEN_BoolThreeJet_deltaR/F");
+  fTree->Branch("dR_ak4_fatjet",&dR_ak4_fatjet);
+  fTree->Branch("dR_ak4_ak4",&dR_ak4_ak4);
+  fTree->Branch("dR_ak4_photon",&dR_ak4_photon);
+  fTree->Branch("dR_ak4_ele",&dR_ak4_ele);
+  fTree->Branch("dR_ak4_muon",&dR_ak4_muon);
 
 };
 
@@ -907,7 +1015,7 @@ void WVJJData::clearVars() {
   std::fill_n(aqgcWeight,1000,0);
 
   is_tZq = false;
-
+  nAllAK4jets = -999.0;
   GEN_HiggsWW_p = -999.0;
   GEN_HiggsWW_pt = -999.0;
   GEN_HiggsWW_pz = -999.0;
@@ -1024,6 +1132,55 @@ void WVJJData::clearVars() {
   GEN_Q4_had_AK4_phi = -999.0;
   GEN_Q4_had_AK4_m = -999.0;
   GEN_Q4_had_AK4_E = -999.0;
+  GEN_Q5_had_AK4_p = -999.0;
+  GEN_Q5_had_AK4_pt = -999.0;
+  GEN_Q5_had_AK4_pz = -999.0;
+  GEN_Q5_had_AK4_eta = -999.0;
+  GEN_Q5_had_AK4_phi = -999.0;
+  GEN_Q5_had_AK4_m = -999.0;
+  GEN_Q5_had_AK4_E = -999.0;
+  GEN_Q6_had_AK4_p = -999.0;
+  GEN_Q6_had_AK4_pt = -999.0;
+  GEN_Q6_had_AK4_pz = -999.0;
+  GEN_Q6_had_AK4_eta = -999.0;
+  GEN_Q6_had_AK4_phi = -999.0;
+  GEN_Q6_had_AK4_m = -999.0;
+  GEN_Q6_had_AK4_E = -999.0;
+  GEN_Q7_had_AK4_p = -999.0;
+  GEN_Q7_had_AK4_pt = -999.0;
+  GEN_Q7_had_AK4_pz = -999.0;
+  GEN_Q7_had_AK4_eta = -999.0;
+  GEN_Q7_had_AK4_phi = -999.0;
+  GEN_Q7_had_AK4_m = -999.0;
+  GEN_Q7_had_AK4_E = -999.0;
+  GEN_Q8_had_AK4_p = -999.0;
+  GEN_Q8_had_AK4_pt = -999.0;
+  GEN_Q8_had_AK4_pz = -999.0;
+  GEN_Q8_had_AK4_eta = -999.0;
+  GEN_Q8_had_AK4_phi = -999.0;
+  GEN_Q8_had_AK4_m = -999.0;
+  GEN_Q8_had_AK4_E = -999.0;
+  GEN_Q9_had_AK4_p = -999.0;
+  GEN_Q9_had_AK4_pt = -999.0;
+  GEN_Q9_had_AK4_pz = -999.0;
+  GEN_Q9_had_AK4_eta = -999.0;
+  GEN_Q9_had_AK4_phi = -999.0;
+  GEN_Q9_had_AK4_m = -999.0;
+  GEN_Q9_had_AK4_E = -999.0;
+  GEN_Q10_had_AK4_p = -999.0;
+  GEN_Q10_had_AK4_pt = -999.0;
+  GEN_Q10_had_AK4_pz = -999.0;
+  GEN_Q10_had_AK4_eta = -999.0;
+  GEN_Q10_had_AK4_phi = -999.0;
+  GEN_Q10_had_AK4_m = -999.0;
+  GEN_Q10_had_AK4_E = -999.0;
+  four_had_jets_p = -999.0;
+  four_had_jets_pt = -999.0;
+  four_had_jets_pz = -999.0;
+  four_had_jets_M = -999.0;
+  four_had_jets_E = -999.0;
+  four_had_jets_eta = -999.0;
+  four_had_jets_phi = -999.0;
 
   GEN_W1_had_AK4_p = -999.0;
   GEN_W1_had_AK4_pt = -999.0;
@@ -1039,6 +1196,14 @@ void WVJJData::clearVars() {
   GEN_W2_had_AK4_phi = -999.0;
   GEN_W2_had_AK4_m = -999.0;
   GEN_W2_had_AK4_E = -999.0;
+  
+  GEN_H_had_AK4_p = -999.0;
+  GEN_H_had_AK4_pt = -999.0;
+  GEN_H_had_AK4_pz = -999.0;
+  GEN_H_had_AK4_eta = -999.0;
+  GEN_H_had_AK4_phi = -999.0;
+  GEN_H_had_AK4_m = -999.0;
+  GEN_H_had_AK4_E = -999.0;
 
   GEN_Lead_had_AK8_p = -999.0;
   GEN_Lead_had_AK8_pt = -999.0;
@@ -1113,6 +1278,15 @@ void WVJJData::clearVars() {
   FullyResolved_deltaR_LeadingWboson_GENW = -999.0;
   FullyResolved_deltaR_SubLeadingWboson_GENW = -999.0;
   FullyResolved_deltaR_GENRECO_HH = -999.0;
+  GEN_had_jets_deltaR_HH = -999.0;
+  GEN_had_jets_deltaR_leadingWboson_GENW = -999.0;
+  GEN_had_jets_deltaR_SubleadingWboson_GENW = -999.0;
+  GEN_had_jets_deltaR_RECOjet1_GENjet1 = -999.0;
+  GEN_had_jets_deltaR_RECOjet2_GENjet2 = -999.0;
+  GEN_had_jets_deltaR_RECOjet3_GENjet3 = -999.0;
+  GEN_had_jets_deltaR_RECOjet4_GENjet4 = -999.0;
+  deltaR_GENJetQuark_HH = -999.0;
+
 
   OneJet_deltaR_LHERECO_HH = -999.0;
   TwoJet_deltaR_LHERECO_HH = -999.0;
@@ -1741,6 +1915,8 @@ void WVJJData::clearVars() {
   GEN_deltaR_GG = -999.0;
   GEN_deltaR_WW = -999.0;
   GEN_deltaR_MIN4Q = -999.0;
+  GEN_deltaR_MAX4Q = -999.0;
+  GEN_deltaR_MIN3Q = -999.0;
 
   OneJet_deltaR_HH = -999.0;
   OneJet_deltaEta_HH = -999.0;
@@ -1766,6 +1942,17 @@ void WVJJData::clearVars() {
   ThreeJet_deltaR_AK8AK41 = -999.0;
   ThreeJet_deltaR_MinAK8AK4 = -999.0;
   FullyResolved_deltaR_MinAlljeta = -999.0;
+  FullyResolved_category = -999.0;
+  TwoJet_category = -999.0;
+  ThreeJet_category = -999.0;
+  OneJet_category = -999.0;
+  GEN_BoolTwoJet_deltaR = -999.0;
+  GEN_BoolThreeJet_deltaR = -999.0;
+  dR_ak4_fatjet.clear();
+  dR_ak4_ak4.clear();
+  dR_ak4_photon.clear();
+  dR_ak4_ele.clear();
+  dR_ak4_muon.clear();
 
 };
 

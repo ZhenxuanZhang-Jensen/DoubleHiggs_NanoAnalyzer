@@ -44,6 +44,7 @@ int main (int argc, char** argv) {
     int nanoVersion = atoi(argv[5]);
     bool DEBUG = atoi(argv[6]);
     bool DOWNLOAD_LOCAL_COPY = atoi(argv[7]);
+    int massPoint = atoi(argv[8]);
 
     const float H_MASS = 125.10;
 
@@ -88,7 +89,7 @@ int main (int argc, char** argv) {
     //const float AK4_PT_VETO_CUT = 20;
     // const float AK4_ETA_CUT = 2.4;
     //checking 2.4 to 4.7
-    const float AK4_PT_CUT = 25;
+    const float AK4_PT_CUT =10;
     const float AK4_MAX_ETA = 4.7;
     // const float AK4_JJ_MIN_M = 40.0;
     // const float AK4_JJ_MAX_M = 250.0;
@@ -139,6 +140,8 @@ int main (int argc, char** argv) {
     std::vector<TLorentzVector> LV_GEN_photons;
     std::vector<TLorentzVector> LV_GEN_quarks;
     std::vector<TLorentzVector> LV_GEN_quarks_had_AK4;
+    std::vector<TLorentzVector> LV_GEN_quarks_had_AK4_tmp;
+    std::vector<TLorentzVector> LV_GEN_quarks_had_AK4_beforecut;
     std::vector<TLorentzVector> LV_GEN_quarks_had_AK8;
 
     std::vector<TLorentzVector> LV_tightMuon;
@@ -147,8 +150,13 @@ int main (int argc, char** argv) {
 
     std::vector<TLorentzVector> LV_Ak4Jets_all;
     std::vector<TLorentzVector> LV_Ak4Jets;
-    std::vector<Float_t> b_dis;
-    std::vector<Float_t> Selectedb_dis;
+    std::vector<float> dR_ak4_fatjet_tmp;
+    std::vector<float> dR_ak4_ak4_tmp;
+    std::vector<float> dR_ak4_photon_tmp;
+    std::vector<float> dR_ak4_ele_tmp;
+    std::vector<float> dR_ak4_muon_tmp;
+    std::vector<float> b_dis;
+    std::vector<float> Selectedb_dis;
     // std::vector<TLorentzVector> Ak4JetsTem;
     std::vector<TLorentzVector> LV_Ak8WZJets;
     std::vector<TLorentzVector> LV_Ak8HiggsJets;
@@ -192,6 +200,15 @@ int main (int argc, char** argv) {
     Radion_Cutflow->GetXaxis()->SetBinLabel(5,"| p1 - p2 | < 50");         
     Radion_Cutflow->GetXaxis()->SetBinLabel(6,"| p1 - p2 | < 100");         
     Radion_Cutflow->GetXaxis()->SetBinLabel(7,"| p1 - p2 | < 200");          
+
+    TH1F *Ak4JetsCut = new TH1F("Ak4JetsCut","Ak4JetsCut",7,0,7);
+    Ak4JetsCut->GetXaxis()->SetBinLabel(1,"AllJets");
+    Ak4JetsCut->GetXaxis()->SetBinLabel(2,"PT_Eta_cut");
+    Ak4JetsCut->GetXaxis()->SetBinLabel(3,"AK8_clean");
+    Ak4JetsCut->GetXaxis()->SetBinLabel(4,"AK4_clean");
+    Ak4JetsCut->GetXaxis()->SetBinLabel(5,"Photon_clean");
+    Ak4JetsCut->GetXaxis()->SetBinLabel(6,"Ele_clean");
+    Ak4JetsCut->GetXaxis()->SetBinLabel(7,"Muon_clean");
     
 
     TH1F *totalCutFlow_FH_GENMatch = new TH1F("totalCutFlow_FH_GENMatch","totalCutFlow_FH_GENMatch",15,0,15);
@@ -354,7 +371,7 @@ int main (int argc, char** argv) {
 
         if(DEBUG) std::cout << "\t[INFO]: Start of event loop. " << std::endl;
         for (uint i=0; i < t->GetEntries(); i++)
-        // for (uint i=0; i < 200; i++)
+        // for (uint i=0; i < 20; i++)
         {
             WVJJTree->clearVars();
             NanoReader_.GetEntry(i);
@@ -437,7 +454,6 @@ int main (int argc, char** argv) {
             WVJJTree->LHE_H2_pz = LV_LHE_Higgs.at(0).Pz();
             WVJJTree->LHE_H2_eta = LV_LHE_Higgs.at(0).Eta();
             WVJJTree->LHE_H2_phi = LV_LHE_Higgs.at(0).Phi();
-
             }
             // checking 3000GeV radion kinematic
             // if ( WVJJTree->LHE_H1_p > 1000 && WVJJTree->LHE_H1_p < 3000 && WVJJTree->LHE_H2_p > 1000 && WVJJTree->LHE_H2_p < 3000)
@@ -496,6 +512,73 @@ int main (int argc, char** argv) {
             // Below part : GEN information
             //              This contains information of the Higgs decays and after shower effects.
             //
+            /* -------------------------------------------------------------------------- */
+            /*                              PHOTON SELECTION                              */
+            /* -------------------------------------------------------------------------- */
+            LV_tightPhoton.clear();
+            int nTightPhoton = 0;
+
+            if (*NanoReader_.nPhoton < 2) continue;
+            for (UInt_t PhotonCount = 0; PhotonCount < *NanoReader_.nPhoton; ++PhotonCount)
+            {
+                if (!(NanoReader_.Photon_r9[PhotonCount] > PHO_R9_CUT || (NanoReader_.Photon_pfRelIso03_chg[PhotonCount]*NanoReader_.Photon_pt[PhotonCount]) < PHOTON_PFRELISO03_CHG_CUT || NanoReader_.Photon_pfRelIso03_chg[PhotonCount] < 0.3)) continue;
+                if (!(NanoReader_.Photon_hoe[PhotonCount] < HOVERE_CUT)) continue;
+                if (!(NanoReader_.Photon_pt[PhotonCount] > PHO_PT_VETO_CUT)) continue;
+                if (!(abs(NanoReader_.Photon_eta[PhotonCount]) < PHO_ETA_CUT )) continue;
+                if (!(NanoReader_.Photon_isScEtaEB[PhotonCount] || NanoReader_.Photon_isScEtaEE[PhotonCount])) continue;
+                if (!(NanoReader_.Photon_mvaID[PhotonCount] > PHO_MVA_ID)) continue;
+                if(!(NanoReader_.Photon_pixelSeed[PhotonCount]) == 0 ) continue;
+                if (!(NanoReader_.Photon_electronVeto[PhotonCount]) == 1) continue;
+                nTightPhoton++;
+
+                /* ----------- push pt,eta,phi,ecorr in the TightPhoton last index ---------- */
+                LV_tightPhoton.push_back(TLorentzVector(0,0,0,0));
+                LV_tightPhoton.back().SetPtEtaPhiE( NanoReader_.Photon_pt[PhotonCount],
+                                                NanoReader_.Photon_eta[PhotonCount],
+                                                NanoReader_.Photon_phi[PhotonCount],
+                                                NanoReader_.Photon_eCorr[PhotonCount]
+                                                );
+                /* ------- sort and Leading_photon -> pho1  SubLeading_photon -> pho2  ------- */
+                if ( NanoReader_.Photon_pt[PhotonCount] > WVJJTree->pho1_pt ) {
+                    WVJJTree->pho2_pt = WVJJTree->pho1_pt;
+                    WVJJTree->pho2_eta = WVJJTree->pho1_eta;
+                    WVJJTree->pho2_phi = WVJJTree->pho1_phi;
+                    WVJJTree->pho2_m = WVJJTree->pho1_m;
+                    WVJJTree->pho2_E = WVJJTree->pho1_E;
+                    WVJJTree->pho2_iso = WVJJTree->pho1_iso;
+                    WVJJTree->pho2_q = WVJJTree->pho1_q;
+                    WVJJTree->pho2_mvaIDFall17V2 = WVJJTree->pho1_mvaIDFall17V2;
+                    WVJJTree->pho2_mvaIDFall17V1 = WVJJTree->pho1_mvaIDFall17V1;
+                    WVJJTree->pho2_mvaID_WP80 = WVJJTree->pho1_mvaID_WP80;
+                    WVJJTree->pho2_mvaID_WP90 = WVJJTree->pho1_mvaID_WP90;
+
+                    WVJJTree->pho1_pt = NanoReader_.Photon_pt[PhotonCount];
+                    WVJJTree->pho1_eta = NanoReader_.Photon_eta[PhotonCount];
+                    WVJJTree->pho1_phi = NanoReader_.Photon_phi[PhotonCount];
+                    WVJJTree->pho1_m = NanoReader_.Photon_mass[PhotonCount];
+                    WVJJTree->pho1_iso = NanoReader_.Photon_pfRelIso03_all[PhotonCount];
+                    WVJJTree->pho1_q = NanoReader_.Photon_charge[PhotonCount];
+                    WVJJTree->pho1_mvaIDFall17V2 = NanoReader_.Photon_mvaID[PhotonCount];
+                    WVJJTree->pho1_mvaIDFall17V1 = NanoReader_.Photon_mvaID_Fall17V1p1[PhotonCount];
+                    WVJJTree->pho1_mvaID_WP80 = NanoReader_.Photon_mvaID_WP80[PhotonCount];
+                    WVJJTree->pho1_mvaID_WP90 = NanoReader_.Photon_mvaID_WP90[PhotonCount];
+                }
+                else if ( (NanoReader_.Photon_pt[PhotonCount] > WVJJTree->pho2_pt) && (WVJJTree->pho1_pt > NanoReader_.Photon_pt[PhotonCount]) ) 
+                {
+                    WVJJTree->pho2_pt = NanoReader_.Photon_pt[PhotonCount]; 
+                    WVJJTree->pho2_eta = NanoReader_.Photon_eta[PhotonCount];
+                    WVJJTree->pho2_phi = NanoReader_.Photon_phi[PhotonCount];
+                    WVJJTree->pho2_m = NanoReader_.Photon_mass[PhotonCount];
+                    WVJJTree->pho2_iso = NanoReader_.Photon_pfRelIso03_all[PhotonCount];
+                    WVJJTree->pho2_q = NanoReader_.Photon_charge[PhotonCount];
+                    WVJJTree->pho2_mvaIDFall17V2 = NanoReader_.Photon_mvaID[PhotonCount];
+                    WVJJTree->pho2_mvaIDFall17V1 = NanoReader_.Photon_mvaID_Fall17V1p1[PhotonCount];
+                    WVJJTree->pho2_mvaID_WP80 = NanoReader_.Photon_mvaID_WP80[PhotonCount];
+                    WVJJTree->pho2_mvaID_WP90 = NanoReader_.Photon_mvaID_WP90[PhotonCount];
+                }
+            }
+
+            int nGEN_quarks_had =0;
             if (isMC==1)
             {
                 LV_GEN_Higgs.clear();
@@ -503,102 +586,10 @@ int main (int argc, char** argv) {
                 LV_GEN_photons.clear();
                 LV_GEN_quarks.clear();
                 LV_GEN_quarks_had_AK4.clear();
+                LV_GEN_quarks_had_AK4_tmp.clear();
+                LV_GEN_quarks_had_AK4_beforecut.clear();
                 LV_GEN_quarks_had_AK8.clear();
-                //checking GenJet
-                // for (UInt_t GenJetCount = 0; GenJetCount < *NanoReader_.nGenJet; ++GenJetCount)
-                // {
-                // LV_GEN_quarks_had_AK4.push_back(TLorentzVector(0,0,0,0));
-                // LV_GEN_quarks_had_AK4.back().SetPtEtaPhiM(NanoReader_.GenJet_pt[GenJetCount],
-                //                                     NanoReader_.GenJet_eta[GenJetCount],
-                //                                     NanoReader_.GenJet_phi[GenJetCount],
-                //                                     NanoReader_.GenJet_mass[GenJetCount]);
-                // }
-                // WVJJTree->GEN_Q1_had_AK4_p = LV_GEN_quarks_had_AK4.at(0).P();
-                // WVJJTree->GEN_Q1_had_AK4_pt = LV_GEN_quarks_had_AK4.at(0).Pt();
-                // WVJJTree->GEN_Q1_had_AK4_pz = LV_GEN_quarks_had_AK4.at(0).Pz();
-                // WVJJTree->GEN_Q1_had_AK4_eta = LV_GEN_quarks_had_AK4.at(0).Eta();
-                // WVJJTree->GEN_Q1_had_AK4_phi = LV_GEN_quarks_had_AK4.at(0).Phi();
-                // WVJJTree->GEN_Q1_had_AK4_m = LV_GEN_quarks_had_AK4.at(0).M();
-                // WVJJTree->GEN_Q1_had_AK4_E = LV_GEN_quarks_had_AK4.at(0).E();
-
-                // WVJJTree->GEN_Q2_had_AK4_p = LV_GEN_quarks_had_AK4.at(1).P();
-                // WVJJTree->GEN_Q2_had_AK4_pt = LV_GEN_quarks_had_AK4.at(1).Pt();
-                // WVJJTree->GEN_Q2_had_AK4_pz = LV_GEN_quarks_had_AK4.at(1).Pz();
-                // WVJJTree->GEN_Q2_had_AK4_eta = LV_GEN_quarks_had_AK4.at(1).Eta();
-                // WVJJTree->GEN_Q2_had_AK4_phi = LV_GEN_quarks_had_AK4.at(1).Phi();
-                // WVJJTree->GEN_Q2_had_AK4_m = LV_GEN_quarks_had_AK4.at(1).M();
-                // WVJJTree->GEN_Q2_had_AK4_E = LV_GEN_quarks_had_AK4.at(1).E();
-                
-                // WVJJTree->GEN_Q3_had_AK4_p = LV_GEN_quarks_had_AK4.at(2).P();
-                // WVJJTree->GEN_Q3_had_AK4_pt = LV_GEN_quarks_had_AK4.at(2).Pt();
-                // WVJJTree->GEN_Q3_had_AK4_pz = LV_GEN_quarks_had_AK4.at(2).Pz();
-                // WVJJTree->GEN_Q3_had_AK4_eta = LV_GEN_quarks_had_AK4.at(2).Eta();
-                // WVJJTree->GEN_Q3_had_AK4_phi = LV_GEN_quarks_had_AK4.at(2).Phi();
-                // WVJJTree->GEN_Q3_had_AK4_m = LV_GEN_quarks_had_AK4.at(2).M();
-                // WVJJTree->GEN_Q3_had_AK4_E = LV_GEN_quarks_had_AK4.at(2).E();
-                
-                // WVJJTree->GEN_Q4_had_AK4_p = LV_GEN_quarks_had_AK4.at(3).P();
-                // WVJJTree->GEN_Q4_had_AK4_pt = LV_GEN_quarks_had_AK4.at(3).Pt();
-                // WVJJTree->GEN_Q4_had_AK4_pz = LV_GEN_quarks_had_AK4.at(3).Pz();
-                // WVJJTree->GEN_Q4_had_AK4_eta = LV_GEN_quarks_had_AK4.at(3).Eta();
-                // WVJJTree->GEN_Q4_had_AK4_phi = LV_GEN_quarks_had_AK4.at(3).Phi();
-                // WVJJTree->GEN_Q4_had_AK4_m = LV_GEN_quarks_had_AK4.at(3).M();
-                // WVJJTree->GEN_Q4_had_AK4_E = LV_GEN_quarks_had_AK4.at(3).E();
-
-                // WVJJTree->GEN_W1_had_AK4_p = LV_GEN_quarks_had_AK4.at(0).P() + LV_GEN_quarks_had_AK4.at(1).P();
-                // WVJJTree->GEN_W1_had_AK4_pt = LV_GEN_quarks_had_AK4.at(0).Pt() + LV_GEN_quarks_had_AK4.at(1).Pt();
-                // WVJJTree->GEN_W1_had_AK4_pz = LV_GEN_quarks_had_AK4.at(0).Pz() + LV_GEN_quarks_had_AK4.at(1).Pz();
-                // WVJJTree->GEN_W1_had_AK4_eta = LV_GEN_quarks_had_AK4.at(0).Eta() + LV_GEN_quarks_had_AK4.at(1).Eta();
-                // WVJJTree->GEN_W1_had_AK4_phi = LV_GEN_quarks_had_AK4.at(0).Phi() + LV_GEN_quarks_had_AK4.at(1).Phi();
-                // WVJJTree->GEN_W1_had_AK4_m = LV_GEN_quarks_had_AK4.at(0).M() + LV_GEN_quarks_had_AK4.at(1).M();
-                // WVJJTree->GEN_W1_had_AK4_E = LV_GEN_quarks_had_AK4.at(0).E() + LV_GEN_quarks_had_AK4.at(1).E();
-
-                // WVJJTree->GEN_W2_had_AK4_p = LV_GEN_quarks_had_AK4.at(2).P() + LV_GEN_quarks_had_AK4.at(3).P();
-                // WVJJTree->GEN_W2_had_AK4_pt = LV_GEN_quarks_had_AK4.at(2).Pt() + LV_GEN_quarks_had_AK4.at(3).Pt();
-                // WVJJTree->GEN_W2_had_AK4_pz = LV_GEN_quarks_had_AK4.at(2).Pz() + LV_GEN_quarks_had_AK4.at(3).Pz();
-                // WVJJTree->GEN_W2_had_AK4_eta = LV_GEN_quarks_had_AK4.at(2).Eta() + LV_GEN_quarks_had_AK4.at(3).Eta();
-                // WVJJTree->GEN_W2_had_AK4_phi = LV_GEN_quarks_had_AK4.at(2).Phi() + LV_GEN_quarks_had_AK4.at(3).Phi();
-                // WVJJTree->GEN_W2_had_AK4_m = LV_GEN_quarks_had_AK4.at(2).M() + LV_GEN_quarks_had_AK4.at(3).M();
-                // WVJJTree->GEN_W2_had_AK4_E = LV_GEN_quarks_had_AK4.at(2).E() + LV_GEN_quarks_had_AK4.at(3).E();
-                // checking GenJetAK8
-                
-                // for (UInt_t GenJetAK8Count = 0; GenJetAK8Count < *NanoReader_.nGenJetAK8; ++GenJetAK8Count)
-                // {
-                // LV_GEN_quarks_had_AK8.push_back(TLorentzVector(0,0,0,0));
-                // LV_GEN_quarks_had_AK8.back().SetPtEtaPhiM(NanoReader_.GenJetAK8_pt[GenJetAK8Count],
-                //                                     NanoReader_.GenJetAK8_eta[GenJetAK8Count],
-                //                                     NanoReader_.GenJetAK8_phi[GenJetAK8Count],
-                //                                     NanoReader_.GenJetAK8_mass[GenJetAK8Count]);
-                // }
-                // // H->WW-> J J
-                // if(*NanoReader_.nGenJetAK8 == 2){
-                // WVJJTree->GEN_Lead_had_AK8_p = LV_GEN_quarks_had_AK8.at(0).P();
-                // WVJJTree->GEN_Lead_had_AK8_pt = LV_GEN_quarks_had_AK8.at(0).Pt();
-                // WVJJTree->GEN_Lead_had_AK8_pz = LV_GEN_quarks_had_AK8.at(0).Pz();
-                // WVJJTree->GEN_Lead_had_AK8_eta = LV_GEN_quarks_had_AK8.at(0).Eta();
-                // WVJJTree->GEN_Lead_had_AK8_phi = LV_GEN_quarks_had_AK8.at(0).Phi();
-                // WVJJTree->GEN_Lead_had_AK8_m = LV_GEN_quarks_had_AK8.at(0).M();
-                // WVJJTree->GEN_Lead_had_AK8_E = LV_GEN_quarks_had_AK8.at(0).E();
-
-                // WVJJTree->GEN_SubLead_had_AK8_p = LV_GEN_quarks_had_AK8.at(1).P();
-                // WVJJTree->GEN_SubLead_had_AK8_pt = LV_GEN_quarks_had_AK8.at(1).Pt();
-                // WVJJTree->GEN_SubLead_had_AK8_pz = LV_GEN_quarks_had_AK8.at(1).Pz();
-                // WVJJTree->GEN_SubLead_had_AK8_eta = LV_GEN_quarks_had_AK8.at(1).Eta();
-                // WVJJTree->GEN_SubLead_had_AK8_phi = LV_GEN_quarks_had_AK8.at(1).Phi();
-                // WVJJTree->GEN_SubLead_had_AK8_m = LV_GEN_quarks_had_AK8.at(1).M();
-                // WVJJTree->GEN_SubLead_had_AK8_E = LV_GEN_quarks_had_AK8.at(1).E();
-                // }
-                // // H->WW->J
-                // if(*NanoReader_.nGenJetAK8 == 1){
-                // WVJJTree->GEN_OneJet_had_AK8_p = LV_GEN_quarks_had_AK8.at(0).P();
-                // WVJJTree->GEN_OneJet_had_AK8_pt = LV_GEN_quarks_had_AK8.at(0).Pt();
-                // WVJJTree->GEN_OneJet_had_AK8_pz = LV_GEN_quarks_had_AK8.at(0).Pz();
-                // WVJJTree->GEN_OneJet_had_AK8_eta = LV_GEN_quarks_had_AK8.at(0).Eta();
-                // WVJJTree->GEN_OneJet_had_AK8_phi = LV_GEN_quarks_had_AK8.at(0).Phi();
-                // WVJJTree->GEN_OneJet_had_AK8_m = LV_GEN_quarks_had_AK8.at(0).M();
-                // WVJJTree->GEN_OneJet_had_AK8_E = LV_GEN_quarks_had_AK8.at(0).E();
-                // }
-
+                // checking GEN level decay tree
                 // for (UInt_t GENPartCount = 0; GENPartCount < *NanoReader_.nGenPart; ++GENPartCount)
                 // {   
                 //     std::cout
@@ -621,17 +612,40 @@ int main (int argc, char** argv) {
                     // bool isHardProcess = (NanoReader_.GenPart_statusFlags[i] >> 7  & 1 );
                     // bool isFromHardProcess = (NanoReader_.GenPart_statusFlags[i] >> 8  & 1 );
                     // bool isFromHardProcessBeforeFSR = (NanoReader_.GenPart_statusFlags[i] >> 11  & 1 );
+                    // int GrandMotherIdx = NanoReader_.GenPart_genPartIdxMother[motherIdx];
+                    // int GrandMotherPDGid = motherIdx < 0 ? -1 : NanoReader_.GenPart_pdgId[NanoReader_.GenPart_genPartIdxMother[motherIdx]];
+                    // int GrandMotherPDGid = motherIdx < 0 ? -1 : NanoReader_.GenPart_pdgId[GrandMotherIdx];
+                    // int GreatGrandMotherIdx = NanoReader_.GenPart_genPartIdxMother[GrandMotherIdx];
+                    // int GreatGrandMotherPDGid = motherIdx < 0 ? -1 : NanoReader_.GenPart_pdgId[GreatGrandMotherIdx];
+                    // mc_grandmaid = mc_motheridx < 0 ? -1 : genParticles[mc_motheridx].mother_idx;
+                    // bool isPrompt                      = (NanoReader_.GenPart_statusFlags[i] >> 0  & 1 );
+                    // bool isDecayedLeptonHadron         = (NanoReader_.GenPart_statusFlags[i] >> 1  & 1 );
+                    // bool isTauDecayProduct             = (NanoReader_.GenPart_statusFlags[i] >> 2  & 1 );
+                    // bool isPromptTauDecayProduct       = (NanoReader_.GenPart_statusFlags[i] >> 3  & 1 );
+                    // bool isDirectTauDecayProduct       = (NanoReader_.GenPart_statusFlags[i] >> 4  & 1 );
+                    // bool isDirectPromptTauDecayProduct = (NanoReader_.GenPart_statusFlags[i] >> 5  & 1 );
+                    // bool isDirectHadronDecayProduct    = (NanoReader_.GenPart_statusFlags[i] >> 6  & 1 );
+                    // bool isHardProcess                 = (NanoReader_.GenPart_statusFlags[i] >> 7  & 1 );
+                    // bool isFromHardProcess             = (NanoReader_.GenPart_statusFlags[i] >> 8  & 1 );
+                    // bool isHardProcessTauDecayProduct  = (NanoReader_.GenPart_statusFlags[i] >> 9  & 1 );
+                    // bool isDirectHardProcessTauDecayProduct = (NanoReader_.GenPart_statusFlags[i] >> 10  & 1 );
+                    // bool isFromHardProcessBeforeFSR    = (NanoReader_.GenPart_statusFlags[i] >> 11  & 1 );
+                    // bool isFirstCopy                   = (NanoReader_.GenPart_statusFlags[i] >> 12  & 1 );
+                    // bool isLastCopy                    = (NanoReader_.GenPart_statusFlags[i] >> 13  & 1 );
+                    // bool isLastCopyBeforeFSR           = (NanoReader_.GenPart_statusFlags[i] >> 13  & 1);
                     // if (NanoReader_.GenPart_statusFlags[i] >> 0  & 1 ) std::cout << "Status Flags is Prompt "  << std::endl;
                     // if (NanoReader_.GenPart_statusFlags[i] >> 7  & 1 ) std::cout << "Status Flags is HardProcess "  << std::endl;
                     // if (NanoReader_.GenPart_statusFlags[i] >> 8  & 1 ) std::cout << "Status Flags is from HardProcess "  << std::endl;
                     // if (NanoReader_.GenPart_statusFlags[i] >> 11 & 1 ) std::cout << "Status Flags is from HardProcessBeforeFSR "  << std::endl;
 
                     // Get Higgs bosons
-                    if (pdgid == 25)
+                    if (pdgid == 25 && status ==22 )
                     {
                         // std::cout << "\tEvent No. " << i << "/" << lineCount << ":\tHiggs: pdgID: " << pdgid
-                                  // << "\tstatus: " << status << "\tMother pdgID: " <<  motherPDGid
-                                  // << "\tpT: " << NanoReader_.GenPart_pt[GENPartCount] << std::endl;
+                        //           << "\tstatus: " << status << "\tMother pdgID: " <<  motherPDGid
+                        //           << "\tHard Process:" << isHardProcess << "\t From HardProcess:" << isFromHardProcess
+                        //           << std::endl;
+                                //   << "\tpT: " << NanoReader_.GenPart_pt[GENPartCount] << std::endl;
                         LV_GEN_Higgs.push_back(TLorentzVector(0,0,0,0));
                         LV_GEN_Higgs.back().SetPtEtaPhiM(NanoReader_.GenPart_pt[GENPartCount],
                                                            NanoReader_.GenPart_eta[GENPartCount],
@@ -698,16 +712,16 @@ int main (int argc, char** argv) {
                 if (LV_GEN_WBosons.size()>2)
                 {
                     std::cout << "W-Bosons size = " << LV_GEN_WBosons.size() << std::endl;
-                    std::cout << "GEN W-Bosons are more than 2. Please check..." << std::endl;
-                    exit(0);
+                    // std::cout << "GEN W-Bosons are more than 2. Please check..." << std::endl;
+                    // exit(0);
                 }
                 if (LV_GEN_quarks.size()>4)
                 {
                     std::cout << "Quarks size = " << LV_GEN_quarks.size() << std::endl;
-                    std::cout << "GEN Quarks are more than 4. Please check..." << std::endl;
-                    exit(0);
+                    // std::cout << "GEN Quarks are more than 4. Please check..." << std::endl;
+                    // exit(0);
                 }
-            }
+            
             TLorentzVector LV_GEN_HiggsGG(0,0,0,0);
             TLorentzVector LV_GEN_HiggsWW(0,0,0,0);
             LV_GEN_HiggsGG = LV_GEN_photons.at(0) + LV_GEN_photons.at(1);
@@ -835,7 +849,11 @@ int main (int argc, char** argv) {
             WVJJTree->GEN_deltaPhi_HH = deltaPhi(LV_GEN_Higgs.at(0),LV_GEN_Higgs.at(1));
             WVJJTree->GEN_deltaR_GG = deltaR(LV_GEN_photons.at(0),LV_GEN_photons.at(1));
             WVJJTree->GEN_deltaR_WW = deltaR(LV_GEN_WBosons.at(0),LV_GEN_WBosons.at(1));
-            WVJJTree->GEN_deltaR_MIN4Q = MinDeltaR(LV_GEN_quarks.at(0),LV_GEN_quarks.at(1),LV_GEN_quarks[2],LV_GEN_quarks.at(3));
+            WVJJTree->GEN_deltaR_MIN4Q = MinDeltaR(LV_GEN_quarks.at(0),LV_GEN_quarks.at(1),LV_GEN_quarks.at(2),LV_GEN_quarks.at(3));
+            WVJJTree->GEN_deltaR_MAX4Q = MaxDeltaR(LV_GEN_quarks.at(0),LV_GEN_quarks.at(1),LV_GEN_quarks.at(2),LV_GEN_quarks.at(3));
+            WVJJTree->GEN_deltaR_MIN3Q= Min3Q(LV_GEN_quarks.at(0),LV_GEN_quarks.at(1),LV_GEN_quarks.at(2),LV_GEN_quarks.at(3));
+            WVJJTree->GEN_BoolTwoJet_deltaR = TwoJetCategory(LV_GEN_quarks.at(0),LV_GEN_quarks.at(1),LV_GEN_quarks.at(2),LV_GEN_quarks.at(3));
+            WVJJTree->GEN_BoolThreeJet_deltaR = ThreeJetCategory(LV_GEN_quarks.at(0),LV_GEN_quarks.at(1),LV_GEN_quarks.at(2),LV_GEN_quarks.at(3));
 
             WVJJTree->GEN_HWW_pT = (LV_GEN_WBosons.at(0)+LV_GEN_WBosons.at(1)).Pt();
             WVJJTree->GEN_HWW_eta = (LV_GEN_WBosons.at(0)+LV_GEN_WBosons.at(1)).Eta();
@@ -879,6 +897,237 @@ int main (int argc, char** argv) {
                                       (has_HLT_Diphoton30_18_PVrealAND_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55 ? *NanoReader_.HLT_Diphoton30_18_PVrealAND_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55 : 0) ||
                                       (has_HLT_Diphoton30_18_PVrealAND_R9Id_AND_IsoCaloId_AND_HE_R9Id_NoPixelVeto_Mass55 ? *NanoReader_.HLT_Diphoton30_18_PVrealAND_R9Id_AND_IsoCaloId_AND_HE_R9Id_NoPixelVeto_Mass55 : 0)
                                       );
+            //checking GenJet
+            
+            int tem_number =0;
+            int Fourjets_Count =0;
+            for (UInt_t GenJetCount = 0; GenJetCount < *NanoReader_.nGenJet; ++GenJetCount)
+            {
+                if(deltaR(NanoReader_.GenJet_eta[GenJetCount],NanoReader_.GenJet_phi[GenJetCount],LV_GEN_photons.at(0).Eta(),LV_GEN_photons.at(0).Phi())>0.4 && 
+                deltaR(NanoReader_.GenJet_eta[GenJetCount],NanoReader_.GenJet_phi[GenJetCount],LV_GEN_photons.at(1).Eta(),LV_GEN_photons.at(1).Phi())>0.4
+                )
+                {
+                    // if(massPoint<=1000 && NanoReader_.GenJet_pt[GenJetCount]<10) continue;
+                    // if(massPoint>=1000 && NanoReader_.GenJet_pt[GenJetCount]<10) continue;
+                    LV_GEN_quarks_had_AK4_beforecut.push_back(TLorentzVector(0,0,0,0));
+                    LV_GEN_quarks_had_AK4_beforecut.back().SetPtEtaPhiM(NanoReader_.GenJet_pt[GenJetCount],
+                                                    NanoReader_.GenJet_eta[GenJetCount],
+                                                    NanoReader_.GenJet_phi[GenJetCount],
+                                                    NanoReader_.GenJet_mass[GenJetCount]);
+                    if(MinDeltaRFromReferenceLV(LV_GEN_quarks_had_AK4_beforecut.at(tem_number),LV_GEN_quarks.at(0),LV_GEN_quarks.at(1),LV_GEN_quarks.at(2),LV_GEN_quarks.at(3)) < 0.4 )
+                    {
+                        LV_GEN_quarks_had_AK4_tmp.push_back(TLorentzVector(0,0,0,0));
+                        LV_GEN_quarks_had_AK4_tmp.back().SetPtEtaPhiM(NanoReader_.GenJet_pt[GenJetCount],
+                                                        NanoReader_.GenJet_eta[GenJetCount],
+                                                        NanoReader_.GenJet_phi[GenJetCount],
+                                                        NanoReader_.GenJet_mass[GenJetCount]);
+                        // std::cout
+                        // << "Event:" << i <<"/idx:" << GenJetCount
+                        // << "\t Pt:" << NanoReader_.GenJet_pt[GenJetCount]
+                        // << "\t Eta:" << NanoReader_.GenJet_eta[GenJetCount]
+                        // << "\t Phi:" << NanoReader_.GenJet_phi[GenJetCount]
+                        // << std::endl; 
+                        nGEN_quarks_had++;
+                    }
+                    // invarirant mass information cut
+                    b_dis.push_back(GenJetCount);
+                    tem_number++;
+                }
+            }
+            // std::cout << "\t before pt cut numbers:" << *NanoReader_.nGenJet << std::endl;
+            // std::cout << "\t after pt cut numbers:" << nGEN_quarks_had << std::endl;
+            
+            // if(nGEN_quarks_had>=4){
+            // }
+            TLorentzVector four_had_jets;
+            if(nGEN_quarks_had>=4)
+            {
+                
+                // TLorentzVector LV_pho1(0,0,0,0);
+                // LV_pho1.SetPtEtaPhiM( WVJJTree->pho1_pt, WVJJTree->pho1_eta, WVJJTree->pho1_phi, WVJJTree->pho1_m );
+
+                // TLorentzVector LV_pho2(0,0,0,0);
+                // LV_pho2.SetPtEtaPhiM( WVJJTree->pho2_pt, WVJJTree->pho2_eta, WVJJTree->pho2_phi, WVJJTree->pho2_m );
+
+                // TLorentzVector diphoton = LV_pho1+LV_pho2;
+                // GetFHJetUsingDR(diphoton,LV_GEN_quarks_had_AK4_tmp, b_dis, LV_GEN_quarks_had_AK4, Selectedb_dis, 0);
+                GetFHminWHJets(LV_GEN_quarks_had_AK4_tmp,b_dis,LV_GEN_quarks_had_AK4,Selectedb_dis,0);
+            // std::cout<< "\t nGEN_quarks_had:" <<  nGEN_quarks_had << std::endl;
+                WVJJTree->GEN_Q1_had_AK4_p = LV_GEN_quarks_had_AK4.at(0).P();
+                WVJJTree->GEN_Q1_had_AK4_pt = LV_GEN_quarks_had_AK4.at(0).Pt();
+                WVJJTree->GEN_Q1_had_AK4_pz = LV_GEN_quarks_had_AK4.at(0).Pz();
+                WVJJTree->GEN_Q1_had_AK4_eta = LV_GEN_quarks_had_AK4.at(0).Eta();
+                WVJJTree->GEN_Q1_had_AK4_phi = LV_GEN_quarks_had_AK4.at(0).Phi();
+                WVJJTree->GEN_Q1_had_AK4_m = LV_GEN_quarks_had_AK4.at(0).M();
+                WVJJTree->GEN_Q1_had_AK4_E = LV_GEN_quarks_had_AK4.at(0).E();
+
+                WVJJTree->GEN_Q2_had_AK4_p = LV_GEN_quarks_had_AK4.at(1).P();
+                WVJJTree->GEN_Q2_had_AK4_pt = LV_GEN_quarks_had_AK4.at(1).Pt();
+                WVJJTree->GEN_Q2_had_AK4_pz = LV_GEN_quarks_had_AK4.at(1).Pz();
+                WVJJTree->GEN_Q2_had_AK4_eta = LV_GEN_quarks_had_AK4.at(1).Eta();
+                WVJJTree->GEN_Q2_had_AK4_phi = LV_GEN_quarks_had_AK4.at(1).Phi();
+                WVJJTree->GEN_Q2_had_AK4_m = LV_GEN_quarks_had_AK4.at(1).M();
+                WVJJTree->GEN_Q2_had_AK4_E = LV_GEN_quarks_had_AK4.at(1).E();
+                
+                WVJJTree->GEN_Q3_had_AK4_p = LV_GEN_quarks_had_AK4.at(2).P();
+                WVJJTree->GEN_Q3_had_AK4_pt = LV_GEN_quarks_had_AK4.at(2).Pt();
+                WVJJTree->GEN_Q3_had_AK4_pz = LV_GEN_quarks_had_AK4.at(2).Pz();
+                WVJJTree->GEN_Q3_had_AK4_eta = LV_GEN_quarks_had_AK4.at(2).Eta();
+                WVJJTree->GEN_Q3_had_AK4_phi = LV_GEN_quarks_had_AK4.at(2).Phi();
+                WVJJTree->GEN_Q3_had_AK4_m = LV_GEN_quarks_had_AK4.at(2).M();
+                WVJJTree->GEN_Q3_had_AK4_E = LV_GEN_quarks_had_AK4.at(2).E();
+                
+                WVJJTree->GEN_Q4_had_AK4_p = LV_GEN_quarks_had_AK4.at(3).P();
+                WVJJTree->GEN_Q4_had_AK4_pt = LV_GEN_quarks_had_AK4.at(3).Pt();
+                WVJJTree->GEN_Q4_had_AK4_pz = LV_GEN_quarks_had_AK4.at(3).Pz();
+                WVJJTree->GEN_Q4_had_AK4_eta = LV_GEN_quarks_had_AK4.at(3).Eta();
+                WVJJTree->GEN_Q4_had_AK4_phi = LV_GEN_quarks_had_AK4.at(3).Phi();
+                WVJJTree->GEN_Q4_had_AK4_m = LV_GEN_quarks_had_AK4.at(3).M();
+                WVJJTree->GEN_Q4_had_AK4_E = LV_GEN_quarks_had_AK4.at(3).E();
+                // if (massPoint<=1000)
+                TLorentzVector LV_GEN_had_LeadWBosons;
+                
+                TLorentzVector LV_GEN_had_SubLeadWBosons;
+                LV_GEN_had_LeadWBosons = LV_GEN_quarks_had_AK4.at(0) + LV_GEN_quarks_had_AK4.at(1);
+                LV_GEN_had_SubLeadWBosons = LV_GEN_quarks_had_AK4.at(2) + LV_GEN_quarks_had_AK4.at(3);
+                WVJJTree->GEN_W1_had_AK4_p =LV_GEN_had_LeadWBosons.P();
+                WVJJTree->GEN_W1_had_AK4_pt = LV_GEN_had_LeadWBosons.Pt();
+                WVJJTree->GEN_W1_had_AK4_pz = LV_GEN_had_LeadWBosons.Pz();
+                WVJJTree->GEN_W1_had_AK4_eta =LV_GEN_had_LeadWBosons.Eta();
+                WVJJTree->GEN_W1_had_AK4_phi =LV_GEN_had_LeadWBosons.Phi();
+                WVJJTree->GEN_W1_had_AK4_m =LV_GEN_had_LeadWBosons.M();
+                WVJJTree->GEN_W1_had_AK4_E =LV_GEN_had_LeadWBosons.E();
+
+                WVJJTree->GEN_W2_had_AK4_p =LV_GEN_had_SubLeadWBosons.P();
+                WVJJTree->GEN_W2_had_AK4_pt = LV_GEN_had_SubLeadWBosons.Pt();
+                WVJJTree->GEN_W2_had_AK4_pz = LV_GEN_had_SubLeadWBosons.Pz();
+                WVJJTree->GEN_W2_had_AK4_eta =LV_GEN_had_SubLeadWBosons.Eta();
+                WVJJTree->GEN_W2_had_AK4_phi =LV_GEN_had_SubLeadWBosons.Phi();
+                WVJJTree->GEN_W2_had_AK4_m =LV_GEN_had_SubLeadWBosons.M();
+                WVJJTree->GEN_W2_had_AK4_E =LV_GEN_had_SubLeadWBosons.E();                
+                TLorentzVector LV_GEN_had_H;
+                LV_GEN_had_H = LV_GEN_quarks_had_AK4.at(0) + LV_GEN_quarks_had_AK4.at(1) + LV_GEN_quarks_had_AK4.at(2) + LV_GEN_quarks_had_AK4.at(3);
+                WVJJTree->GEN_H_had_AK4_p =LV_GEN_had_H.P();
+                WVJJTree->GEN_H_had_AK4_pt = LV_GEN_had_H.Pt();
+                WVJJTree->GEN_H_had_AK4_pz = LV_GEN_had_H.Pz();
+                WVJJTree->GEN_H_had_AK4_eta =LV_GEN_had_H.Eta();
+                WVJJTree->GEN_H_had_AK4_phi =LV_GEN_had_H.Phi();
+                WVJJTree->GEN_H_had_AK4_m =LV_GEN_had_H.M();
+                WVJJTree->GEN_H_had_AK4_E =LV_GEN_had_H.E();        
+                WVJJTree->deltaR_GENJetQuark_HH = deltaR(LV_GEN_had_H, LV_GEN_WBosons.at(0)+LV_GEN_WBosons.at(1));    
+                // if(nGEN_quarks_had >= 5)
+                // {
+                //     WVJJTree->GEN_Q5_had_AK4_p = LV_GEN_quarks_had_AK4.at(4).P();
+                //     WVJJTree->GEN_Q5_had_AK4_pt = LV_GEN_quarks_had_AK4.at(4).Pt();
+                //     WVJJTree->GEN_Q5_had_AK4_pz = LV_GEN_quarks_had_AK4.at(4).Pz();
+                //     WVJJTree->GEN_Q5_had_AK4_eta = LV_GEN_quarks_had_AK4.at(4).Eta();
+                //     WVJJTree->GEN_Q5_had_AK4_phi = LV_GEN_quarks_had_AK4.at(4).Phi();
+                //     WVJJTree->GEN_Q5_had_AK4_m = LV_GEN_quarks_had_AK4.at(4).M();
+                //     WVJJTree->GEN_Q5_had_AK4_E = LV_GEN_quarks_had_AK4.at(4).E();
+                // }
+                // if(nGEN_quarks_had >=6 )
+                // {
+                //     WVJJTree->GEN_Q6_had_AK4_p = LV_GEN_quarks_had_AK4.at(5).P();
+                //     WVJJTree->GEN_Q6_had_AK4_pt = LV_GEN_quarks_had_AK4.at(5).Pt();
+                //     WVJJTree->GEN_Q6_had_AK4_pz = LV_GEN_quarks_had_AK4.at(5).Pz();
+                //     WVJJTree->GEN_Q6_had_AK4_eta = LV_GEN_quarks_had_AK4.at(5).Eta();
+                //     WVJJTree->GEN_Q6_had_AK4_phi = LV_GEN_quarks_had_AK4.at(5).Phi();
+                //     WVJJTree->GEN_Q6_had_AK4_m = LV_GEN_quarks_had_AK4.at(5).M();
+                //     WVJJTree->GEN_Q6_had_AK4_E = LV_GEN_quarks_had_AK4.at(5).E();
+                // }
+                // if(nGEN_quarks_had >=7 )
+                // {
+                //     WVJJTree->GEN_Q7_had_AK4_p = LV_GEN_quarks_had_AK4.at(6).P();
+                //     WVJJTree->GEN_Q7_had_AK4_pt = LV_GEN_quarks_had_AK4.at(6).Pt();
+                //     WVJJTree->GEN_Q7_had_AK4_pz = LV_GEN_quarks_had_AK4.at(6).Pz();
+                //     WVJJTree->GEN_Q7_had_AK4_eta = LV_GEN_quarks_had_AK4.at(6).Eta();
+                //     WVJJTree->GEN_Q7_had_AK4_phi = LV_GEN_quarks_had_AK4.at(6).Phi();
+                //     WVJJTree->GEN_Q7_had_AK4_m = LV_GEN_quarks_had_AK4.at(6).M();
+                //     WVJJTree->GEN_Q7_had_AK4_E = LV_GEN_quarks_had_AK4.at(6).E();
+                // }
+                // if(nGEN_quarks_had >=8 )
+                // {
+                //     WVJJTree->GEN_Q8_had_AK4_p = LV_GEN_quarks_had_AK4.at(7).P();
+                //     WVJJTree->GEN_Q8_had_AK4_pt = LV_GEN_quarks_had_AK4.at(7).Pt();
+                //     WVJJTree->GEN_Q8_had_AK4_pz = LV_GEN_quarks_had_AK4.at(7).Pz();
+                //     WVJJTree->GEN_Q8_had_AK4_eta = LV_GEN_quarks_had_AK4.at(7).Eta();
+                //     WVJJTree->GEN_Q8_had_AK4_phi = LV_GEN_quarks_had_AK4.at(7).Phi();
+                //     WVJJTree->GEN_Q8_had_AK4_m = LV_GEN_quarks_had_AK4.at(7).M();
+                //     WVJJTree->GEN_Q8_had_AK4_E = LV_GEN_quarks_had_AK4.at(7).E();
+                // }
+                // if(nGEN_quarks_had >=9 )
+                // {
+                //     WVJJTree->GEN_Q9_had_AK4_p = LV_GEN_quarks_had_AK4.at(8).P();
+                //     WVJJTree->GEN_Q9_had_AK4_pt = LV_GEN_quarks_had_AK4.at(8).Pt();
+                //     WVJJTree->GEN_Q9_had_AK4_pz = LV_GEN_quarks_had_AK4.at(8).Pz();
+                //     WVJJTree->GEN_Q9_had_AK4_eta = LV_GEN_quarks_had_AK4.at(8).Eta();
+                //     WVJJTree->GEN_Q9_had_AK4_phi = LV_GEN_quarks_had_AK4.at(8).Phi();
+                //     WVJJTree->GEN_Q9_had_AK4_m = LV_GEN_quarks_had_AK4.at(8).M();
+                //     WVJJTree->GEN_Q9_had_AK4_E = LV_GEN_quarks_had_AK4.at(8).E();
+                // }
+                // if(nGEN_quarks_had >=10 )
+                // {
+                //     WVJJTree->GEN_Q10_had_AK4_p = LV_GEN_quarks_had_AK4.at(9).P();
+                //     WVJJTree->GEN_Q10_had_AK4_pt = LV_GEN_quarks_had_AK4.at(9).Pt();
+                //     WVJJTree->GEN_Q10_had_AK4_pz = LV_GEN_quarks_had_AK4.at(9).Pz();
+                //     WVJJTree->GEN_Q10_had_AK4_eta = LV_GEN_quarks_had_AK4.at(9).Eta();
+                //     WVJJTree->GEN_Q10_had_AK4_phi = LV_GEN_quarks_had_AK4.at(9).Phi();
+                //     WVJJTree->GEN_Q10_had_AK4_m = LV_GEN_quarks_had_AK4.at(9).M();
+                //     WVJJTree->GEN_Q10_had_AK4_E = LV_GEN_quarks_had_AK4.at(9).E();
+                // }
+                four_had_jets = LV_GEN_quarks_had_AK4.at(0) + LV_GEN_quarks_had_AK4.at(1) + LV_GEN_quarks_had_AK4.at(2) +LV_GEN_quarks_had_AK4.at(3);
+                WVJJTree->four_had_jets_p = four_had_jets.P();
+                WVJJTree->four_had_jets_pz = four_had_jets.Pz();
+                WVJJTree->four_had_jets_pt = four_had_jets.Pt();
+                WVJJTree->four_had_jets_M = four_had_jets.M();
+                WVJJTree->four_had_jets_E = four_had_jets.E();
+                WVJJTree->four_had_jets_eta = four_had_jets.Eta();
+                WVJJTree->four_had_jets_phi = four_had_jets.Phi();
+            }
+            
+            // checking GenJetAK8
+            for (UInt_t GenJetAK8Count = 0; GenJetAK8Count < *NanoReader_.nGenJetAK8; ++GenJetAK8Count)
+            {
+                // std::cout
+                // << "Event:" << i <<"/idx:" << GenJetAK8Count
+                // << "\t AK8Pt:" << NanoReader_.GenJetAK8_pt[GenJetAK8Count]
+                // << "\t AK8Eta:" << NanoReader_.GenJetAK8_eta[GenJetAK8Count]
+                // << "\t Ak8Phi:" << NanoReader_.GenJetAK8_phi[GenJetAK8Count]
+                // << std::endl; 
+            LV_GEN_quarks_had_AK8.push_back(TLorentzVector(0,0,0,0));
+            LV_GEN_quarks_had_AK8.back().SetPtEtaPhiM(NanoReader_.GenJetAK8_pt[GenJetAK8Count],
+                                                NanoReader_.GenJetAK8_eta[GenJetAK8Count],
+                                                NanoReader_.GenJetAK8_phi[GenJetAK8Count],
+                                                NanoReader_.GenJetAK8_mass[GenJetAK8Count]);
+            }
+            // H->WW-> J J
+            if(*NanoReader_.nGenJetAK8 == 2){
+            WVJJTree->GEN_Lead_had_AK8_p = LV_GEN_quarks_had_AK8.at(0).P();
+            WVJJTree->GEN_Lead_had_AK8_pt = LV_GEN_quarks_had_AK8.at(0).Pt();
+            WVJJTree->GEN_Lead_had_AK8_pz = LV_GEN_quarks_had_AK8.at(0).Pz();
+            WVJJTree->GEN_Lead_had_AK8_eta = LV_GEN_quarks_had_AK8.at(0).Eta();
+            WVJJTree->GEN_Lead_had_AK8_phi = LV_GEN_quarks_had_AK8.at(0).Phi();
+            WVJJTree->GEN_Lead_had_AK8_m = LV_GEN_quarks_had_AK8.at(0).M();
+            WVJJTree->GEN_Lead_had_AK8_E = LV_GEN_quarks_had_AK8.at(0).E();
+
+            WVJJTree->GEN_SubLead_had_AK8_p = LV_GEN_quarks_had_AK8.at(1).P();
+            WVJJTree->GEN_SubLead_had_AK8_pt = LV_GEN_quarks_had_AK8.at(1).Pt();
+            WVJJTree->GEN_SubLead_had_AK8_pz = LV_GEN_quarks_had_AK8.at(1).Pz();
+            WVJJTree->GEN_SubLead_had_AK8_eta = LV_GEN_quarks_had_AK8.at(1).Eta();
+            WVJJTree->GEN_SubLead_had_AK8_phi = LV_GEN_quarks_had_AK8.at(1).Phi();
+            WVJJTree->GEN_SubLead_had_AK8_m = LV_GEN_quarks_had_AK8.at(1).M();
+            WVJJTree->GEN_SubLead_had_AK8_E = LV_GEN_quarks_had_AK8.at(1).E();
+            }
+            // H->WW->J
+            if(*NanoReader_.nGenJetAK8 == 1){ 
+            WVJJTree->GEN_OneJet_had_AK8_p = LV_GEN_quarks_had_AK8.at(0).P();
+            WVJJTree->GEN_OneJet_had_AK8_pt = LV_GEN_quarks_had_AK8.at(0).Pt();
+            WVJJTree->GEN_OneJet_had_AK8_pz = LV_GEN_quarks_had_AK8.at(0).Pz();
+            WVJJTree->GEN_OneJet_had_AK8_eta = LV_GEN_quarks_had_AK8.at(0).Eta();
+            WVJJTree->GEN_OneJet_had_AK8_phi = LV_GEN_quarks_had_AK8.at(0).Phi();
+            WVJJTree->GEN_OneJet_had_AK8_m = LV_GEN_quarks_had_AK8.at(0).M();
+            WVJJTree->GEN_OneJet_had_AK8_E = LV_GEN_quarks_had_AK8.at(0).E();
+            }
 
             //std::cout << "passed trigger: ";
             //if (WVJJTree->trigger_1Mu) std::cout << "1 muon ";
@@ -898,73 +1147,8 @@ int main (int argc, char** argv) {
             if (WVJJTree->trigger_2Pho) totalCutFlow_FH->Fill("Trigger",1);
             if (WVJJTree->trigger_2Pho) totalCutFlow_SL->Fill("Trigger",1);
             if (WVJJTree->trigger_2Pho) totalCutFlow_FH_GENMatch->Fill("Trigger",1);
-
-            /* -------------------------------------------------------------------------- */
-            /*                              PHOTON SELECTION                              */
-            /* -------------------------------------------------------------------------- */
-            LV_tightPhoton.clear();
-            int nTightPhoton = 0;
-
-            if (*NanoReader_.nPhoton < 2) continue;
-            for (UInt_t PhotonCount = 0; PhotonCount < *NanoReader_.nPhoton; ++PhotonCount)
-            {
-                if (!(NanoReader_.Photon_r9[PhotonCount] > PHO_R9_CUT || (NanoReader_.Photon_pfRelIso03_chg[PhotonCount]*NanoReader_.Photon_pt[PhotonCount]) < PHOTON_PFRELISO03_CHG_CUT || NanoReader_.Photon_pfRelIso03_chg[PhotonCount] < 0.3)) continue;
-                if (!(NanoReader_.Photon_hoe[PhotonCount] < HOVERE_CUT)) continue;
-                if (!(NanoReader_.Photon_pt[PhotonCount] > PHO_PT_VETO_CUT)) continue;
-                if (!(abs(NanoReader_.Photon_eta[PhotonCount]) < PHO_ETA_CUT )) continue;
-                if (!(NanoReader_.Photon_isScEtaEB[PhotonCount] || NanoReader_.Photon_isScEtaEE[PhotonCount])) continue;
-                if (!(NanoReader_.Photon_mvaID[PhotonCount] > PHO_MVA_ID)) continue;
-                if(!(NanoReader_.Photon_pixelSeed[PhotonCount]) == 0 ) continue;
-                if (!(NanoReader_.Photon_electronVeto[PhotonCount]) == 1) continue;
-                nTightPhoton++;
-
-                /* ----------- push pt,eta,phi,ecorr in the TightPhoton last index ---------- */
-                LV_tightPhoton.push_back(TLorentzVector(0,0,0,0));
-                LV_tightPhoton.back().SetPtEtaPhiE( NanoReader_.Photon_pt[PhotonCount],
-                                                NanoReader_.Photon_eta[PhotonCount],
-                                                NanoReader_.Photon_phi[PhotonCount],
-                                                NanoReader_.Photon_eCorr[PhotonCount]
-                                                );
-                /* ------- sort and Leading_photon -> pho1  SubLeading_photon -> pho2  ------- */
-                if ( NanoReader_.Photon_pt[PhotonCount] > WVJJTree->pho1_pt ) {
-                    WVJJTree->pho2_pt = WVJJTree->pho1_pt;
-                    WVJJTree->pho2_eta = WVJJTree->pho1_eta;
-                    WVJJTree->pho2_phi = WVJJTree->pho1_phi;
-                    WVJJTree->pho2_m = WVJJTree->pho1_m;
-                    WVJJTree->pho2_E = WVJJTree->pho1_E;
-                    WVJJTree->pho2_iso = WVJJTree->pho1_iso;
-                    WVJJTree->pho2_q = WVJJTree->pho1_q;
-                    WVJJTree->pho2_mvaIDFall17V2 = WVJJTree->pho1_mvaIDFall17V2;
-                    WVJJTree->pho2_mvaIDFall17V1 = WVJJTree->pho1_mvaIDFall17V1;
-                    WVJJTree->pho2_mvaID_WP80 = WVJJTree->pho1_mvaID_WP80;
-                    WVJJTree->pho2_mvaID_WP90 = WVJJTree->pho1_mvaID_WP90;
-
-                    WVJJTree->pho1_pt = NanoReader_.Photon_pt[PhotonCount];
-                    WVJJTree->pho1_eta = NanoReader_.Photon_eta[PhotonCount];
-                    WVJJTree->pho1_phi = NanoReader_.Photon_phi[PhotonCount];
-                    WVJJTree->pho1_m = NanoReader_.Photon_mass[PhotonCount];
-                    WVJJTree->pho1_iso = NanoReader_.Photon_pfRelIso03_all[PhotonCount];
-                    WVJJTree->pho1_q = NanoReader_.Photon_charge[PhotonCount];
-                    WVJJTree->pho1_mvaIDFall17V2 = NanoReader_.Photon_mvaID[PhotonCount];
-                    WVJJTree->pho1_mvaIDFall17V1 = NanoReader_.Photon_mvaID_Fall17V1p1[PhotonCount];
-                    WVJJTree->pho1_mvaID_WP80 = NanoReader_.Photon_mvaID_WP80[PhotonCount];
-                    WVJJTree->pho1_mvaID_WP90 = NanoReader_.Photon_mvaID_WP90[PhotonCount];
-                }
-                else if ( (NanoReader_.Photon_pt[PhotonCount] > WVJJTree->pho2_pt) && (WVJJTree->pho1_pt > NanoReader_.Photon_pt[PhotonCount]) ) 
-                {
-                    WVJJTree->pho2_pt = NanoReader_.Photon_pt[PhotonCount]; 
-                    WVJJTree->pho2_eta = NanoReader_.Photon_eta[PhotonCount];
-                    WVJJTree->pho2_phi = NanoReader_.Photon_phi[PhotonCount];
-                    WVJJTree->pho2_m = NanoReader_.Photon_mass[PhotonCount];
-                    WVJJTree->pho2_iso = NanoReader_.Photon_pfRelIso03_all[PhotonCount];
-                    WVJJTree->pho2_q = NanoReader_.Photon_charge[PhotonCount];
-                    WVJJTree->pho2_mvaIDFall17V2 = NanoReader_.Photon_mvaID[PhotonCount];
-                    WVJJTree->pho2_mvaIDFall17V1 = NanoReader_.Photon_mvaID_Fall17V1p1[PhotonCount];
-                    WVJJTree->pho2_mvaID_WP80 = NanoReader_.Photon_mvaID_WP80[PhotonCount];
-                    WVJJTree->pho2_mvaID_WP90 = NanoReader_.Photon_mvaID_WP90[PhotonCount];
-                }
-            }
-
+        }
+     
             /* ----------------- Leading and SubLeading photon selection ---------------- */
 
             if(!(WVJJTree->pho1_pt > PHO1_PT_CUT)) continue;
@@ -1118,8 +1302,7 @@ int main (int argc, char** argv) {
             if (nTightMu + nTightEle > 1) continue;
             if (nTightMu + nTightEle == 0) totalCutFlow_FH->Fill("Lepton Selection",1);
             if (nTightMu + nTightEle == 1) totalCutFlow_SL->Fill("Lepton Selection",1);
-            if (nTightMu + nTightEle == 0)
-                totalCutFlow_FH_GENMatch->Fill("Lepton Selection",1);
+            if (nTightMu + nTightEle == 0) totalCutFlow_FH_GENMatch->Fill("Lepton Selection",1);
 
             /* -------------------------------------------------------------------------- */
             /*                                   AK8Jet   Higgs Jet                       */
@@ -1180,8 +1363,7 @@ int main (int argc, char** argv) {
                                             NanoReader_.FatJet_msoftdrop[j]
                                             );
             }
-            if ((nTightMu + nTightEle == 0) && nGood_Higgs_FatJet>=1)
-                totalCutFlow_FH->Fill("nAK8_Higgs >= 1",1);
+            if ((nTightMu + nTightEle == 0) && nGood_Higgs_FatJet>=1&& massPoint>=1500) {totalCutFlow_FH->Fill("nAK8_Higgs >= 1",1);}
 
             /*  ------------------------------------------------------------------------- */
             /*                              One Jet case variables                        */
@@ -1274,9 +1456,8 @@ int main (int argc, char** argv) {
                 WVJJTree->OneJet_deltaPhi_HH = deltaPhi(LV_Ak8HiggsJets.at(0),diphoton);
             }
 
-            //Important: Onejet RECO&GEN Higgs dR
             // if ((nTightMu + nTightEle == 0) && nGood_Higgs_FatJet>=1 && WVJJTree->OneJet_deltaR_GENRECO_HH<0.4)
-            if ((nTightMu + nTightEle == 0) && nGood_Higgs_FatJet>=1 && WVJJTree->OneJet_deltaR_GENRECO_HH<1.6)
+            if ((nTightMu + nTightEle == 0) && nGood_Higgs_FatJet>=1 && WVJJTree->OneJet_deltaR_GENRECO_HH<1.6 && massPoint>=1500)
             {
                 totalCutFlow_FH_GENMatch->Fill("nAK8_Higgs >= 1",1);
                 totalCutFlow_FH_GENMatch->Fill("1Jet2Jet3Jet4Jet",1);
@@ -1355,16 +1536,49 @@ int main (int argc, char** argv) {
             // if (nGood_WLep_FatJet>=1) to talCutFlow_SL->Fill("nAK8_W >= 1",1);
 
             /* -------------------------------------------------------------------------- */
-            /*                                   AK4Jet                                   */
+            /*                                   Important AK4Jet                                   */
             /* -------------------------------------------------------------------------- */
             goodAK4JetIndex.clear();
             LV_Ak4Jets_all.clear();
-            int nGood_AK4Jet = 0;
-
+            int nGoodAK4jets = 0;
             float allAK4JetsSum_pt = 0.0;
-            if (DEBUG) std::cout << "Starting AK4 jet loop" << std::endl;
+            dR_ak4_fatjet_tmp.clear();
+            dR_ak4_ak4_tmp.clear();
+            dR_ak4_photon_tmp.clear();
+            dR_ak4_ele_tmp.clear();
+            dR_ak4_muon_tmp.clear();
+            if (DEBUG) std::cout << "Starting AK4 jet loop" << std::endl;               
             for (uint j=0; j<*NanoReader_.nJet; j++)
             {
+                // dR eff check--------------------------------------------//
+                if (nGood_W_FatJet == 1)
+                {
+                    for ( std::size_t k=0; k<goodWJetIndex.size(); k++)
+                    {
+                            dR_ak4_fatjet_tmp.push_back(deltaR(NanoReader_.FatJet_eta[goodWJetIndex.at(k)], NanoReader_.FatJet_phi[goodWJetIndex.at(k)],
+                             NanoReader_.Jet_eta[j], NanoReader_.Jet_phi[j]));
+                    }
+                }
+                for ( std::size_t k=0; k<goodAK4JetIndex.size(); k++) 
+                {
+                    dR_ak4_ak4_tmp.push_back(deltaR(NanoReader_.Jet_eta[goodAK4JetIndex.at(k)], NanoReader_.Jet_phi[goodAK4JetIndex.at(k)],NanoReader_.Jet_eta[j], NanoReader_.Jet_phi[j]));
+                }
+                for ( std::size_t k=0; k<2; k++) 
+                {
+                    dR_ak4_photon_tmp.push_back(deltaR(LV_tightPhoton.at(k).Eta(), LV_tightPhoton.at(k).Phi(),NanoReader_.Jet_eta[j], NanoReader_.Jet_phi[j]));                
+                }
+                for ( std::size_t k=0; k<LV_tightEle.size(); k++) 
+                {
+                    dR_ak4_ele_tmp.push_back(deltaR(LV_tightEle.at(k).Eta(), LV_tightEle.at(k).Phi(),NanoReader_.Jet_eta[j], NanoReader_.Jet_phi[j]));
+                }
+                for ( std::size_t k=0; k<LV_tightMuon.size(); k++)
+                { 
+                    dR_ak4_muon_tmp.push_back(deltaR(LV_tightMuon.at(k).Eta(), LV_tightMuon.at(k).Phi(),NanoReader_.Jet_eta[j], NanoReader_.Jet_phi[j]));                
+                }
+
+                // .......................................................//
+                // nAll_AK4Jet++;
+                Ak4JetsCut->Fill("AllJets",1);
                 if (DEBUG) std::cout << "\t[INFO::AK4jets] [" << i <<"/" << lineCount << "] =====> JetIndex: " << j << std::endl;
                 //jet energy scale variations
                 if (!( NanoReader_.Jet_pt[j] > AK4_PT_CUT )) continue;
@@ -1375,7 +1589,8 @@ int main (int argc, char** argv) {
                 if (!(NanoReader_.Jet_jetId[j] >= 2)) continue;
                 // PU JET ID for jets pt > AK4_PT_CUT and < 50
                 if (NanoReader_.Jet_pt[j] < 50 && NanoReader_.Jet_puId[j] < 3) continue;
-
+                // nPtEta_cut_ak4Jet++
+                Ak4JetsCut->Fill("PT_Eta_cut",1);
                 bool isClean=true;
 
                 // object cleaning
@@ -1390,13 +1605,13 @@ int main (int argc, char** argv) {
                         }
                     }
                     // kept goodHJetIndex cleaning for future VBF study
-                    for ( std::size_t k=0; k<goodHJetIndex.size(); k++)
-                    {
-                        if (deltaR(NanoReader_.FatJet_eta[goodHJetIndex.at(k)], NanoReader_.FatJet_phi[goodHJetIndex.at(k)],
-                             NanoReader_.Jet_eta[j], NanoReader_.Jet_phi[j]) < AK4_AK8_DR_CUT) {
-                            isClean = false;
-                        }
-                    }
+                    // for ( std::size_t k=0; k<goodHJetIndex.size(); k++)
+                    // {
+                    //     if (deltaR(NanoReader_.FatJet_eta[goodHJetIndex.at(k)], NanoReader_.FatJet_phi[goodHJetIndex.at(k)],
+                    //          NanoReader_.Jet_eta[j], NanoReader_.Jet_phi[j]) < AK4_AK8_DR_CUT) {
+                    //         isClean = false;
+                    //     }
+                    // }
                     // kept below patch for SL category
                     // for ( std::size_t k=0; k<goodWLepJetIndex.size(); k++)
                     // {
@@ -1406,15 +1621,20 @@ int main (int argc, char** argv) {
                     //     }
                     // }
                 }
+                if ( isClean == false ) continue;
+                // nAK8clean_ak4Jet++;
+                Ak4JetsCut->Fill("AK8_clean",1);
 
                 if (DEBUG) std::cout << "\t[INFO::AK4jets] [" << i <<"/" << lineCount << "] Clean AK4 jet with other AK4 jets" << std::endl;
                 for ( std::size_t k=0; k<goodAK4JetIndex.size(); k++) {
-                  if (deltaR(NanoReader_.Jet_eta[goodAK4JetIndex.at(k)], NanoReader_.Jet_phi[goodAK4JetIndex.at(k)],
+                    if (deltaR(NanoReader_.Jet_eta[goodAK4JetIndex.at(k)], NanoReader_.Jet_phi[goodAK4JetIndex.at(k)],
                              NanoReader_.Jet_eta[j], NanoReader_.Jet_phi[j]) < AK4_AK4_DR_CUT) {
                     isClean = false;
                   }
                 }
-
+                if ( isClean == false ) continue;
+                Ak4JetsCut->Fill("AK4_clean",1);
+                // nAK4clean_ak4Jet++;
                 if (DEBUG) std::cout << "\t[INFO::AK4jets] [" << i <<"/" << lineCount << "] Clean AK4 jet with photons jets" << std::endl;
                 for ( std::size_t k=0; k<2; k++) {
                     if (deltaR(LV_tightPhoton.at(k).Eta(), LV_tightPhoton.at(k).Phi(),
@@ -1422,22 +1642,26 @@ int main (int argc, char** argv) {
                         isClean = false;
                     }
                 }
-
+                if ( isClean == false ) continue;
+                Ak4JetsCut->Fill("Photon_clean",1);
+                // nPhoton6lean_ak4Jet++;
                 for ( std::size_t k=0; k<LV_tightEle.size(); k++) {
                     if (deltaR(LV_tightEle.at(k).Eta(), LV_tightEle.at(k).Phi(),
                                NanoReader_.Jet_eta[j], NanoReader_.Jet_phi[j]) < AK4_LEP_DR_CUT) {
                         isClean = false;
                     }
                 }
-                for ( std::size_t k=0; k<LV_tightMuon.size(); k++) {
+                if ( isClean == false ) continue;
+                Ak4JetsCut->Fill("Ele_clean",1);
+                for ( std::size_t k=0; k<LV_tightMuon.size(); k++){ 
                     if (deltaR(LV_tightMuon.at(k).Eta(), LV_tightMuon.at(k).Phi(),
                                NanoReader_.Jet_eta[j], NanoReader_.Jet_phi[j]) < AK4_LEP_DR_CUT) {
                         isClean = false;
                     }
                 }
-
                 if ( isClean == false ) continue;
-
+                Ak4JetsCut->Fill("Muon_clean",1);
+                // nMuonclean_ak4Jet++;
 
                 if (DEBUG) std::cout << "\t[INFO::AK4jets] [" << i <<"/" << lineCount << "] compute the btag eff." << std::endl;
                 //https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagSFMethods#1a_Event_reweighting_using_scale
@@ -1477,8 +1701,16 @@ int main (int argc, char** argv) {
                 b_dis.push_back(j);
                 goodAK4JetIndex.push_back(j);
                 allAK4JetsSum_pt += NanoReader_.Jet_pt[j];
-                nGood_AK4Jet++;
+                nGoodAK4jets++;
             }
+            WVJJTree->dR_ak4_fatjet = dR_ak4_fatjet_tmp;
+            WVJJTree->dR_ak4_ak4 = dR_ak4_ak4_tmp;
+            WVJJTree->dR_ak4_photon = dR_ak4_photon_tmp;
+            WVJJTree->dR_ak4_ele = dR_ak4_ele_tmp;
+            WVJJTree->dR_ak4_muon = dR_ak4_muon_tmp;
+              // std::cout <<"nGood_AK4Jet / *NanoReader_.nJet:" << float(nGood_AK4Jet) / *NanoReader_.nJet << std::endl;
+            // std::cout <<"*NanoReader_.nJet:" << *NanoReader_.nJet << std::endl;
+            // std::cout <<"nGood_AK4Jet:" << nGood_AK4Jet << std::endl;
             if (DEBUG) std::cout << "\t[INFO::AK4jets] [" << i <<"/" << lineCount << "] Outside of AK4 jet loop." << std::endl;
 
             // for (std::vector<int>::iterator It_JetIndex = goodAK4JetIndex.begin(); It_JetIndex != goodAK4JetIndex.end(); ++It_JetIndex)
@@ -1489,25 +1721,20 @@ int main (int argc, char** argv) {
             //
             // get 4 jets for FH final state with minWH vals
 
-            int nGoodAK4jets = goodAK4JetIndex.size();
-
             // FH: 2 jet category
-            if (nTightMu + nTightEle == 0 && nGood_Higgs_FatJet == 0 && nGood_W_FatJet >= 2)
-                totalCutFlow_FH->Fill("nAK8H=0 & nAK8_W >= 2",1);
+            if (nTightMu + nTightEle == 0 && nGood_Higgs_FatJet == 0 && nGood_W_FatJet >= 2 && massPoint>=400 && massPoint<=1500) {totalCutFlow_FH->Fill("nAK8H=0 & nAK8_W >= 2",1);}
 
             // FH: 3 jet category (including 2 or more good AK8 jet)
-            if (nTightMu + nTightEle == 0 && nGood_Higgs_FatJet == 0 && nGood_W_FatJet >= 1 && nGoodAK4jets >= 2)
-                totalCutFlow_FH->Fill("nAK8H=0 & nAK8_W>=1 & nAK4>=2",1);
+            if (nTightMu + nTightEle == 0 && nGood_Higgs_FatJet == 0 && nGood_W_FatJet >= 1 && nGoodAK4jets >= 2 && massPoint>=400 && massPoint<=1500) {totalCutFlow_FH->Fill("nAK8H=0 & nAK8_W>=1 & nAK4>=2",1);}
 
             // FH: 3 jet category  (excluding events with 2 or more good AK8 jet)
-            if (nTightMu + nTightEle == 0 && nGood_Higgs_FatJet == 0 && nGood_W_FatJet == 1 && nGoodAK4jets >= 2)
+            if (nTightMu + nTightEle == 0 && nGood_Higgs_FatJet == 0 && nGood_W_FatJet == 1 && nGoodAK4jets >= 2 && massPoint>=400 && massPoint<=1500)
             {
                 totalCutFlow_FH->Fill("nAK8H=0 & nAK8_W=1 & nAK4>=2",1);
             }
 
             // FH: 4 jet category
-            if (nTightMu + nTightEle == 0 && nGood_Higgs_FatJet == 0 && nGood_W_FatJet == 0 && nGoodAK4jets >= 4)
-                totalCutFlow_FH->Fill("nAK8H=0 & nAK8W=0 & nAK4>=4",1);
+            if (nTightMu + nTightEle == 0 && nGood_Higgs_FatJet == 0 && nGood_W_FatJet == 0 && nGoodAK4jets >= 4 && massPoint>=0 && massPoint<=700) {totalCutFlow_FH->Fill("nAK8H=0 & nAK8W=0 & nAK4>=4",1);}
 
             // Found 1 Higgs jet or
             // Fount 1 fat Wjet and 2 AK4 jets or
@@ -1714,7 +1941,7 @@ int main (int argc, char** argv) {
                 // other conditons are already applied in the current if condition
                 // so I did not added conditons that belongs to 2 jet category.
                 // Important: Two jets RECO&GEN Higgs dR 
-                if ( WVJJTree->TwoJet_deltaR_GENRECO_HH < 0.8)
+                if ( WVJJTree->TwoJet_deltaR_GENRECO_HH < 0.8 && massPoint>=400 && massPoint<= 1500)
                 // if ( WVJJTree->TwoJet_deltaR_LeadAK8WBoson_GENW < 0.4 && WVJJTree-> TwoJet_deltaR_SubLeadAK8WBoson_GENW < 0.4)
                 {
                     totalCutFlow_FH_GENMatch->Fill("nAK8H=0 & nAK8_W >= 2",1);
@@ -1727,11 +1954,10 @@ int main (int argc, char** argv) {
             }
 
            
-            if (DEBUG) std::cout << "\t[INFO::AK8jets] [" << i <<"/" << lineCount << "] After two jet if condition" << std::endl;
+            // if (DEBUG) std::cout << "\t[INFO::AK8jets] [" << i <<"/" << lineCount << "] After two jet if condition" << std::endl;
 
             if (nTightMu + nTightEle == 0 && nGood_Higgs_FatJet == 0 && nGood_W_FatJet == 1 && nGoodAK4jets >= 2)
             {
-                if (DEBUG) std::cout << "\t[INFO::AK4jets] [" << i <<"/" << lineCount << "] Passed three jet condition" << std::endl;
                 WVJJTree->ThreeJet_FatJet_area = NanoReader_.FatJet_area[goodWJetIndex[0]];
                 WVJJTree->ThreeJet_FatJet_btagCMVA = NanoReader_.FatJet_btagCMVA[goodWJetIndex[0]];
                 WVJJTree->ThreeJet_FatJet_btagCSVV2 = NanoReader_.FatJet_btagCSVV2[goodWJetIndex[0]];
@@ -1794,7 +2020,7 @@ int main (int argc, char** argv) {
                 WVJJTree->ThreeJet_FatJet_tau3=NanoReader_.FatJet_tau3[goodWJetIndex[0]];
                 WVJJTree->ThreeJet_FatJet_tau4=NanoReader_.FatJet_tau4[goodWJetIndex[0]];
                 WVJJTree->ThreeJet_nFatJet=nGood_W_FatJet;
-                WVJJTree->ThreeJet_nAK4Jet=nGood_AK4Jet;
+                WVJJTree->ThreeJet_nAK4Jet=nGoodAK4jets;
 
                 WVJJTree->ThreeJet_LeadingAK4_p =LV_Ak4Jets_all.at(0).P();
                 WVJJTree->ThreeJet_LeadingAK4_pT =LV_Ak4Jets_all.at(0).Pt();
@@ -1871,7 +2097,7 @@ int main (int argc, char** argv) {
                 WVJJTree->ThreeJet_deltaPhi_HH = deltaPhi(LV_Ak8WZJets.at(0) + LV_Ak4Jets_all.at(0) + LV_Ak4Jets_all.at(1),diphoton);
                 // Important: Three jets RECO&GEN Higgs dR 
                 // if(WVJJTree->ThreeJet_deltaR_AK4WBoson_GENW<0.4 && WVJJTree->ThreeJet_deltaR_AK8WBoson_GENW<0.4){
-                if(WVJJTree->ThreeJet_deltaR_GENRECO_HH<0.8){
+                if(WVJJTree->ThreeJet_deltaR_GENRECO_HH<0.8 && massPoint<=1500 && massPoint>=400){
                     totalCutFlow_FH_GENMatch->Fill("nAK8H=0 & nAK8_W>=1 & nAK4>=2",1);
                     totalCutFlow_FH_GENMatch->Fill("1Jet2Jet3Jet4Jet",1);
                 }
@@ -1880,27 +2106,84 @@ int main (int argc, char** argv) {
             if (DEBUG) std::cout << "\t[INFO::AK4jets] [" << i <<"/" << lineCount << "] After three jet if condition" << std::endl;
 
             /* ----------------------- output the AK4 jet ----------------------- */
-            if (nTightMu + nTightEle == 0 && nGood_Higgs_FatJet == 0 && nGood_W_FatJet == 0 && nGoodAK4jets >= 4 )
+            //checking without condition about the Four jet category
+            // if (nTightMu + nTightEle == 0 && nGood_Higgs_FatJet == 0 && nGood_W_FatJet == 0 && nGoodAK4jets >= 4 )
+            WVJJTree->nGoodAK4jets = nGoodAK4jets;
+            if (nTightMu + nTightEle == 0 && nGoodAK4jets >= 4 && LV_GEN_quarks_had_AK4.size()==4 )
             {
                 //checking minWHJets
-                // GetFHminWHJets(LV_Ak4Jets_all,b_dis,LV_Ak4Jets,Selectedb_dis,0);
+                GetFHminWHJets(LV_Ak4Jets_all,b_dis,LV_Ak4Jets,Selectedb_dis,0);
                 //checking maxdR
-                GetFHJetUsingDR(diphoton,LV_Ak4Jets_all, b_dis, LV_Ak4Jets, Selectedb_dis, 0);
+                // GetFHJetUsingDR(diphoton,LV_Ak4Jets_all, b_dis, LV_Ak4Jets, Selectedb_dis, 0);
+                // GetRecoJetsFromGenJets(LV_Ak4Jets_all,LV_GEN_quarks_had_AK4,LV_Ak4Jets);
 
                 if (DEBUG) std::cout << "\t[INFO::AK4jets] [" << i <<"/" << lineCount << "] Passed nAK4 jets >= 4 condition" << std::endl;
 
                 /* ------------------- cout four pt to make sure in order ------------------- */
-                WVJJTree->nGoodAK4jets = nGoodAK4jets;
                 WVJJTree->FullyResolved_allAK4JetsSum_pt = allAK4JetsSum_pt;
 
-                WVJJTree->FullyResolved_Jet1_pt = LV_Ak4Jets.at(0).Pt();
-                WVJJTree->FullyResolved_Jet2_pt = LV_Ak4Jets.at(1).Pt();
-                WVJJTree->FullyResolved_Jet3_pt = LV_Ak4Jets.at(2).Pt();
-                WVJJTree->FullyResolved_Jet4_pt = LV_Ak4Jets.at(3).Pt();
                 // WVJJTree->FullyResolved_Jet1_pt = NanoReader_.Jet_pt[goodAK4JetIndex[0]];
                 // WVJJTree->FullyResolved_Jet2_pt = NanoReader_.Jet_pt[goodAK4JetIndex[1]];
                 // WVJJTree->FullyResolved_Jet3_pt = NanoReader_.Jet_pt[goodAK4JetIndex[2]];
                 // WVJJTree->FullyResolved_Jet4_pt = NanoReader_.Jet_pt[goodAK4JetIndex[3]];
+                // WVJJTree->FullyResolved_Jet1_eta = NanoReader_.Jet_eta[goodAK4JetIndex[0]];
+                // WVJJTree->FullyResolved_Jet2_eta = NanoReader_.Jet_eta[goodAK4JetIndex[1]];
+                // WVJJTree->FullyResolved_Jet3_eta = NanoReader_.Jet_eta[goodAK4JetIndex[2]];
+                // WVJJTree->FullyResolved_Jet4_eta = NanoReader_.Jet_eta[goodAK4JetIndex[3]];
+                // WVJJTree->FullyResolved_Jet1_phi = NanoReader_.Jet_phi[goodAK4JetIndex[0]];
+                // WVJJTree->FullyResolved_Jet2_phi = NanoReader_.Jet_phi[goodAK4JetIndex[1]];
+                // WVJJTree->FullyResolved_Jet3_phi = NanoReader_.Jet_phi[goodAK4JetIndex[2]];
+                // WVJJTree->FullyResolved_Jet4_phi = NanoReader_.Jet_phi[goodAK4JetIndex[3]];
+                // WVJJTree->FullyResolved_Jet1_M = NanoReader_.Jet_mass[goodAK4JetIndex[0]];
+                // WVJJTree->FullyResolved_Jet2_M = NanoReader_.Jet_mass[goodAK4JetIndex[1]];
+                // WVJJTree->FullyResolved_Jet3_M = NanoReader_.Jet_mass[goodAK4JetIndex[2]];
+                // WVJJTree->FullyResolved_Jet4_M = NanoReader_.Jet_mass[goodAK4JetIndex[3]];
+                // if(nGoodAK4jets >=5)
+                // {
+                // WVJJTree->FullyResolved_Jet5_pt = NanoReader_.Jet_pt[goodAK4JetIndex[4]];
+                // WVJJTree->FullyResolved_Jet5_eta = NanoReader_.Jet_eta[goodAK4JetIndex[4]];
+                // WVJJTree->FullyResolved_Jet5_phi = NanoReader_.Jet_phi[goodAK4JetIndex[4]];
+                // WVJJTree->FullyResolved_Jet5_M = NanoReader_.Jet_mass[goodAK4JetIndex[4]];
+                // }
+                // if(nGoodAK4jets >=6)
+                // {
+                // WVJJTree->FullyResolved_Jet6_pt = NanoReader_.Jet_pt[goodAK4JetIndex[5]];
+                // WVJJTree->FullyResolved_Jet6_eta = NanoReader_.Jet_eta[goodAK4JetIndex[5]];
+                // WVJJTree->FullyResolved_Jet6_phi = NanoReader_.Jet_phi[goodAK4JetIndex[5]];
+                // WVJJTree->FullyResolved_Jet6_M = NanoReader_.Jet_mass[goodAK4JetIndex[5]];
+                // }
+                // if(nGoodAK4jets >=7)
+                // {
+                // WVJJTree->FullyResolved_Jet7_pt = NanoReader_.Jet_pt[goodAK4JetIndex[6]];
+                // WVJJTree->FullyResolved_Jet7_eta = NanoReader_.Jet_eta[goodAK4JetIndex[6]];
+                // WVJJTree->FullyResolved_Jet7_phi = NanoReader_.Jet_phi[goodAK4JetIndex[6]];
+                // WVJJTree->FullyResolved_Jet7_M = NanoReader_.Jet_mass[goodAK4JetIndex[6]];
+                // }
+                // if(nGoodAK4jets >=8)
+                // {
+                // WVJJTree->FullyResolved_Jet8_pt = NanoReader_.Jet_pt[goodAK4JetIndex[7]];
+                // WVJJTree->FullyResolved_Jet8_eta = NanoReader_.Jet_eta[goodAK4JetIndex[7]];
+                // WVJJTree->FullyResolved_Jet8_phi = NanoReader_.Jet_phi[goodAK4JetIndex[7]];
+                // WVJJTree->FullyResolved_Jet8_M = NanoReader_.Jet_mass[goodAK4JetIndex[7]];
+                // }
+                // if(nGoodAK4jets >=9)
+                // {
+                // WVJJTree->FullyResolved_Jet9_pt = NanoReader_.Jet_pt[goodAK4JetIndex[8]];
+                // WVJJTree->FullyResolved_Jet9_eta = NanoReader_.Jet_eta[goodAK4JetIndex[8]];
+                // WVJJTree->FullyResolved_Jet9_phi = NanoReader_.Jet_phi[goodAK4JetIndex[8]];
+                // WVJJTree->FullyResolved_Jet9_M = NanoReader_.Jet_mass[goodAK4JetIndex[8]];
+                // }
+                // if(nGoodAK4jets >=10)
+                // {
+                // WVJJTree->FullyResolved_Jet10_pt = NanoReader_.Jet_pt[goodAK4JetIndex[9]];
+                // WVJJTree->FullyResolved_Jet10_eta = NanoReader_.Jet_eta[goodAK4JetIndex[9]];
+                // WVJJTree->FullyResolved_Jet10_phi = NanoReader_.Jet_phi[goodAK4JetIndex[9]];
+                // WVJJTree->FullyResolved_Jet10_M = NanoReader_.Jet_mass[goodAK4JetIndex[9]];
+                // }
+                WVJJTree->FullyResolved_Jet1_pt = LV_Ak4Jets.at(0).Pt();
+                WVJJTree->FullyResolved_Jet2_pt = LV_Ak4Jets.at(1).Pt();
+                WVJJTree->FullyResolved_Jet3_pt = LV_Ak4Jets.at(2).Pt();
+                WVJJTree->FullyResolved_Jet4_pt = LV_Ak4Jets.at(3).Pt();
                 WVJJTree->FullyResolved_Jet1_p = LV_Ak4Jets.at(0).P();
                 WVJJTree->FullyResolved_Jet2_p = LV_Ak4Jets.at(1).P();
                 WVJJTree->FullyResolved_Jet3_p = LV_Ak4Jets.at(2).P();
@@ -1915,28 +2198,16 @@ int main (int argc, char** argv) {
                 WVJJTree->FullyResolved_Jet2_eta = LV_Ak4Jets.at(1).Eta();
                 WVJJTree->FullyResolved_Jet3_eta = LV_Ak4Jets.at(2).Eta();
                 WVJJTree->FullyResolved_Jet4_eta = LV_Ak4Jets.at(3).Eta();
-                // WVJJTree->FullyResolved_Jet1_eta = NanoReader_.Jet_eta[goodAK4JetIndex[0]];
-                // WVJJTree->FullyResolved_Jet2_eta = NanoReader_.Jet_eta[goodAK4JetIndex[1]];
-                // WVJJTree->FullyResolved_Jet3_eta = NanoReader_.Jet_eta[goodAK4JetIndex[2]];
-                // WVJJTree->FullyResolved_Jet4_eta = NanoReader_.Jet_eta[goodAK4JetIndex[3]];
 
                 WVJJTree->FullyResolved_Jet1_phi = LV_Ak4Jets.at(0).Phi();
                 WVJJTree->FullyResolved_Jet2_phi = LV_Ak4Jets.at(1).Phi();
                 WVJJTree->FullyResolved_Jet3_phi = LV_Ak4Jets.at(2).Phi();
                 WVJJTree->FullyResolved_Jet4_phi = LV_Ak4Jets.at(3).Phi();
-                // WVJJTree->FullyResolved_Jet1_phi = NanoReader_.Jet_phi[goodAK4JetIndex[0]];
-                // WVJJTree->FullyResolved_Jet2_phi = NanoReader_.Jet_phi[goodAK4JetIndex[1]];
-                // WVJJTree->FullyResolved_Jet3_phi = NanoReader_.Jet_phi[goodAK4JetIndex[2]];
-                // WVJJTree->FullyResolved_Jet4_phi = NanoReader_.Jet_phi[goodAK4JetIndex[3]];
 
                 WVJJTree->FullyResolved_Jet1_M = LV_Ak4Jets.at(0).M();
                 WVJJTree->FullyResolved_Jet2_M = LV_Ak4Jets.at(1).M();
                 WVJJTree->FullyResolved_Jet3_M = LV_Ak4Jets.at(2).M();
                 WVJJTree->FullyResolved_Jet4_M = LV_Ak4Jets.at(3).M();
-                // WVJJTree->FullyResolved_Jet1_M = NanoReader_.Jet_mass[goodAK4JetIndex[0]];
-                // WVJJTree->FullyResolved_Jet2_M = NanoReader_.Jet_mass[goodAK4JetIndex[1]];
-                // WVJJTree->FullyResolved_Jet3_M = NanoReader_.Jet_mass[goodAK4JetIndex[2]];
-                // WVJJTree->FullyResolved_Jet4_M = NanoReader_.Jet_mass[goodAK4JetIndex[3]];
 
                 WVJJTree->FullyResolved_Jet1_E = LV_Ak4Jets.at(0).E();
                 WVJJTree->FullyResolved_Jet2_E = LV_Ak4Jets.at(1).E();
@@ -1960,6 +2231,9 @@ int main (int argc, char** argv) {
                 WVJJTree->FullyResolved_ThirdFourthJets_E = ThirdFourthJets.E();
 
                 /* ------------------------------ Sum of 4 jets ----------------------------- */
+                //only leading pt
+                // TLorentzVector FourJets = LV_Ak4Jets_all.at(0) + LV_Ak4Jets_all.at(1)+ LV_Ak4Jets_all.at(2) + LV_Ak4Jets_all.at(3);
+                // using invariant mass information
                 TLorentzVector FourJets = LV_Ak4Jets.at(0) + LV_Ak4Jets.at(1)+ LV_Ak4Jets.at(2) + LV_Ak4Jets.at(3);
                 WVJJTree->FullyResolved_FourJets_pt = FourJets.Pt();
                 WVJJTree->FullyResolved_FourJets_eta = FourJets.Eta();
@@ -1977,10 +2251,10 @@ int main (int argc, char** argv) {
                 WVJJTree->FullyResolved_Radion_E = FullyResolved_Radion.E();
 
                 // deltaR between GEN quarks and RECO jets
-                WVJJTree->FullyResolved_deltaR_1stLeadingJet_GENQ = MinDeltaRFromReferenceLV(LV_Ak4Jets.at(0), LV_GEN_quarks.at(0), LV_GEN_quarks.at(1), LV_GEN_quarks.at(2), LV_GEN_quarks.at(3));
-                WVJJTree->FullyResolved_deltaR_2ndLeadingJet_GENQ = MinDeltaRFromReferenceLV(LV_Ak4Jets.at(1), LV_GEN_quarks.at(0), LV_GEN_quarks.at(1), LV_GEN_quarks.at(2), LV_GEN_quarks.at(3));
-                WVJJTree->FullyResolved_deltaR_3rdLeadingJet_GENQ = MinDeltaRFromReferenceLV(LV_Ak4Jets.at(2), LV_GEN_quarks.at(0), LV_GEN_quarks.at(1), LV_GEN_quarks.at(2), LV_GEN_quarks.at(3));
-                WVJJTree->FullyResolved_deltaR_4thLeadingJet_GENQ = MinDeltaRFromReferenceLV(LV_Ak4Jets.at(3), LV_GEN_quarks.at(0), LV_GEN_quarks.at(1), LV_GEN_quarks.at(2), LV_GEN_quarks.at(3));
+                WVJJTree->FullyResolved_deltaR_1stLeadingJet_GENQ = MinDeltaRFromReferenceLV(LV_Ak4Jets_all.at(0), LV_GEN_quarks.at(0), LV_GEN_quarks.at(1), LV_GEN_quarks.at(2), LV_GEN_quarks.at(3));
+                WVJJTree->FullyResolved_deltaR_2ndLeadingJet_GENQ = MinDeltaRFromReferenceLV(LV_Ak4Jets_all.at(1), LV_GEN_quarks.at(0), LV_GEN_quarks.at(1), LV_GEN_quarks.at(2), LV_GEN_quarks.at(3));
+                WVJJTree->FullyResolved_deltaR_3rdLeadingJet_GENQ = MinDeltaRFromReferenceLV(LV_Ak4Jets_all.at(2), LV_GEN_quarks.at(0), LV_GEN_quarks.at(1), LV_GEN_quarks.at(2), LV_GEN_quarks.at(3));
+                WVJJTree->FullyResolved_deltaR_4thLeadingJet_GENQ = MinDeltaRFromReferenceLV(LV_Ak4Jets_all.at(3), LV_GEN_quarks.at(0), LV_GEN_quarks.at(1), LV_GEN_quarks.at(2), LV_GEN_quarks.at(3));
 
                 // deltaR between GEN W-bosons and Reconstructed W-bosons
                 WVJJTree->FullyResolved_deltaR_LeadingWboson_GENW = MinDeltaRFromReferenceLV(TwoLeadingJets, LV_GEN_WBosons.at(0), LV_GEN_WBosons.at(1));
@@ -1990,20 +2264,43 @@ int main (int argc, char** argv) {
                 WVJJTree->FullyResolved_deltaR_LHERECO_HH = MinDeltaRFromReferenceLV(FourJets,LV_LHE_Higgs.at(0),LV_LHE_Higgs.at(1));
                 // WVJJTree->FullyResolved_deltaR_GENRECO_HH = MinDeltaRFromReferenceLV(FullyResolved_Radion,LV_GEN_Higgs.at(0),LV_GEN_Higgs.at(1));
                 WVJJTree->FullyResolved_deltaR_GENRECO_HH = deltaR(FourJets,LV_GEN_WBosons.at(0)+LV_GEN_WBosons.at(1));
+                if(nGEN_quarks_had>=4)
+                {
+                    WVJJTree->GEN_had_jets_deltaR_HH = deltaR(LV_GEN_quarks_had_AK4.at(0)+LV_GEN_quarks_had_AK4.at(1)+LV_GEN_quarks_had_AK4.at(2)+LV_GEN_quarks_had_AK4.at(3),FourJets);
+                    WVJJTree->GEN_had_jets_deltaR_leadingWboson_GENW = deltaR(TwoLeadingJets,LV_GEN_quarks_had_AK4.at(0)+LV_GEN_quarks_had_AK4.at(1));
+                    WVJJTree->GEN_had_jets_deltaR_SubleadingWboson_GENW = deltaR(ThirdFourthJets,LV_GEN_quarks_had_AK4.at(2)+LV_GEN_quarks_had_AK4.at(3));
+                    WVJJTree->GEN_had_jets_deltaR_RECOjet1_GENjet1 = MinDeltaRFromReferenceLV(LV_Ak4Jets_all.at(0),LV_GEN_quarks_had_AK4.at(0),LV_GEN_quarks_had_AK4.at(1),LV_GEN_quarks_had_AK4.at(2),LV_GEN_quarks_had_AK4.at(3));
+                    WVJJTree->GEN_had_jets_deltaR_RECOjet2_GENjet2 = MinDeltaRFromReferenceLV(LV_Ak4Jets_all.at(1),LV_GEN_quarks_had_AK4.at(0),LV_GEN_quarks_had_AK4.at(1),LV_GEN_quarks_had_AK4.at(2),LV_GEN_quarks_had_AK4.at(3));
+                    WVJJTree->GEN_had_jets_deltaR_RECOjet3_GENjet3 = MinDeltaRFromReferenceLV(LV_Ak4Jets_all.at(2),LV_GEN_quarks_had_AK4.at(0),LV_GEN_quarks_had_AK4.at(1),LV_GEN_quarks_had_AK4.at(2),LV_GEN_quarks_had_AK4.at(3));
+                    WVJJTree->GEN_had_jets_deltaR_RECOjet4_GENjet4 = MinDeltaRFromReferenceLV(LV_Ak4Jets_all.at(3),LV_GEN_quarks_had_AK4.at(0),LV_GEN_quarks_had_AK4.at(1),LV_GEN_quarks_had_AK4.at(2),LV_GEN_quarks_had_AK4.at(3));
 
-                WVJJTree->FullyResolved_deltaR_MinAlljeta = MinDeltaR(LV_Ak4Jets.at(0), LV_Ak4Jets.at(1), LV_Ak4Jets.at(2), LV_Ak4Jets.at(3));
+                }
+                WVJJTree->FullyResolved_deltaR_MinAlljeta = MinDeltaR(LV_Ak4Jets_all.at(0), LV_Ak4Jets_all.at(1), LV_Ak4Jets_all.at(2), LV_Ak4Jets_all.at(3));
 
                 WVJJTree->FullyResolved_deltaR_HH = deltaR(FourJets,diphoton);
                 WVJJTree->FullyResolved_deltaEta_HH = FourJets.Eta() - diphoton.Eta();
                 WVJJTree->FullyResolved_deltaPhi_HH = deltaPhi(FourJets,diphoton);
-                // Important: Four jets RECO&GEN Higgs dR 
-                // if(WVJJTree->FullyResolved_deltaR_LeadingWboson_GENW<0.4 && WVJJTree-> FullyResolved_deltaR_SubLeadingWboson_GENW < 0.4){
-                if(WVJJTree->FullyResolved_deltaR_LHERECO_HH < 0.8){
-                    totalCutFlow_FH_GENMatch->Fill("nAK8H=0 & nAK8W=0 & nAK4>=4",1);
-                    totalCutFlow_FH_GENMatch->Fill("1Jet2Jet3Jet4Jet",1);
-                }
+                // Important: Four jets RECO&GEN Higgs dR  checking
+                // if(WVJJTree->FullyResolved_deltaR_LeadingWboson_GENW<0.4 && WVJJTree-> FullyResolved_deltaR_SubLeadingWboson_GENW < 0.4 && massPoint<=700){
+                // if(WVJJTree->FullyResolved_deltaR_GENRECO_HH < 0.8 && massPoint<=700)
+                // if(
+                //     MinDeltaRFromReferenceLV(LV_Ak4Jets_all.at(0),LV_GEN_quarks.at(0),LV_GEN_quarks.at(1),LV_GEN_quarks.at(2),LV_GEN_quarks.at(3)) <0.4 &&
+                //     MinDeltaRFromReferenceLV(LV_Ak4Jets_all.at(1),LV_GEN_quarks.at(0),LV_GEN_quarks.at(1),LV_GEN_quarks.at(2),LV_GEN_quarks.at(3)) <0.4 &&
+                //     MinDeltaRFromReferenceLV(LV_Ak4Jets_all.at(2),LV_GEN_quarks.at(0),LV_GEN_quarks.at(1),LV_GEN_quarks.at(2),LV_GEN_quarks.at(3)) <0.4 &&
+                //     MinDeltaRFromReferenceLV(LV_Ak4Jets_all.at(3),LV_GEN_quarks.at(0),LV_GEN_quarks.at(1),LV_GEN_quarks.at(2),LV_GEN_quarks.at(3)) <0.4 &&
+                //     massPoint<=700)
+                // {
+                totalCutFlow_FH_GENMatch->Fill("nAK8H=0 & nAK8W=0 & nAK4>=4",1);
+                totalCutFlow_FH_GENMatch->Fill("1Jet2Jet4Jet4Jet",1);
+                // }
             }
-           
+            // Important: add flag for each category
+            if(massPoint>0 && massPoint<=400){WVJJTree->FullyResolved_category = 1;}
+            if(massPoint>400 && massPoint<=700){WVJJTree->FullyResolved_category = 1;WVJJTree->TwoJet_category = 1;WVJJTree->ThreeJet_category = 1;}
+            if(massPoint>700 && massPoint<=1500){WVJJTree->TwoJet_category = 1;WVJJTree->ThreeJet_category = 1;}
+            if(massPoint>=1500){WVJJTree->OneJet_category = 1;}
+
+
             if (DEBUG) std::cout << "\t[INFO::AK4jets] [" << i <<"/" << lineCount << "] After four jet if condition" << std::endl;
 
             if (isMC==1) {
@@ -2055,6 +2352,12 @@ int main (int argc, char** argv) {
                 }
             }
 
+            // for(uint i; i < dR_ak4_photon.size();i++)
+            // {
+            //     WVJJTree->dR_ak4_photon = dR_ak4_photon.at(i);
+            //     ot->Fill();
+            // }
+
             ot->Fill();
         }
         delete t;
@@ -2074,3 +2377,4 @@ int main (int argc, char** argv) {
     return 0;
 
 }
+
