@@ -2,6 +2,8 @@
 .__*
 /DoubleHiggs/Selection/CMSSW_10_6_20/
 submit*.sh
+*CMSSW_10_6_20*
+Selection/CMSSW_10_6_20/*
 *.tgz
 *.patch
 *.log

@@ -697,6 +697,7 @@ int main (int argc, char** argv) {
                                                            NanoReader_.GenPart_mass[GENPartCount]);
                     }
                 }
+                
                 if (LV_GEN_photons.size() != 2)
                 {
                     std::cout << "photons size = " << LV_GEN_photons.size() << std::endl;
@@ -765,6 +766,10 @@ int main (int argc, char** argv) {
             // Save pT, eta, phi and mass of LV_GEN_quarks[1] in output Tree
             // Save pT, eta, phi and mass of LV_GEN_quarks.at(2) in output Tree
             // Save pT, eta, phi and mass of LV_GEN_quarks[3] in output Tree
+            std::cout << "pt1:" << LV_GEN_quarks.at(0).Pt()<<std::endl;
+            std::cout << "pt2:" << LV_GEN_quarks.at(1).Pt()<<std::endl;
+            std::cout << "pt3:" << LV_GEN_quarks.at(2).Pt()<<std::endl;
+            std::cout << "pt4:" << LV_GEN_quarks.at(3).Pt()<<std::endl;
 
             WVJJTree->GEN_Q1_pT = LV_GEN_quarks.at(0).Pt();
             WVJJTree->GEN_Q1_eta = LV_GEN_quarks.at(0).Eta();
