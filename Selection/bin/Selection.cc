@@ -97,10 +97,10 @@ int main (int argc, char** argv) {
     // cleaning cuts
     // To-Do: Check the cut values of jet cleaning with other jets
     const float AK8_LEP_DR_CUT = 0.8;
-    const float AK4_LEP_DR_CUT = 0.8;
+    const float AK4_LEP_DR_CUT = 0.4;
     const float AK8_AK8_DR_CUT = 1.6;
-    const float AK4_AK8_DR_CUT = 1.2;
-    const float AK4_AK4_DR_CUT = 0.8;
+    const float AK4_AK8_DR_CUT = 0.8;
+    const float AK4_AK4_DR_CUT = 0.4;
 
     // Jet sub-structure cuts
     const float TAU42 = 0.55;
@@ -139,6 +139,7 @@ int main (int argc, char** argv) {
     std::vector<TLorentzVector> LV_GEN_WBosons;
     std::vector<TLorentzVector> LV_GEN_photons;
     std::vector<TLorentzVector> LV_GEN_quarks;
+    std::vector<TLorentzVector> LV_GEN_quarks_all;
     std::vector<TLorentzVector> LV_GEN_quarks_had_AK4;
     std::vector<TLorentzVector> LV_GEN_quarks_had_AK4_tmp;
     std::vector<TLorentzVector> LV_GEN_quarks_had_AK4_beforecut;
@@ -585,6 +586,7 @@ int main (int argc, char** argv) {
                 LV_GEN_WBosons.clear();
                 LV_GEN_photons.clear();
                 LV_GEN_quarks.clear();
+                LV_GEN_quarks_all.clear();
                 LV_GEN_quarks_had_AK4.clear();
                 LV_GEN_quarks_had_AK4_tmp.clear();
                 LV_GEN_quarks_had_AK4_beforecut.clear();
@@ -690,14 +692,14 @@ int main (int argc, char** argv) {
                                   // << "\tstatus: " << status << "\tMother pdgID: " <<  motherPDGid
                                   // << "\tpT: " << NanoReader_.GenPart_pt[GENPartCount] << std::endl;
                         CountEvents++;
-                        LV_GEN_quarks.push_back(TLorentzVector(0,0,0,0));
-                        LV_GEN_quarks.back().SetPtEtaPhiM(NanoReader_.GenPart_pt[GENPartCount],
+                        LV_GEN_quarks_all.push_back(TLorentzVector(0,0,0,0));
+                        LV_GEN_quarks_all.back().SetPtEtaPhiM(NanoReader_.GenPart_pt[GENPartCount],
                                                            NanoReader_.GenPart_eta[GENPartCount],
                                                            NanoReader_.GenPart_phi[GENPartCount],
                                                            NanoReader_.GenPart_mass[GENPartCount]);
                     }
                 }
-                
+
                 if (LV_GEN_photons.size() != 2)
                 {
                     std::cout << "photons size = " << LV_GEN_photons.size() << std::endl;
@@ -766,11 +768,11 @@ int main (int argc, char** argv) {
             // Save pT, eta, phi and mass of LV_GEN_quarks[1] in output Tree
             // Save pT, eta, phi and mass of LV_GEN_quarks.at(2) in output Tree
             // Save pT, eta, phi and mass of LV_GEN_quarks[3] in output Tree
-            std::cout << "pt1:" << LV_GEN_quarks.at(0).Pt()<<std::endl;
-            std::cout << "pt2:" << LV_GEN_quarks.at(1).Pt()<<std::endl;
-            std::cout << "pt3:" << LV_GEN_quarks.at(2).Pt()<<std::endl;
-            std::cout << "pt4:" << LV_GEN_quarks.at(3).Pt()<<std::endl;
-
+            // std::cout << "pt1:" << LV_GEN_quarks.at(0).Pt()<<std::endl;
+            // std::cout << "pt2:" << LV_GEN_quarks.at(1).Pt()<<std::endl;
+            // std::cout << "pt3:" << LV_GEN_quarks.at(2).Pt()<<std::endl;
+            // std::cout << "pt4:" << LV_GEN_quarks.at(3).Pt()<<std::endl;
+            GetFHminWHJets_q(LV_GEN_quarks_all,LV_GEN_quarks);
             WVJJTree->GEN_Q1_pT = LV_GEN_quarks.at(0).Pt();
             WVJJTree->GEN_Q1_eta = LV_GEN_quarks.at(0).Eta();
             WVJJTree->GEN_Q1_phi = LV_GEN_quarks.at(0).Phi();
@@ -794,6 +796,22 @@ int main (int argc, char** argv) {
             WVJJTree->GEN_Q4_phi = LV_GEN_quarks.at(3).Phi();
             WVJJTree->GEN_Q4_energy = LV_GEN_quarks.at(3).E();
             WVJJTree->GEN_Q4_mass = LV_GEN_quarks.at(3).M();
+            TLorentzVector GEN_W1_Q1Q2(0,0,0,0);
+            TLorentzVector GEN_W2_Q3Q4(0,0,0,0);
+            GEN_W1_Q1Q2 = LV_GEN_quarks.at(0) + LV_GEN_quarks.at(1);
+            GEN_W2_Q3Q4 = LV_GEN_quarks.at(2) + LV_GEN_quarks.at(3);
+
+            WVJJTree->GEN_W1_Q1Q2_pT = GEN_W1_Q1Q2.Pt();
+            WVJJTree->GEN_W1_Q1Q2_eta = GEN_W1_Q1Q2.Eta();
+            WVJJTree->GEN_W1_Q1Q2_phi = GEN_W1_Q1Q2.Phi();
+            WVJJTree->GEN_W1_Q1Q2_energy = GEN_W1_Q1Q2.E();
+            WVJJTree->GEN_W1_Q1Q2_mass = GEN_W1_Q1Q2.M();
+
+            WVJJTree->GEN_W2_Q3Q4_pT = GEN_W2_Q3Q4.Pt();
+            WVJJTree->GEN_W2_Q3Q4_eta = GEN_W2_Q3Q4.Eta();
+            WVJJTree->GEN_W2_Q3Q4_phi = GEN_W2_Q3Q4.Phi();
+            WVJJTree->GEN_W2_Q3Q4_energy = GEN_W2_Q3Q4.E();
+            WVJJTree->GEN_W2_Q3Q4_mass = GEN_W2_Q3Q4.M();
 
             // Save pT, eta, phi and mass of LV_GEN_WBosons.at(0) in output Tree
             // Save pT, eta, phi and mass of LV_GEN_WBosons[1] in output Tree
@@ -1546,6 +1564,7 @@ int main (int argc, char** argv) {
             goodAK4JetIndex.clear();
             LV_Ak4Jets_all.clear();
             int nGoodAK4jets = 0;
+            int nAllAK4Jets = 0;
             float allAK4JetsSum_pt = 0.0;
             dR_ak4_fatjet_tmp.clear();
             dR_ak4_ak4_tmp.clear();
@@ -1555,6 +1574,7 @@ int main (int argc, char** argv) {
             if (DEBUG) std::cout << "Starting AK4 jet loop" << std::endl;               
             for (uint j=0; j<*NanoReader_.nJet; j++)
             {
+                nAllAK4Jets++;
                 // dR eff check--------------------------------------------//
                 if (nGood_W_FatJet == 1)
                 {
@@ -1708,6 +1728,7 @@ int main (int argc, char** argv) {
                 allAK4JetsSum_pt += NanoReader_.Jet_pt[j];
                 nGoodAK4jets++;
             }
+            WVJJTree->nAllAK4jets = nAllAK4Jets;
             WVJJTree->dR_ak4_fatjet = dR_ak4_fatjet_tmp;
             WVJJTree->dR_ak4_ak4 = dR_ak4_ak4_tmp;
             WVJJTree->dR_ak4_photon = dR_ak4_photon_tmp;
@@ -2118,9 +2139,10 @@ int main (int argc, char** argv) {
             {
                 //checking minWHJets
                 GetFHminWHJets(LV_Ak4Jets_all,b_dis,LV_Ak4Jets,Selectedb_dis,0);
+                // GetFHminWHJets_q(LV_Ak4Jets_all,LV_Ak4Jets);
                 //checking maxdR
                 // GetFHJetUsingDR(diphoton,LV_Ak4Jets_all, b_dis, LV_Ak4Jets, Selectedb_dis, 0);
-                // GetRecoJetsFromGenJets(LV_Ak4Jets_all,LV_GEN_quarks_had_AK4,LV_Ak4Jets);
+                GetRecoJetsFromGenJets(LV_Ak4Jets_all,LV_GEN_quarks_had_AK4,LV_Ak4Jets);
 
                 if (DEBUG) std::cout << "\t[INFO::AK4jets] [" << i <<"/" << lineCount << "] Passed nAK4 jets >= 4 condition" << std::endl;
 

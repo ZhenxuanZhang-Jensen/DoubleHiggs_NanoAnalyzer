@@ -104,6 +104,16 @@ public:
   float GEN_Q4_eta = -999.0;
   float GEN_Q4_phi = -999.0;
   float GEN_Q4_energy = -999.0;
+  float GEN_W1_Q1Q2_pT = -999.0;
+  float GEN_W1_Q1Q2_eta = -999.0;
+  float GEN_W1_Q1Q2_phi = -999.0;
+  float GEN_W1_Q1Q2_energy = -999.0;
+  float GEN_W1_Q1Q2_mass = -999.0;
+  float GEN_W2_Q3Q4_pT = -999.0;
+  float GEN_W2_Q3Q4_eta = -999.0;
+  float GEN_W2_Q3Q4_phi = -999.0;
+  float GEN_W2_Q3Q4_energy = -999.0;
+  float GEN_W2_Q3Q4_mass = -999.0;
   float GEN_W1_pT = -999.0;
   float GEN_W1_eta = -999.0;
   float GEN_W1_phi = -999.0;

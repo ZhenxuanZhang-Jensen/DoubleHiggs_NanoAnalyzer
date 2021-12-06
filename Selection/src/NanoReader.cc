@@ -71,37 +71,195 @@ void GetRecoJetsFromGenJets(std::vector<TLorentzVector> &AllGoodJets, std::vecto
     double deltaR = 0;
     double TempMindR = 0;
     std::vector<int> Index;
-    std::vector<double> AllDeltaR;
-    int i;
+    std::vector<double> AllDeltaR1;
+    std::vector<double> AllDeltaR2;
+    TLorentzVector jet1;
+    TLorentzVector jet2;
+    TLorentzVector jet3;
+    TLorentzVector jet4;
+    int CountGenJet;
 
 
     int nTagJets = AllGoodJets.size();
     int nTagGenJets = LV_GEN_quarks_had_AK4.size();
-    // std::cout<< "ntagGenJets:" << nTagGenJets << std::endl;
-    Index.clear();
-    AllDeltaR.clear();
-    for (int CountGenJet = 0; CountGenJet < nTagGenJets; CountGenJet++)
+    int a[4][4] = {{0,1,2,3},{1,2,3,0},{2,3,0,1},{3,0,1,2}};
+    double tempMinDelaR = 10000.0;
+    int PositionOfRecoJets[nTagGenJets][nTagGenJets];
+    double PositionOfRecoJets_MinDRValue[nTagGenJets][nTagGenJets]; // define an array having size of nTagGenJets. All elements should be initialized to -1.
+    for(int i=0; i<nTagGenJets;i++)
     {
-        for (int CountJet = 0; CountJet < nTagJets; CountJet++)
+        for(int j=0; j<nTagGenJets;j++)
         {
-            deltaR = DeltaR(AllGoodJets.at(CountJet).Eta(),AllGoodJets.at(CountJet).Phi(),LV_GEN_quarks_had_AK4.at(CountGenJet).Eta(),LV_GEN_quarks_had_AK4.at(CountGenJet).Phi());
-            Index.push_back(i);
-            i++;
-            AllDeltaR.push_back(deltaR);
-            // std::cout << "Countjet" << CountJet << "\t countGenjet" << CountGenJet << std::endl;
-            if(deltaR<TempMindR && CountJet!= MindRIndex)
+            PositionOfRecoJets[i][j] = -1;
+        }
+    }
+
+    for(int i=0; i<nTagGenJets;i++)
+    {
+        for(int j=0; j<nTagGenJets;j++)
+        {
+            PositionOfRecoJets_MinDRValue[i][j] = -1;
+        }
+
+    }
+
+    for (int i = 0; i < nTagGenJets; i++)
+    {
+        for (int j = 0; j < nTagGenJets; j++)
+        {
+            CountGenJet = a[i][j];
+            for (int CountJet = 0; CountJet < nTagJets; CountJet++)
             {
-                MindRIndex = CountJet;
-                TempMindR = deltaR;
+                // if "CountJet" exists in array PositionOfRecoJets then continue to next iteration
+                deltaR = DeltaR(AllGoodJets.at(CountJet).Eta(),AllGoodJets.at(CountJet).Phi(),LV_GEN_quarks_had_AK4.at(CountGenJet).Eta(),LV_GEN_quarks_had_AK4.at(CountGenJet).Phi());
+                if(deltaR < tempMinDelaR)
+                {
+                    PositionOfRecoJets[i][CountGenJet] = CountJet;
+                    PositionOfRecoJets_MinDRValue[i][CountGenJet] = deltaR;
+                    tempMinDelaR = deltaR;
+                }
             }
         }
-        std::cout<< "MindRIndex:" << MindRIndex << std::endl;   
-        SelectedJets.push_back(AllGoodJets.at(MindRIndex));    
     }
+    printf("position:\n");
+    for(int i=0;i<4;i++)
+    {
+        for(int j=0;j<4;j++)
+        {
+            std::cout << "\t";
+            printf("%d",PositionOfRecoJets[i][j]);
+        }
+        printf("\n");
+    }
+    printf("MindRValue:\n");
+    for(int i=0;i<4;i++)
+    {
+        for(int j=0;j<4;j++)
+        {
+            std::cout << "\t";
+            printf("%f",PositionOfRecoJets_MinDRValue[i][j]);
+        }
+        printf("\n");
+    }
+    // std::cout<< "ntagGenJets:" << nTagGenJets << std::endl;
+    // Index.clear();
+    // AllDeltaR1.clear();
+    // AllDeltaR2.clear();
+    // std::vector<int> index;
+    // for (int CountGenJet = 0; CountGenJet < nTagGenJets; CountGenJet++)
+    // {
+    //     for (int CountJet = 0; CountJet < nTagJets; CountJet++)
+    //     {
+    //         deltaR = DeltaR(AllGoodJets.at(CountJet).Eta(),AllGoodJets.at(CountJet).Phi(),LV_GEN_quarks_had_AK4.at(CountGenJet).Eta(),LV_GEN_quarks_had_AK4.at(CountGenJet).Phi());
+    //         AllDeltaR1.push_back(deltaR);
+    //         AllDeltaR2.push_back(deltaR);
+    //     }
+    // }
+    // sort(AllDeltaR1.begin(), AllDeltaR1.end());
+    // for(int i=0; i<4;i++)
+    // {
+    // std::vector <double>::iterator iElement = std::find(std::begin(AllDeltaR2),std::end(AllDeltaR2),AllDeltaR1[i]);
+    // int nPosition = std::distance(std::begin(AllDeltaR2),iElement);
+    // int nPosition_rewight = nPosition%nTagJets;
+    // index.push_back(nPosition_rewight);
+    // // std::cout << "Position:" << nPosition_rewight << std::endl;
+    // }
+    jet1 = AllGoodJets.at(0);
+    jet2 = AllGoodJets.at(1);
+    jet3 = AllGoodJets.at(2);
+    jet4 = AllGoodJets.at(3);
+
+    SelectedJets.push_back(jet1);
+    SelectedJets.push_back(jet2);
+    SelectedJets.push_back(jet3);
+    SelectedJets.push_back(jet4);
 }
+
 /* -------------------------------------------------------------------------- */
 /*                   Utilize the invariant mass information:                  */
 /* -------------------------------------------------------------------------- */
+void GetFHminWHJets_q(std::vector<TLorentzVector> &AllGoodJets, std::vector<TLorentzVector> &SelectedJets)
+{
+    // get 4 jets for FH final state with minWH vals
+    SelectedJets.clear();
+    double TempMinWMass = 999999.0;
+    double TempMinHMass = 999999.0;
+
+    int OnShellW_LeadingJetIndex = -1;
+    int OnShellW_SubLeadingJetIndex = -1;
+    int OffShellW_LeadingJetIndex = -1;
+    int OffShellW_SubLeadingJetIndex = -1;
+
+    TLorentzVector jet11;
+    TLorentzVector jet12;
+    TLorentzVector jet1;
+    TLorentzVector jet2;
+    TLorentzVector jet3;
+    TLorentzVector jet4;
+    Float_t jet1b;
+    Float_t jet2b;
+    Float_t jet3b;
+    Float_t jet4b;
+
+    int nTagJets = AllGoodJets.size();
+
+    // Select 2 jets whose mass closest to W-boson mass
+    for (int CountJet1 = 0; CountJet1 < nTagJets-1; CountJet1++) {
+        for (int CountJet2 = CountJet1+1; CountJet2 < nTagJets; CountJet2++) {
+            jet11 = AllGoodJets[CountJet1];
+            jet12 = AllGoodJets[CountJet2];
+            // if (b_dis[CountJet1] > 0.7221) continue;
+            // if (b_dis[CountJet2] > 0.7221) continue;
+
+            double deltaMass =  abs((jet11 + jet12).M() - 80.0);
+            if ( deltaMass < TempMinWMass)
+            {
+                if  (jet11.Pt() > jet12.Pt()) {
+                    OnShellW_LeadingJetIndex = CountJet1;
+                    OnShellW_SubLeadingJetIndex = CountJet2;
+                } else {
+                    OnShellW_LeadingJetIndex = CountJet2;
+                    OnShellW_SubLeadingJetIndex = CountJet1;
+                }
+                TempMinWMass = deltaMass;
+            }
+        }
+    }
+
+    for (int CountJet1 = 0; CountJet1 < nTagJets-1; CountJet1++) {
+        if (CountJet1 == OnShellW_LeadingJetIndex || CountJet1 == OnShellW_SubLeadingJetIndex) continue;
+        for (int CountJet2 = CountJet1+1; CountJet2 < nTagJets; CountJet2++) {
+            if (CountJet2 == OnShellW_LeadingJetIndex || CountJet2 == OnShellW_SubLeadingJetIndex) continue;
+            jet11 = AllGoodJets[CountJet1];
+            jet12 = AllGoodJets[CountJet2];
+
+            double deltaMass =  abs((jet11 + jet12 + AllGoodJets[OnShellW_LeadingJetIndex] + AllGoodJets[OnShellW_SubLeadingJetIndex] ).M() - 125.0);
+            if ( deltaMass < TempMinHMass)
+            {
+                if  (jet11.Pt() > jet12.Pt()) {
+                    OffShellW_LeadingJetIndex = CountJet1;
+                    OffShellW_SubLeadingJetIndex = CountJet2;
+                } else {
+                    OffShellW_LeadingJetIndex = CountJet2;
+                    OffShellW_SubLeadingJetIndex = CountJet1;
+                }
+                TempMinHMass = deltaMass;
+            }
+        }
+    }
+    jet1 = AllGoodJets[OnShellW_LeadingJetIndex];
+    jet2 = AllGoodJets[OnShellW_SubLeadingJetIndex];
+    jet3 = AllGoodJets[OffShellW_LeadingJetIndex];
+    jet4 = AllGoodJets[OffShellW_SubLeadingJetIndex];
+
+    SelectedJets.push_back(jet1);
+    SelectedJets.push_back(jet2);
+    SelectedJets.push_back(jet3);
+    SelectedJets.push_back(jet4);
+
+
+}
+
 void GetFHminWHJets(std::vector<TLorentzVector> &AllGoodJets, std::vector<Float_t> &b_dis, std::vector<TLorentzVector> &SelectedJets, std::vector<Float_t> &Selectedb_dis, bool DEBUG)
 {
     // get 4 jets for FH final state with minWH vals
