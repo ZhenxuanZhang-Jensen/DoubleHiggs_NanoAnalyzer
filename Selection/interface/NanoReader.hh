@@ -16,6 +16,7 @@
 void printpdgID(int num);
 void GetFHminWHJets_q(std::vector<TLorentzVector> &AllGoodJets, std::vector<TLorentzVector> &SelectedJets);
 void GetRecoJetsFromGenJets(std::vector<TLorentzVector> &AllGoodJets, std::vector<TLorentzVector> &LV_GEN_quarks_had_AK4,std::vector<TLorentzVector> &SelectedJets);
+void GetGenJetsFromGenQuarks(std::vector<TLorentzVector> &LV_GEN_quarks_had_AK4_beforecut, std::vector<TLorentzVector> &LV_GEN_quarks,std::vector<TLorentzVector> &SelectedJets);
 /* -------------------------------------------------------------------------- */
 /*                   Utilize the invariant mass information:                  */
 /* -------------------------------------------------------------------------- */

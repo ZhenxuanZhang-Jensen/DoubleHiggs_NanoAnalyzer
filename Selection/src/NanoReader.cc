@@ -63,6 +63,135 @@ double DeltaR(double eta1,double phi1,double eta2,double phi2)
   return std::sqrt(deta*deta + dphi*dphi);
 }
 
+void GetGenJetsFromGenQuarks(std::vector<TLorentzVector> &LV_GEN_quarks_had_AK4_beforecut, std::vector<TLorentzVector> &LV_GEN_quarks,std::vector<TLorentzVector> &SelectedJets)
+{
+    // get 4 jets for FH final state with minWH vals
+    SelectedJets.clear();
+    int MindRIndex = 0;
+    double deltaR = 0;
+    double TempMindR = 0;
+    std::vector<double> AllDeltaR1;
+    std::vector<double> AllDeltaR2;
+    TLorentzVector jet1;
+    TLorentzVector jet2;
+    TLorentzVector jet3;
+    TLorentzVector jet4;
+    int nTagJets = LV_GEN_quarks_had_AK4_beforecut.size();
+    int nTagGenJets = LV_GEN_quarks.size(); // should be 4
+    // int i,j;
+    std::vector< std::vector<int> > array(nTagGenJets);
+    for (uint i = 0; i < array.size(); i++)
+        array[i].resize(nTagJets);
+    
+    for(uint i = 0; i < array.size(); i++)
+    {
+        for (uint j = 0; j < array[0].size();j++)
+        {
+            array[i][j] = DeltaR(LV_GEN_quarks.at(i).Eta(),LV_GEN_quarks.at(i).Phi(),LV_GEN_quarks_had_AK4_beforecut.at(j).Eta(),LV_GEN_quarks_had_AK4_beforecut.at(j).Phi());
+            // std::cout << array[i][j] << "\t";
+        }
+    }
+    std::vector< std::vector<uint> > index(4);
+    for (uint i=0;i<index.size();i++)
+        index[i].resize(2);
+    for(uint i = 0; i < index.size(); i++)
+    {
+        for (uint j = 0; j < index[0].size();j++)
+        {
+            index[i][j] = 100000;
+            // std::cout << index[i][j];
+        }
+    }
+    int tempMinDeltaR = 100000;
+        // i != index[0][0] && i != index[1][0] && i != index[2][0] &&i != index[3][0] && j != index[0][1] && j != index[0][1] && j != index[1][1] && j != index[2][1] && j != index[3][1]
+    for(uint i=0;i<array.size();i++)
+    {
+        for (uint j=0;j<array[0].size();j++)
+        {
+            // std::cout <<"array[i][j] = " << array[i][j] << std::endl;
+            if(array[i][j]<tempMinDeltaR)
+            {
+                // std::cout << std::endl << "i=" << i
+                // <<"\t j=" << j << std::endl;
+                tempMinDeltaR = array[i][j];
+                index[0][0] = i;
+                index[0][1] = j;
+            }
+        }
+    }
+
+    tempMinDeltaR = 100000;
+    for(uint i=0;i<array.size();i++)
+    {
+        for (uint j=0;j<array[0].size();j++)
+        {
+            if(i!= index[0][0] && j!= index[0][1])
+            {
+                // std::cout <<"array[i][j] = " << array[i][j] << std::endl;
+                if(array[i][j]<tempMinDeltaR)
+                {
+                    // std::cout << std::endl << "i=" << i
+                    // <<"\t j=" << j << std::endl;
+                    tempMinDeltaR = array[i][j];
+                    index[1][0] = i;
+                    index[1][1] = j;
+                }
+            }
+        }
+    }
+    tempMinDeltaR = 100000;
+    for(uint i=0;i<array.size();i++)
+    {
+        for (uint j=0;j<array[0].size();j++)
+        {
+            if(i!= index[0][0] && j!= index[0][1]&& i!= index[1][0] && j!= index[1][1])
+            {
+                // std::cout <<"array[i][j] = " << array[i][j] << std::endl;
+                if(array[i][j]<tempMinDeltaR)
+                {
+                    // std::cout << std::endl << "i=" << i
+                    // <<"\t j=" << j << std::endl;
+                    tempMinDeltaR = array[i][j];
+                    index[2][0] = i;
+                    index[2][1] = j;
+                }
+            }
+        }
+    }
+    tempMinDeltaR = 100000;
+    for(uint i=0;i<array.size();i++)
+    {
+        for (uint j=0;j<array[0].size();j++)
+        {
+            if(i!= index[0][0] && j!= index[0][1]&& i!= index[1][0] && j!= index[1][1]&& i!= index[2][0] && j!= index[2][1])
+            {
+                // std::cout <<"array[i][j] = " << array[i][j] << std::endl;
+                if(array[i][j]<tempMinDeltaR)
+                {
+                    // std::cout << std::endl << "i=" << i
+                    // <<"\t j=" << j << std::endl;
+                    tempMinDeltaR = array[i][j];
+                    index[3][0] = i;
+                    index[3][1] = j;
+                }
+            }
+        }
+    }
+    // for(i=0;i <index.size();i++)
+    // std::cout <<std::endl<< "indexi:" <<index[i][0] << "\t indexj:" << index[i][1];
+    int indexJet1 = index[0][1];
+    int indexJet2 = index[1][1];
+    int indexJet3 = index[2][1];
+    int indexJet4 = index[3][1];
+    jet1 = LV_GEN_quarks_had_AK4_beforecut.at(indexJet1);
+    jet2 = LV_GEN_quarks_had_AK4_beforecut.at(indexJet2);
+    jet3 = LV_GEN_quarks_had_AK4_beforecut.at(indexJet3);
+    jet4 = LV_GEN_quarks_had_AK4_beforecut.at(indexJet4);
+    SelectedJets.push_back(jet1);
+    SelectedJets.push_back(jet2);
+    SelectedJets.push_back(jet3);
+    SelectedJets.push_back(jet4);
+}
 void GetRecoJetsFromGenJets(std::vector<TLorentzVector> &AllGoodJets, std::vector<TLorentzVector> &LV_GEN_quarks_had_AK4,std::vector<TLorentzVector> &SelectedJets)
 {
     // get 4 jets for FH final state with minWH vals
@@ -70,105 +199,123 @@ void GetRecoJetsFromGenJets(std::vector<TLorentzVector> &AllGoodJets, std::vecto
     int MindRIndex = 0;
     double deltaR = 0;
     double TempMindR = 0;
-    std::vector<int> Index;
     std::vector<double> AllDeltaR1;
     std::vector<double> AllDeltaR2;
     TLorentzVector jet1;
     TLorentzVector jet2;
     TLorentzVector jet3;
     TLorentzVector jet4;
-    int CountGenJet;
-
-
     int nTagJets = AllGoodJets.size();
-    int nTagGenJets = LV_GEN_quarks_had_AK4.size();
-    int a[4][4] = {{0,1,2,3},{1,2,3,0},{2,3,0,1},{3,0,1,2}};
-    double tempMinDelaR = 10000.0;
-    int PositionOfRecoJets[nTagGenJets][nTagGenJets];
-    double PositionOfRecoJets_MinDRValue[nTagGenJets][nTagGenJets]; // define an array having size of nTagGenJets. All elements should be initialized to -1.
-    for(int i=0; i<nTagGenJets;i++)
+    int nTagGenJets = LV_GEN_quarks_had_AK4.size(); // should be 4
+    // int i,j;
+    std::vector< std::vector<int> > array(nTagGenJets);
+    for (uint i = 0; i < array.size(); i++)
+        array[i].resize(nTagJets);
+    
+    for(uint i = 0; i < array.size(); i++)
     {
-        for(int j=0; j<nTagGenJets;j++)
+        for (uint j = 0; j < array[0].size();j++)
         {
-            PositionOfRecoJets[i][j] = -1;
+            array[i][j] = DeltaR(LV_GEN_quarks_had_AK4.at(i).Eta(),LV_GEN_quarks_had_AK4.at(i).Phi(),AllGoodJets.at(j).Eta(),AllGoodJets.at(j).Phi());
+            // std::cout << array[i][j] << "\t";
         }
     }
-
-    for(int i=0; i<nTagGenJets;i++)
+    std::vector< std::vector<uint> > index(4);
+    for (uint i=0;i<index.size();i++)
+        index[i].resize(2);
+    for(uint i = 0; i < index.size(); i++)
     {
-        for(int j=0; j<nTagGenJets;j++)
+        for (uint j = 0; j < index[0].size();j++)
         {
-            PositionOfRecoJets_MinDRValue[i][j] = -1;
+            index[i][j] = 100000;
+            // std::cout << index[i][j];
         }
-
     }
-
-    for (int i = 0; i < nTagGenJets; i++)
+    int tempMinDeltaR = 100000;
+        // i != index[0][0] && i != index[1][0] && i != index[2][0] &&i != index[3][0] && j != index[0][1] && j != index[0][1] && j != index[1][1] && j != index[2][1] && j != index[3][1]
+    for(uint i=0;i<array.size();i++)
     {
-        for (int j = 0; j < nTagGenJets; j++)
+        for (uint j=0;j<array[0].size();j++)
         {
-            CountGenJet = a[i][j];
-            for (int CountJet = 0; CountJet < nTagJets; CountJet++)
+            // std::cout <<"array[i][j] = " << array[i][j] << std::endl;
+            if(array[i][j]<tempMinDeltaR)
             {
-                // if "CountJet" exists in array PositionOfRecoJets then continue to next iteration
-                deltaR = DeltaR(AllGoodJets.at(CountJet).Eta(),AllGoodJets.at(CountJet).Phi(),LV_GEN_quarks_had_AK4.at(CountGenJet).Eta(),LV_GEN_quarks_had_AK4.at(CountGenJet).Phi());
-                if(deltaR < tempMinDelaR)
+                // std::cout << std::endl << "i=" << i
+                // <<"\t j=" << j << std::endl;
+                tempMinDeltaR = array[i][j];
+                index[0][0] = i;
+                index[0][1] = j;
+            }
+        }
+    }
+
+    tempMinDeltaR = 100000;
+    for(uint i=0;i<array.size();i++)
+    {
+        for (uint j=0;j<array[0].size();j++)
+        {
+            if(i!= index[0][0] && j!= index[0][1])
+            {
+                // std::cout <<"array[i][j] = " << array[i][j] << std::endl;
+                if(array[i][j]<tempMinDeltaR)
                 {
-                    PositionOfRecoJets[i][CountGenJet] = CountJet;
-                    PositionOfRecoJets_MinDRValue[i][CountGenJet] = deltaR;
-                    tempMinDelaR = deltaR;
+                    // std::cout << std::endl << "i=" << i
+                    // <<"\t j=" << j << std::endl;
+                    tempMinDeltaR = array[i][j];
+                    index[1][0] = i;
+                    index[1][1] = j;
                 }
             }
         }
     }
-    printf("position:\n");
-    for(int i=0;i<4;i++)
+    tempMinDeltaR = 100000;
+    for(uint i=0;i<array.size();i++)
     {
-        for(int j=0;j<4;j++)
+        for (uint j=0;j<array[0].size();j++)
         {
-            std::cout << "\t";
-            printf("%d",PositionOfRecoJets[i][j]);
+            if(i!= index[0][0] && j!= index[0][1]&& i!= index[1][0] && j!= index[1][1])
+            {
+                // std::cout <<"array[i][j] = " << array[i][j] << std::endl;
+                if(array[i][j]<tempMinDeltaR)
+                {
+                    // std::cout << std::endl << "i=" << i
+                    // <<"\t j=" << j << std::endl;
+                    tempMinDeltaR = array[i][j];
+                    index[2][0] = i;
+                    index[2][1] = j;
+                }
+            }
         }
-        printf("\n");
     }
-    printf("MindRValue:\n");
-    for(int i=0;i<4;i++)
+    tempMinDeltaR = 100000;
+    for(uint i=0;i<array.size();i++)
     {
-        for(int j=0;j<4;j++)
+        for (uint j=0;j<array[0].size();j++)
         {
-            std::cout << "\t";
-            printf("%f",PositionOfRecoJets_MinDRValue[i][j]);
+            if(i!= index[0][0] && j!= index[0][1]&& i!= index[1][0] && j!= index[1][1]&& i!= index[2][0] && j!= index[2][1])
+            {
+                // std::cout <<"array[i][j] = " << array[i][j] << std::endl;
+                if(array[i][j]<tempMinDeltaR)
+                {
+                    // std::cout << std::endl << "i=" << i
+                    // <<"\t j=" << j << std::endl;
+                    tempMinDeltaR = array[i][j];
+                    index[3][0] = i;
+                    index[3][1] = j;
+                }
+            }
         }
-        printf("\n");
     }
-    // std::cout<< "ntagGenJets:" << nTagGenJets << std::endl;
-    // Index.clear();
-    // AllDeltaR1.clear();
-    // AllDeltaR2.clear();
-    // std::vector<int> index;
-    // for (int CountGenJet = 0; CountGenJet < nTagGenJets; CountGenJet++)
-    // {
-    //     for (int CountJet = 0; CountJet < nTagJets; CountJet++)
-    //     {
-    //         deltaR = DeltaR(AllGoodJets.at(CountJet).Eta(),AllGoodJets.at(CountJet).Phi(),LV_GEN_quarks_had_AK4.at(CountGenJet).Eta(),LV_GEN_quarks_had_AK4.at(CountGenJet).Phi());
-    //         AllDeltaR1.push_back(deltaR);
-    //         AllDeltaR2.push_back(deltaR);
-    //     }
-    // }
-    // sort(AllDeltaR1.begin(), AllDeltaR1.end());
-    // for(int i=0; i<4;i++)
-    // {
-    // std::vector <double>::iterator iElement = std::find(std::begin(AllDeltaR2),std::end(AllDeltaR2),AllDeltaR1[i]);
-    // int nPosition = std::distance(std::begin(AllDeltaR2),iElement);
-    // int nPosition_rewight = nPosition%nTagJets;
-    // index.push_back(nPosition_rewight);
-    // // std::cout << "Position:" << nPosition_rewight << std::endl;
-    // }
-    jet1 = AllGoodJets.at(0);
-    jet2 = AllGoodJets.at(1);
-    jet3 = AllGoodJets.at(2);
-    jet4 = AllGoodJets.at(3);
-
+    // for(i=0;i <index.size();i++)
+    // std::cout <<std::endl<< "indexi:" <<index[i][0] << "\t indexj:" << index[i][1];
+    int indexJet1 = index[0][1];
+    int indexJet2 = index[1][1];
+    int indexJet3 = index[2][1];
+    int indexJet4 = index[3][1];
+    jet1 = AllGoodJets.at(indexJet1);
+    jet2 = AllGoodJets.at(indexJet2);
+    jet3 = AllGoodJets.at(indexJet3);
+    jet4 = AllGoodJets.at(indexJet4);
     SelectedJets.push_back(jet1);
     SelectedJets.push_back(jet2);
     SelectedJets.push_back(jet3);
@@ -214,7 +361,7 @@ void GetFHminWHJets_q(std::vector<TLorentzVector> &AllGoodJets, std::vector<TLor
             double deltaMass =  abs((jet11 + jet12).M() - 80.0);
             if ( deltaMass < TempMinWMass)
             {
-                if  (jet11.Pt() > jet12.Pt()) {
+                if  (jet11.Pt() > jet12.Pt()) { 
                     OnShellW_LeadingJetIndex = CountJet1;
                     OnShellW_SubLeadingJetIndex = CountJet2;
                 } else {

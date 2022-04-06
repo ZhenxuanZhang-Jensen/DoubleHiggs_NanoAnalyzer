@@ -88,6 +88,7 @@ public:
   float GEN_SubLeadingPhoton_eta = -999.0;
   float GEN_SubLeadingPhoton_phi = -999.0;
   float GEN_SubLeadingPhoton_energy = -999.0;
+  float nGEN_quarks_had = -999.0;
   float GEN_Q1_pT = -999.0;
   float GEN_Q1_eta = -999.0;
   float GEN_Q1_phi = -999.0;
@@ -164,6 +165,35 @@ public:
   float GEN_Radion_WWgg_m = -999.0;
   float GEN_Radion_WWgg_E = -999.0;
   // checking Gen jet
+  float GEN_Q1_had_AK4_fake_p = -999.0;
+  float GEN_Q1_had_AK4_fake_pt = -999.0;
+  float GEN_Q1_had_AK4_fake_pz = -999.0;
+  float GEN_Q1_had_AK4_fake_eta = -999.0;
+  float GEN_Q1_had_AK4_fake_phi = -999.0;
+  float GEN_Q1_had_AK4_fake_m = -999.0;
+  float GEN_Q1_had_AK4_fake_E = -999.0;
+  float GEN_Q2_had_AK4_fake_p = -999.0;
+  float GEN_Q2_had_AK4_fake_pt = -999.0;
+  float GEN_Q2_had_AK4_fake_pz = -999.0;
+  float GEN_Q2_had_AK4_fake_eta = -999.0;
+  float GEN_Q2_had_AK4_fake_phi = -999.0;
+  float GEN_Q2_had_AK4_fake_m = -999.0;
+  float GEN_Q2_had_AK4_fake_E = -999.0;
+  float GEN_Q3_had_AK4_fake_p = -999.0;
+  float GEN_Q3_had_AK4_fake_pt = -999.0;
+  float GEN_Q3_had_AK4_fake_pz = -999.0;
+  float GEN_Q3_had_AK4_fake_eta = -999.0;
+  float GEN_Q3_had_AK4_fake_phi = -999.0;
+  float GEN_Q3_had_AK4_fake_m = -999.0;
+  float GEN_Q3_had_AK4_fake_E = -999.0;
+  float GEN_Q4_had_AK4_fake_p = -999.0;
+  float GEN_Q4_had_AK4_fake_pt = -999.0;
+  float GEN_Q4_had_AK4_fake_pz = -999.0;
+  float GEN_Q4_had_AK4_fake_eta = -999.0;
+  float GEN_Q4_had_AK4_fake_phi = -999.0;
+  float GEN_Q4_had_AK4_fake_m = -999.0;
+  float GEN_Q4_had_AK4_fake_E = -999.0;
+
   float GEN_Q1_had_AK4_p = -999.0;
   float GEN_Q1_had_AK4_pt = -999.0;
   float GEN_Q1_had_AK4_pz = -999.0;
@@ -315,6 +345,12 @@ public:
   float LHEGEN_deltaR_HToWWH = -999.0;
   float DiPhoton_deltaR_LHERECO_HH = -999.0;
 
+  float GEN_deltaR_Q1Q2 = -999.0;
+  float GEN_deltaR_Q1Q3 = -999.0;
+  float GEN_deltaR_Q1Q4 = -999.0;
+  float GEN_deltaR_Q2Q3 = -999.0;
+  float GEN_deltaR_Q2Q4 = -999.0;
+  float GEN_deltaR_Q3Q4 = -999.0;
   float GEN_deltaR_GG = -999.0;
   float GEN_deltaR_WW = -999.0;
   float GEN_deltaR_MIN4Q = -999.0;
@@ -952,6 +988,8 @@ public:
   //       AK4 Jets                     //
   //------------------------------------//
 
+  float Tight_Ele_Mu_veto = -999.0;
+  float fourGenjet_cate = -999.0;
   float FullyResolved_allAK4JetsSum_pt = -999.0;
   float FullyResolved_Jet1_pt = -999.0;
   float FullyResolved_Jet2_pt = -999.0;
@@ -1066,6 +1104,30 @@ public:
   std::vector<float> dR_ak4_photon;
   std::vector<float> dR_ak4_ele;
   std::vector<float> dR_ak4_muon;
+  std::vector<float> allDeltaR_genjets_genquarks1;
+  std::vector<float> allDeltaR_genjets_genquarks2;
+  std::vector<float> allDeltaR_genjets_genquarks3;
+  std::vector<float> allDeltaR_genjets_genquarks4;
+  float mindR_jets_quark1 = -999.0;
+  float mindR_jets_quark2 = -999.0;
+  float mindR_jets_quark3 = -999.0;
+  float mindR_jets_quark4 = -999.0;
+  float nGEN_quark1_jets = -999.0;
+  float nGEN_quark2_jets = -999.0;
+  float nGEN_quark3_jets = -999.0;
+  float nGEN_quark4_jets = -999.0;
+  float deltaR_gen_j1j2 = -999.0;
+  float deltaR_gen_j1j3 = -999.0;
+  float deltaR_gen_j1j4 = -999.0;
+  float deltaR_gen_j2j3 = -999.0;
+  float deltaR_gen_j2j4 = -999.0;
+  float deltaR_gen_j3j4 = -999.0;
+  float deltaR_fourjets_j1j2 = -999.0;
+  float deltaR_fourjets_j1j3 = -999.0;
+  float deltaR_fourjets_j1j4 = -999.0;
+  float deltaR_fourjets_j2j3 = -999.0;
+  float deltaR_fourjets_j2j4 = -999.0;
+  float deltaR_fourjets_j3j4 = -999.0;
 
 
 };

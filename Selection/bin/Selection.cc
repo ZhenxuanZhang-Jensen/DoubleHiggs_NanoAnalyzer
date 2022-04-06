@@ -270,7 +270,7 @@ int main (int argc, char** argv) {
     // Bool_t has_HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55 = false;
     // Bool_t has_HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55 = false;
 
-    Bool_t has_HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90 = false;
+    Bool_t has_HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90 = true;
     Bool_t has_HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass95 = false;
     Bool_t has_HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55 = false;
     Bool_t has_HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_NoPixelVeto_Mass55 = false;
@@ -387,7 +387,7 @@ int main (int argc, char** argv) {
         }
 
         if(DEBUG) std::cout << "\t[INFO]: Start of event loop. " << std::endl;
-        for (uint i=0; i < t->GetEntries(); i++)
+        for (uint i=0; i < t->GetEntries(); i++) // attention: this is where the events loop begin
         // for (uint i=0; i < 20; i++)
         {
             WVJJTree->clearVars();
@@ -1301,18 +1301,18 @@ int main (int argc, char** argv) {
             // }
             //std::cout << std::endl;
 
-            // if (!(WVJJTree->trigger_2Pho)) continue;
+            if (!(WVJJTree->trigger_2Pho)) continue;
             // tot alCutFlow_FH->Fill("Trigger",1);
             // totalCutFlow_SL->Fill("Trigger",1);
             if (WVJJTree->trigger_2Pho) totalCutFlow_FH->Fill("Trigger",1);
             if (WVJJTree->trigger_2Pho) totalCutFlow_SL->Fill("Trigger",1);
             if (WVJJTree->trigger_2Pho) totalCutFlow_FH_GENMatch->Fill("Trigger",1);
         }
-        // std::cout << "check bug3 \t" << std::endl;
+            // std::cout << "check bug3 \t" << std::endl;
 
             /* ----------------- Leading and SubLeading photon selection ---------------- */
-     /* -------------------------------------------------------------------------- */
-            /*                              PHOTON SELECTION                              */
+            /* -------------------------------------------------------------------------- */
+            /*                      attention: PHOTON SELECTION                              */
             /* -------------------------------------------------------------------------- */
             LV_tightPhoton.clear();
             int nTightPhoton = 0;
@@ -1381,7 +1381,6 @@ int main (int argc, char** argv) {
             if (!(nTightPhoton==2)) continue;
 
             totalCutFlow_FH->Fill("Photon Selection",1);
-            totalCutFlow_FH_OnlyFourjetsCategory->Fill("Photon Selection",1);
             totalCutFlow_SL->Fill("Photon Selection",1);
 
             // std::cout << "Exactly 2 photons found..." << std::endl;
@@ -1429,8 +1428,10 @@ int main (int argc, char** argv) {
                 totalCutFlow_FH_GENMatch->Fill("Photon Selection",1);
             }
             
-            // if(!(WVJJTree->pho1_pt_byMgg > 0.35)) continue;
-            // if(!(WVJJTree->pho2_pt_byMgg > 0.25)) continue;
+            if(!(WVJJTree->pho1_pt_byMgg > 0.33)) continue;
+            if(!(WVJJTree->pho2_pt_byMgg > 0.25)) continue;
+            if(!( 100. < WVJJTree->diphoton_m && 180. > WVJJTree->diphoton_m )) continue;
+            totalCutFlow_FH_OnlyFourjetsCategory->Fill("Photon Selection",1);
 
             // if(WVJJTree->diphoton_pt > 100.0) to talCutFlow_FH->Fill("pT(#gamma #gamma)>100",1);
             // if(WVJJTree->diphoton_pt > 100.0) to talCutFlow_SL->Fill("pT(#gamma #gamma)>100",1./totalCutFlow_SL);
