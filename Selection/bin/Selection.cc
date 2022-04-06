@@ -91,7 +91,7 @@ int main (int argc, char** argv) {
     // const float AK4_ETA_CUT = 2.4;
     //checking 2.4 to 4.7
     const float AK4_PT_CUT = 20;
-    const float AK4_MAX_ETA = 4.7;
+    const float AK4_MAX_ETA = 2.4;
     // const float AK4_JJ_MIN_M = 40.0;
     // const float AK4_JJ_MAX_M = 250.0;
 
@@ -189,7 +189,7 @@ int main (int argc, char** argv) {
     totalCutFlow_FH_OnlyFourjetsCategory->GetXaxis()->SetBinLabel(1,"MC Gen");
     totalCutFlow_FH_OnlyFourjetsCategory->GetXaxis()->SetBinLabel(2,"Photon Selection");
     totalCutFlow_FH_OnlyFourjetsCategory->GetXaxis()->SetBinLabel(3,"Lepton Selection");
-    totalCutFlow_FH_OnlyFourjetsCategory->GetXaxis()->SetBinLabel(4,"nAK8H=0 & nAK8W=0 & nAK4>=4"); // 4 jet category
+    totalCutFlow_FH_OnlyFourjetsCategory->GetXaxis()->SetBinLabel(4,"nAK4>=4"); // 4 jet category
 
     TH1F *totalCutFlow_FH = new TH1F("totalCutFlow_FH","totalCutFlow_FH",19,0,19);
     totalCutFlow_FH->GetXaxis()->SetBinLabel(1,"MC Gen");
@@ -1022,7 +1022,7 @@ int main (int argc, char** argv) {
                                                         NanoReader_.GenJet_mass[GenJetCount]);
                         // std::cout
                         // << "Event:" << i <<"/idx:" << GenJetCount
-                        // << "\t Pt:" << NanoReader_.GenJet_pt[GenJetCount]
+                        // << "\t Pt:" << NanoReade`r_.GenJet_pt[GenJetCount]
                         // << "\t Eta:" << NanoReader_.GenJet_eta[GenJetCount]
                         // << "\t Phi:" << NanoReader_.GenJet_phi[GenJetCount]
                         // << std::endl; 
@@ -1401,7 +1401,7 @@ int main (int argc, char** argv) {
             WVJJTree->diphoton_m = diphoton.M();
             WVJJTree->diphoton_pt = diphoton.Pt();
             WVJJTree->diphoton_eta = diphoton.Eta();
-            WVJJTree->diphoton_phi = diphoton.Phi();
+            WVJJTree->diphoton_phi  = diphoton.Phi();
             WVJJTree->diphoton_E = diphoton.E();
             WVJJTree->pho1_E = LV_pho1.E();
             WVJJTree->pho2_E = LV_pho2.E();
@@ -1822,7 +1822,7 @@ int main (int argc, char** argv) {
                 //jet ID
                 // https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookNanoAOD#Jets
                 // tight jet ID
-                if (!(NanoReader_.Jet_jetId[j] >= 2)) continue;
+                if (!(NanoReader_.Jet_jetId[j] >= 2)) continue; // attention: jetId
                 // PU JET ID for jets pt > AK4_PT_CUT and < 50
                 if (NanoReader_.Jet_pt[j] < 50 && NanoReader_.Jet_puId[j] < 3) continue;
                 // nPtEta_cut_ak4Jet++
@@ -2013,7 +2013,8 @@ int main (int argc, char** argv) {
             }
 
             // FH: 4 jet category
-            if (nTightMu + nTightEle == 0 && nGoodAK4jets >= 4 && massPoint>=0 && massPoint<=700) {totalCutFlow_FH->Fill("nAK8H=0 & nAK8W=0 & nAK4>=4",1);}
+            if (nTightMu + nTightEle == 0 && nGoodAK4jets >= 4 &&  nGood_Higgs_FatJet == 0 && nGood_W_FatJet == 0 && massPoint>=0 && massPoint<=700) {totalCutFlow_FH->Fill("nAK8H=0 & nAK8W=0 & nAK4>=4",1);}
+            if (nTightMu + nTightEle == 0 && nGoodAK4jets >= 4 && massPoint>=0 && massPoint<=700) {totalCutFlow_FH_OnlyFourjetsCategory->Fill("nAK4>=4",1);}
 
             // Found 1 Higgs jet or
             // Fount 1 fat Wjet and 2 AK4 jets or
