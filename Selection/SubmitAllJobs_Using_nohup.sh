@@ -24,7 +24,7 @@ if [ ${WhichSamples} -eq 1 ]
   then
     echo "Running for fully-hadronic.."
     # nohup Selection InputSampleTextFiles/GluGluToRadionToHHTo2G4Q_M-250_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8.txt /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M250.root 1 2017  7 0 1 250 0 >& /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M250.log &
-    nohup Selection InputSampleTextFiles/GluGluToRadionToHHTo2G4Q_M-300_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8.txt /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M300.root 1 2017  7 0 1 300 0 >& /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M300.log &
+    # nohup Selection InputSampleTextFiles/GluGluToRadionToHHTo2G4Q_M-300_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8.txt /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M300.root 1 2017  7 0 1 300 0 >& /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M300.log &
     # nohup Selection InputSampleTextFiles/GluGluToRadionToHHTo2G4Q_M-400_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8.txt /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M400.root 1 2017  7 0 1 400 0 >& /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M400.log &
     # nohup Selection InputSampleTextFiles/TTGG_0Jets_TuneCP5_13TeV_amcatnlo_madspin_pythia8.txt /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/TTGG_0Jets_TuneCP5_13TeV_amcatnlo_madspin_pythia8.root 1 2017  7 0 1 400 0 >& /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/TTGG_0Jets_TuneCP5_13TeV_amcatnlo_madspin_pythia8.log &
     # nohup Selection InputSampleTextFiles/GluGluToRadionToHHTo2G4Q_M-450_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8.txt /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M450.root 1 2017  7 0 1 450 0 >& /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M450.log &
@@ -38,7 +38,7 @@ if [ ${WhichSamples} -eq 1 ]
     # nohup Selection InputSampleTextFiles/GluGluToRadionToHHTo2G4Q_M-850_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8.txt /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M850.root 1 2017  7 0 1 850 0 >& /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M850.log &
     # nohup Selection InputSampleTextFiles/GluGluToRadionToHHTo2G4Q_M-900_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8.txt /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M900.root 1 2017  7 0 1 900 0 >& /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M900.log &
     # nohup Selection InputSampleTextFiles/GluGluToRadionToHHTo2G4Q_M-1000_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8.txt /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M1000.root 1 2017  7 0 1 1000 0 >& /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M1000.log &
-    # nohup Selection InputSampleTextFiles/GluGluToRadionToHHTo2G4Q_M-1500_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8.txt /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M1500.root 1 2017  7 0 1 1500 0 >& /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M1500.log &
+    nohup Selection InputSampleTextFiles/GluGluToRadionToHHTo2G4Q_M-1500_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8.txt /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M1500.root 1 2017  7 0 1 1500 0 >& /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M1500.log &
     # nohup Selection InputSampleTextFiles/GluGluToRadionToHHTo2G4Q_M-2000_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8.txt /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M2000.root 1 2017  7 0 1 2000 0 >& /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M2000.log &
     # nohup Selection InputSampleTextFiles/GluGluToRadionToHHTo2G4Q_M-3000_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8.txt /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M3000.root 1 2017  7 0 1 3000 0 >& /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/GluGluToRadionToHHTo2G4Q_M3000.log &
     # nohup Selection InputSampleTextFiles/GluGluToRadionToHHTo2G4Q_M-1500_narrow_TuneCP5_PSWeights_13TeV-madgraph-pythia8.txt GluGluToRadionToHHTo2G4Q_M1500.root 1 2017  7 0 1 1500 0 >& GluGluToRadionToHHTo2G4Q_M1500.log &
@@ -113,10 +113,10 @@ fi
 if [ ${WhichSamples} -eq 3 ]
   then
     echo "Running for SM fully-hadronic samples.."
-    nohup Selection InputSampleTextFiles/GluGluToHHTo2G4Q_node_cHHH0_TuneCP5_PSWeights_13TeV-powheg-pythia8.txt GluGluToHHTo2G4Q_node-cHHH0.root 1 2017 7 0 1 &> GluGluToHHTo2G4Q_node_cHHH0.log &
-    nohup Selection InputSampleTextFiles/GluGluToHHTo2G4Q_node_cHHH2p45_TuneCP5_PSWeights_13TeV-powheg-pythia8.txt GluGluToHHTo2G4Q_node-cHHH2p45.root 1 2017 7 0 1 &> GluGluToHHTo2G4Q_node_cHHH2p45.log &
-    nohup Selection InputSampleTextFiles/GluGluToHHTo2G4Q_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8.txt GluGluToHHTo2G4Q_node-cHHH1.root 1 2017 7 0 1 &> GluGluToHHTo2G4Q_node_cHHH1.log &
-    nohup Selection InputSampleTextFiles/GluGluToHHTo2G4Q_node_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythia8.txt GluGluToHHTo2G4Q_node-cHHH5.root 1 2017 7 0 1 &> GluGluToHHTo2G4Q_node_cHHH5.log &
+    # nohup Selection InputSampleTextFiles/GluGluToHHTo2G4Q_node_cHHH0_TuneCP5_PSW`eights_13TeV-powheg-pythia8.txt GluGluToHHTo2G4Q_node-cHHH0.root 1 2017 7 0 1 &> GluGluToHHTo2G4Q_node_cHHH0.log &
+    # nohup Selection InputSampleTextFiles/GluGluToHHTo2G4Q_node_cHHH2p45_TuneCP5_PSWeights_13TeV-powheg-pythia8.txt GluGluToHHTo2G4Q_node-cHHH2p45.root 1 2017 7 0 1 &> GluGluToHHTo2G4Q_node_cHHH2p45.log &
+    nohup Selection InputSampleTextFiles/GluGluToHHTo2G4Q_node_cHHH1_TuneCP5_PSWeights_13TeV-powheg-pythia8.txt /eos/user/z/zhenxuan/DoubleHiggs/SM_MC/GluGluToHHTo2G4Q_node-cHHH1.root 1 2017 7 0 1 &> /eos/user/z/zhenxuan/DoubleHiggs/SM_MC/GluGluToHHTo2G4Q_node_cHHH1.log &
+    # nohup Selection InputSampleTextFiles/GluGluToHHTo2G4Q_node_cHHH5_TuneCP5_PSWeights_13TeV-powheg-pythia8.txt GluGluToHHTo2G4Q_node-cHHH5.root 1 2017 7 0 1 &> GluGluToHHTo2G4Q_node_cHHH5.log &
     ps -f
 fi
 
@@ -140,3 +140,8 @@ if [ ${WhichSamples} -eq 5 ]
     nohup Selection InputSampleTextFiles/DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa.txt /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa.root 1 2017  7 0 1 400 1 >& /eos/user/z/zhenxuan/DoubleHiggs/MC_Root/DiPhotonJetsBox_MGG-80toInf_13TeV-Sherpa.log &
 fi
 # python CutFlow.py
+
+
+
+
+
